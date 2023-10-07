@@ -1,0 +1,74 @@
+{
+  "manifest_version": 2,
+  "name": "Cyberfeeder",
+  "version": "1.0",
+
+  "description": "UI improvements for jinteki.net",
+
+  "icons": {
+    "16": "icons/JINTEKI_16.png",
+    "32": "icons/JINTEKI_32.png",
+    "48": "icons/JINTEKI_48.png",
+    "96": "icons/JINTEKI_96.png",
+    "128": "icons/JINTEKI_128.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://*.jinteki.net/play"],
+      "js": ["js/play.js"]
+    },
+    {
+      "matches": ["*://*.jinteki.net/deckbuilder"],
+      "js": ["js/deckbuilder.js"]
+    }
+  ],
+
+  "permissions": [
+    "scripting",
+    "activeTab"
+  ],
+
+  "sidebar_action": {
+    "default_icon": {
+      "16": "icons/JINTEKI_16.png",
+      "32": "icons/JINTEKI_32.png",
+      "48": "icons/JINTEKI_48.png",
+      "96": "icons/JINTEKI_96.png",
+      "128": "icons/JINTEKI_128.png"
+    },
+    "default_title": "Cyberfeeder",
+    "default_panel": "html/sidebar.html",
+    "open_at_install": true
+  },
+
+  "page_action": {
+    "default_icon": {
+      "16": "icons/JINTEKI_16.png",
+      "32": "icons/JINTEKI_32.png",
+      "48": "icons/JINTEKI_48.png",
+      "96": "icons/JINTEKI_96.png",
+      "128": "icons/JINTEKI_128.png"
+    },
+    "default_title": "Cyberfeeder",
+    "show_matches": ["https://*.jinteki.net/*"]
+  },
+
+  "browser_action": {
+    "default_icon": {
+      "16": "icons/JINTEKI_16.png",
+      "32": "icons/JINTEKI_32.png",
+      "48": "icons/JINTEKI_48.png",
+      "96": "icons/JINTEKI_96.png",
+      "128": "icons/JINTEKI_128.png"
+    },
+    "default_title": "Open Sidebar"
+  },
+
+  "background": {
+    "scripts": [
+      "js/background.js"
+    ],
+    "persistent": false
+  }
+}

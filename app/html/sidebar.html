@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cyberfeeder</title>
+  <link rel="stylesheet" href="../css/sidebar.css">
+</head>
+
+<body>
+  <main>
+    <input type="radio" name="tabset" id="tab1" aria-controls="styles" checked>
+    <label for="tab1">Styles</label>
+    <input type="radio" name="tabset" id="tab2" aria-controls="scripts">
+    <label for="tab2">Scripts</label>
+    <input type="radio" name="tabset" id="tab3" aria-controls="experimental">
+    <label for="tab3">Experimental</label>
+
+    <div class="tab-panels">
+      <section id="styles" class="tab-panel"></section>
+      <section id="scripts" class="tab-panel"></section>
+      <section id="experimental" class="tab-panel"></section>
+    </div>
+  </main>
+  <footer id="version"></footer>
+  <script src="../js/sidebar.js"></script>
+</body>
+</html>
