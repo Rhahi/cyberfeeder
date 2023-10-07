@@ -1,0 +1,7 @@
+/.package
+/.assets
+/node_modules
+/app/css
+/app/data
+/app/js
+/build

@@ -1,0 +1,25 @@
+{
+  "name": "cyberfeeder",
+  "version": "1.0.0",
+  "description": "Jinteki.net enhancements",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "gts lint",
+    "clean": "gts clean && rm app/js/*",
+    "build": "sh build.sh",
+    "compile": "tsc",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run lint",
+    "package": "rm -f ./.package/cyberfeeder.zip && zip -r -FS .package/cyberfeeder.zip * --exclude './.*' --exclude './node_modules/*'"
+  },
+  "author": "Rhahi",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/firefox-webext-browser": "^111.0.2",
+    "@types/node": "20.4.6",
+    "gts": "^5.0.1",
+    "typescript": "^5.2.2"
+  }
+}

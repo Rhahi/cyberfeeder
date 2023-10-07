@@ -1,0 +1,57 @@
+body {
+  font-size: 1.2rem;
+  background-color: rgba(40,57,77);
+}
+
+main {
+  flex-grow: 1;
+  margin: 0.4em 0.3em 0 0.3em;
+  min-width: 15.5em;
+  white-space: nowrap;
+}
+
+input[name=tabset] {
+  display: none;
+
+  &+label {
+    margin-bottom: 0;
+    display: inline-block;
+    padding: 0.2em 0.4em 0.1em 0.4em;
+    background-color: rgb(95, 95, 95);
+    color: white;
+    cursor: pointer;
+    &:hover {
+      background-color: rgb(76, 102, 133);
+    }
+  }
+
+  &:checked + label {
+    background-color: rgb(63, 91, 126);
+  }
+}
+
+.tab-panels .tab-panel {
+  display: none;
+  background-color: rgb(63, 91, 126);
+  border-bottom: 0.2em solid transparent;
+  border-top-right-radius: 0.7em;
+  border-bottom-left-radius: 0.7em;
+  border-bottom-right-radius: 0.7em;
+  padding: 0.4em;
+  color: white;
+}
+
+main > input:first-child:checked ~ .tab-panels > .tab-panel:first-child,
+main > input:nth-child(3):checked ~ .tab-panels > .tab-panel:nth-child(2),
+main > input:nth-child(5):checked ~ .tab-panels > .tab-panel:nth-child(3) {
+  display: block;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+footer {
+  margin: 0.2em 0.5em;
+  color: #888;
+}
