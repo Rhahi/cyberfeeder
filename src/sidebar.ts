@@ -90,9 +90,81 @@ async function initializeStyles(jsonData: StyleData) {
   }
 }
 
+
+function populateStyleData(
+  collection: CollectedStyle,
+  primary: {[key: string]: IdStyle},
+  secondary: {[key: string]: IdStyle},
+  strategy: 'overwrite-with-secondary' | 'userdata'
+) {
+  for (const [key, s] of Object.entries(primary)) {
+    if (strategy === 'userdata' && key in secondary) {
+      continue;
+    }
+    // initialize
+    if (!(s.category in collection)) {
+      collection[s.category] = {
+        standalone: [],
+        series: {},
+      };
+    }
+    // populate checkbox items
+    if (s.series === 'none') {
+      if (key in secondary) {
+        s.css = secondary[key].css;
+      }
+      collection[s.category].standalone.push(s);
+      continue;
+    }
+    // initialize radio button array
+    if (!(s.series in collection[s.category].series)) {
+      collection[s.category].series[s.series] = [];
+    }
+    // populate radio button items
+    if (key in secondary) {
+      s.css = secondary[key].css;
+    }
+    collection[s.category].series[s.series].push(s);
+  }
+}
+
+function getCategorizedStyles(
+  data: {[key: string]: IdStyle},
+  userdata: {[key: string]: IdStyle}
+) {
+  const collection: CollectedStyle = {};
+  populateStyleData(collection, data, userdata, 'overwrite-with-secondary');
+  populateStyleData(collection, userdata, data, 'userdata');
+  return collection;
+}
+
+
+async function loadSidebar() {
+  const data = await browser.storage.local.get(['styles', 'userstyles']);
+  const styles = toDict(data.styles);
+  const userstyles = toDict(data.userstyles);
+
+  const element = document.getElementById('styles');
+  if (element) {
+    const categorized = getCategorizedStyles(styles, userstyles);
+    let innerHTML = '';
+    for (const [key, category] of Object.entries(categorized)) {
+      innerHTML += '<div class="category">';
+      innerHTML += `<h2>${key}</h2>`;
+      innerHTML += populateSeries(category);
+      innerHTML += populateStandalone(category);
+      innerHTML += '</div>';
+    }
+    element.innerHTML = innerHTML;
+    // do something here to update from storage
+    // and then apply the styles once
+  }
+}
+
 /**
  * Loading script for sidebar
  */
 document.addEventListener('DOMContentLoaded', async () => {
   await initializeLocalStorage();
+  await loadSidebar();
 });
