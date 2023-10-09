@@ -255,10 +255,113 @@ async function loadSidebar() {
   }
 }
 
+function registerStyleToggleEvent() {
+  const styleCheckboxes = document.getElementsByClassName('style-checkbox-enable');
+  for (let i = 0; i < styleCheckboxes.length; i++) {
+    styleCheckboxes[i].addEventListener('change', async () => {
+      const style = rebuildStyle();
+      await sendIt(style);
+    });
+  }
+}
+
+function registerCustomizeToggleEvent() {
+  const customCheckboxes = document.getElementsByClassName('style-checkbox-customize');
+  for (let i = 0; i < customCheckboxes.length; i++) {
+    customCheckboxes[i].addEventListener('change', async () => {
+      const element = customCheckboxes[i];
+      const li = element.closest('li');
+      const style = getStyleUI(li?.id);
+      if (!style) {
+        console.warn('Enable/disable target not found');
+        return;
+      }
+
+      const styles = await getStyles();
+      style.textarea.disabled = !style.customize.checked;
+      style.resetButton.disabled = !style.customize.checked;
+      style.saveButton.disabled = !style.customize.checked;
+      if (style.customize.checked) {
+        // only enable editing but do not send the styles to jnet
+        if (style.id in styles.userStyles) {
+          style.textarea.value = styles.userStyles[style.id].css;
+        } else {
+          console.log('user style not found, do not modify text area');
+        }
+      } else {
+        // reset textarea to bundled style
+        if (style.id in styles.bundledStyles) {
+          style.textarea.value = styles.bundledStyles[style.id].css;
+        } else {
+          console.warn('bundled style not found, do not modify text area');
+        }
+      }
+      if (style.enable.checked) {
+        await sendIt(rebuildStyle());
+      }
+    });
+  }
+}
+
+function registerCustomizeResetEvent() {
+  const applyButtons = document.getElementsByClassName('style-checkbox-reset');
+  for (let i = 0; i < applyButtons.length; i++) {
+    applyButtons[i].addEventListener('click', async () => {
+      const element = applyButtons[i];
+      const li = element.closest('li');
+      const style = getStyleUI(li?.id);
+      if (!style) {
+        return;
+      }
+      const styles = await getStyles();
+      if (style.id in styles.bundledStyles) {
+        style.textarea.value = styles.bundledStyles[style.id].css;
+      } else {
+        console.info('Tried to revert to bundled style, but there was none.');
+      }
+    });
+  }
+}
+
+function registerCustomizeSaveEvent() {
+  const applyButtons = document.getElementsByClassName('style-checkbox-save');
+  for (let i = 0; i < applyButtons.length; i++) {
+    applyButtons[i].addEventListener('click', async () => {
+      const element = applyButtons[i];
+      const li = element.closest('li');
+      const style = getStyleUI(li?.id);
+      if (!style) {
+        return;
+      }
+      // update style
+      const {bundledStyles, userStyles} = await getStyles();
+      if (style.id in userStyles) {
+        userStyles[style.id].css = style.textarea.value;
+      } else if (style.id in bundledStyles) {
+        userStyles[style.id] = bundledStyles[style.id];
+        userStyles[style.id].css = style.textarea.value;
+      } else {
+        console.warn('Tried to save style with unknown ID, do not save.');
+      }
+      await browser.storage.local.set({userStyles: toList(userStyles)});
+      if (style.enable.checked) {
+        const style = rebuildStyle();
+        await sendIt(style);
+      }
+    });
+  }
+}
+
 /**
  * Loading script for sidebar
  */
 document.addEventListener('DOMContentLoaded', async () => {
   await initializeLocalStorage();
   await loadSidebar();
+  registerStyleToggleEvent();
+  registerCustomizeToggleEvent();
+  registerCustomizeResetEvent();
+  registerCustomizeSaveEvent();
+  const style = rebuildStyle();
+  await sendIt(style);
 });
