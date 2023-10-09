@@ -30,20 +30,31 @@ input[name=tabset] {
   }
 }
 
-.tab-panels .tab-panel {
+.tab-panels .tab-panel, .tab-custom-panels .tab-panel {
   display: none;
+  padding: 0.4em;
   background-color: rgb(63, 91, 126);
+  color: white;
+}
+
+.tab-panels .tab-panel {
   border-bottom: 0.2em solid transparent;
   border-top-right-radius: 0.7em;
   border-bottom-left-radius: 0.7em;
   border-bottom-right-radius: 0.7em;
-  padding: 0.4em;
-  color: white;
+}
+
+.tab-custom-panels .tab-panel {
+  margin-top: 0.5em;
+  border-radius: 0.7em;
 }
 
 main > input:first-child:checked ~ .tab-panels > .tab-panel:first-child,
 main > input:nth-child(3):checked ~ .tab-panels > .tab-panel:nth-child(2),
-main > input:nth-child(5):checked ~ .tab-panels > .tab-panel:nth-child(3) {
+main > input:nth-child(5):checked ~ .tab-panels > .tab-panel:nth-child(3),
+main > input:first-child:checked ~ .tab-custom-panels > .tab-panel:first-child,
+main > input:nth-child(3):checked ~ .tab-custom-panels > .tab-panel:nth-child(2),
+main > input:nth-child(5):checked ~ .tab-custom-panels > .tab-panel:nth-child(3) {
   display: block;
 }
 
