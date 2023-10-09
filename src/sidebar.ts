@@ -95,7 +95,7 @@ async function saveBundled(jsonData: StyleData) {
   const bundledStyles: IdStyle[] = [];
   const bundledTogglesFlat: IdToggle[] = [];
   for (const style of jsonData.style) {
-    const id = `${style.category}-${style.name}`.replace(' ', '-').trim()
+    const id = `${style.category}-${style.name}`.replace(' ', '-').trim();
     const data: IdStyle = {
       id: id,
       ...style,
@@ -193,19 +193,19 @@ function getCategorizedStyles(
 
 
 async function loadSidebar() {
-  const data = await browser.storage.local.get(['styles', 'userstyles']);
-  const styles = toDict(data.styles);
-  const userstyles = toDict(data.userstyles);
+  const data = await browser.storage.local.get(['bundledStyles', 'userStyles']);
+  const bundledStyles = toDict(data.bundledStyles);
+  const userStyles = toDict(data.userStyles);
 
   const element = document.getElementById('styles');
   if (element) {
-    const categorized = getCategorizedStyles(styles, userstyles);
+    const categorized = getCategorizedStyles(bundledStyles, userStyles);
     let innerHTML = '';
     for (const [key, category] of Object.entries(categorized)) {
       innerHTML += '<div class="category">';
       innerHTML += `<h2>${key}</h2>`;
-      innerHTML += populateSeries(category);
-      innerHTML += populateStandalone(category);
+      innerHTML += populateRadioButton(category);
+      innerHTML += populateCheckbox(category);
       innerHTML += '</div>';
     }
     element.innerHTML = innerHTML;
