@@ -1,8 +1,10 @@
+/** Bundled style data coming from the toml file */
 interface StyleData {
   version: string;
   style: Style[];
 }
 
+/** Information included in the bundle style */
 interface Style {
   category: string;
   series: string;
@@ -12,17 +14,23 @@ interface Style {
   description: string;
 }
 
+/** Internal representation of style with identifier */
 interface IdStyle extends Style {
   id: string;
 }
 
+/** Style representation when loaded in the extension */
 interface CollectedStyle {
   [category: string]: Category;
 }
 
 interface Category {
-  standalone: Style[];
-  series: {[series: string]: Style[]};
+  checkBoxes: IdStyle[];
+  radioButton: RadioBoxSeries;
+}
+
+interface RadioBoxSeries {
+  [series: string]: IdStyle[];
 }
 
 async function getJson(name: string): Promise<StyleData> {
@@ -104,8 +112,8 @@ function populateStyleData(
     // initialize
     if (!(s.category in collection)) {
       collection[s.category] = {
-        standalone: [],
-        series: {},
+        checkBoxes: [],
+        radioButton: {},
       };
     }
     // populate checkbox items
@@ -113,18 +121,18 @@ function populateStyleData(
       if (key in secondary) {
         s.css = secondary[key].css;
       }
-      collection[s.category].standalone.push(s);
+      collection[s.category].checkBoxes.push(s);
       continue;
     }
     // initialize radio button array
-    if (!(s.series in collection[s.category].series)) {
-      collection[s.category].series[s.series] = [];
+    if (!(s.series in collection[s.category].radioButton)) {
+      collection[s.category].radioButton[s.series] = [];
     }
     // populate radio button items
     if (key in secondary) {
       s.css = secondary[key].css;
     }
-    collection[s.category].series[s.series].push(s);
+    collection[s.category].radioButton[s.series].push(s);
   }
 }
 
