@@ -191,6 +191,33 @@ function getCategorizedStyles(
   return collection;
 }
 
+function populateCheckboxHTML(s: IdStyle, toggles?: SavedToggles) {
+  const t = toggles ? toggles[s.id] : {
+    enabled: s.default,
+    customize: false,
+  };
+
+  if (s.id) {
+    return `
+    <li id=${s.id}>
+      <input type="checkbox" id="style-${s.id}" name="${s.id}" class="style-checkbox-enable"${t.enabled ? ' checked' : ''} />
+      <label for="style-${s.id}">${s.name}</label>
+      <details>
+        <summary>${s.description}</summary>
+        <div>
+          <input type="checkbox" id="custom-${s.id}" name="custom-${s.id}" class="style-checkbox-customize"/>
+          <label for="custom-${s.id}">Customize</label>
+          <br />
+          <textarea${t.customize ? '' : ' disabled'}>${s.css}</textarea>
+          <input type="button" class="style-checkbox-reset" value="Reset" />
+          <input type="button" class="style-checkbox-apply" value="Apply" />
+        </div>
+      </details>
+    </li>
+    `;
+  }
+  return '<li>Error occured while parsing data</li>';
+}
 
 async function loadSidebar() {
   const data = await browser.storage.local.get(['bundledStyles', 'userStyles']);
