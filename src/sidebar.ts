@@ -235,7 +235,34 @@ function populateCheckbox(category: Category, toggles?: SavedToggles) {
   return innerHTML;
 }
 
-async function loadSidebar() {
+function rebuildStyle() {
+  let css = '';
+  document
+    .querySelectorAll('input.style-checkbox-enable:checked + label + details textarea')
+    .forEach(textarea => {
+      css += (textarea as HTMLInputElement).value + '\n';
+    });
+  return css;
+}
+
+
+/**
+ * Inject CSS style into jinteki.net background listener
+ */
+async function sendIt(css: string) {
+  await browser.tabs
+    .query({active: true, currentWindow: true})
+    .then(async tabs => {
+      if (tabs.length > 0 && tabs[0].id !== undefined) {
+        await browser.tabs.sendMessage(tabs[0].id, {
+          id: 'cyberfeeder-style',
+          action: 'style',
+          payload: css,
+        });
+      }
+    });
+}
+
   const data = await browser.storage.local.get(['bundledStyles', 'userStyles']);
   const bundledStyles = toDict(data.bundledStyles);
   const userStyles = toDict(data.userStyles);
