@@ -193,7 +193,7 @@ function getCategorizedStyles(
   return collection;
 }
 
-function populateCheckboxHTML(s: IdStyle, toggles?: SavedToggles) {
+function populateRadioButtonHTML(s: IdStyle, radioName: string, toggles?: SavedToggles) {
   const t = toggles ? toggles[s.id] : {
     enabled: s.default,
     customize: false,
@@ -201,17 +201,17 @@ function populateCheckboxHTML(s: IdStyle, toggles?: SavedToggles) {
 
   if (s.id) {
     return `
-    <li id=${s.id}>
-      <input type="checkbox" id="style-${s.id}" name="${s.id}" class="style-checkbox-enable"${t.enabled ? ' checked' : ''} />
+    <li class="style-item radio" id=${s.id}>
+      <input type="radio" id="style-${s.id}" name="${radioName}" class="style-enable"${t.enabled ? ' checked' : ''} />
       <label for="style-${s.id}">${s.name}</label>
       <details>
         <summary>view/edit</summary>
         <div>
           ${s.description ? "<p>"+s.description+"</p>" : ""}
-          <input type="checkbox" id="custom-${s.id}" name="custom-${s.id}" class="style-checkbox-customize"/>
+          <input type="checkbox" id="custom-${s.id}" name="custom-${s.id}" class="style-customize"/>
           <label for="custom-${s.id}" title="Turn on or off customizaion. Unsaved customization will be lost.">Customize</label>
-          <input type="button" class="style-checkbox-reset" value="Reset" title="Reset to the bundled style"${t.customize ? '' : ' disabled'} />
-          <input type="button" class="style-checkbox-save" value="Save" title="Save current customization into local storage"${t.customize ? '' : ' disabled'} />
+          <input type="button" class="style-reset" value="Reset" title="Reset to the bundled style"${t.customize ? '' : ' disabled'} />
+          <input type="button" class="style-save" value="Save" title="Save current customization into local storage"${t.customize ? '' : ' disabled'} />
           <textarea${t.customize ? '' : ' disabled'}>${s.css}</textarea>
         </div>
       </details>
@@ -221,6 +221,52 @@ function populateCheckboxHTML(s: IdStyle, toggles?: SavedToggles) {
   return '<li>Error occured while parsing data</li>';
 }
 
+function populateRadioButton(category: Category, toggles?: SavedToggles) {
+  if (Object.keys(category.radioButton).length === 0) {
+    return '';
+  }
+  let innerHTML = '';
+  for (const [radioId, group] of Object.entries(category.radioButton)) {
+    if (group.length === 0) {
+      continue;
+    }
+    innerHTML += '<ul class="radiobox">';
+    innerHTML += `<h3>${radioId}</h3>`;
+    for (const style of group) {
+      innerHTML += populateRadioButtonHTML(style, radioId, toggles)
+    }
+    innerHTML += '</ul>';
+  }
+  return innerHTML;
+}
+
+function populateCheckboxHTML(s: IdStyle, toggles?: SavedToggles) {
+  const t = toggles ? toggles[s.id] : {
+    enabled: s.default,
+    customize: false,
+  };
+
+  if (s.id) {
+    return `
+    <li class="style-item check" id=${s.id}>
+      <input type="checkbox" id="style-${s.id}" name="${s.id}" class="style-enable"${t.enabled ? ' checked' : ''} />
+      <label for="style-${s.id}">${s.name}</label>
+      <details>
+        <summary>view/edit</summary>
+        <div>
+          ${s.description ? "<p>"+s.description+"</p>" : ""}
+          <input type="checkbox" id="custom-${s.id}" name="custom-${s.id}" class="style-customize"/>
+          <label for="custom-${s.id}" title="Turn on or off customizaion. Unsaved customization will be lost.">Customize</label>
+          <input type="button" class="style-reset" value="Reset" title="Reset to the bundled style"${t.customize ? '' : ' disabled'} />
+          <input type="button" class="style-save" value="Save" title="Save current customization into local storage"${t.customize ? '' : ' disabled'} />
+          <textarea${t.customize ? '' : ' disabled'}>${s.css}</textarea>
+        </div>
+      </details>
+    </li>
+    `;
+  }
+  return '<li>Error occured while parsing data</li>';
+}
 
 function populateCheckbox(category: Category, toggles?: SavedToggles) {
   if (category.checkBoxes.length === 0) {
