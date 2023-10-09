@@ -33,7 +33,7 @@ interface RadioBoxSeries {
   [series: string]: IdStyle[];
 }
 
-async function getJson(name: string): Promise<StyleData> {
+async function readJson(name: string): Promise<StyleData> {
   const jsonUrl = browser.runtime.getURL(`data/${name}.json`);
   return fetch(jsonUrl)
     .then(async response => {
@@ -59,7 +59,7 @@ async function getJson(name: string): Promise<StyleData> {
  * - userstyles = styles that the user has modified or created. untouched by updates.
  */
 async function initializeLocalStorage() {
-  const jsonData = await getJson('style');
+  const jsonData = await readJson('style');
   const prevVersion = await browser.storage.local
     .get('version')
     .then(item => item.version);
