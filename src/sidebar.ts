@@ -245,6 +245,37 @@ function rebuildStyle() {
   return css;
 }
 
+function getStyleUI(id: string | undefined) {
+  if (!id) {
+    console.warn(`Invalid style id ${id}`);
+    return;
+  }
+  const li = document.getElementById(id);
+  if (!li) {
+    console.warn(`Could not find requested list item ${id}`);
+    return;
+  }
+  const enableCheckbox = li.querySelector<HTMLInputElement>('.style-checkbox-enable');
+  const customCheckbox = li.querySelector<HTMLInputElement>('.style-checkbox-customize');
+  const textarea = li.querySelector<HTMLTextAreaElement>('textarea');
+  const resetButton = li.querySelector<HTMLInputElement>('.style-checkbox-reset');
+  const saveButton = li.querySelector<HTMLInputElement>('.style-checkbox-save');
+  if (enableCheckbox && customCheckbox && textarea && resetButton && saveButton) {
+    return {
+      id: li.id,
+      enable: enableCheckbox,
+      customize: customCheckbox,
+      textarea: textarea,
+      resetButton: resetButton,
+      saveButton: saveButton,
+    };
+  }
+  if (!li) {
+    console.warn(`Could not find data from list item ${id}`);
+    return;
+  }
+  return;
+}
 
 /**
  * Inject CSS style into jinteki.net background listener
