@@ -93,7 +93,7 @@ async function initializeLocalStorage() {
 /** Read the bundled style and put them in local storage */
 async function saveBundled(jsonData: StyleData) {
   const bundledStyles: IdStyle[] = [];
-  const bundledToggles: IdToggle[] = [];
+  const bundledTogglesFlat: IdToggle[] = [];
   for (const style of jsonData.style) {
     const id = `${style.category}-${style.name}`.replace(' ', '-').trim()
     const data: IdStyle = {
@@ -106,7 +106,11 @@ async function saveBundled(jsonData: StyleData) {
       customize: false,
     };
     bundledStyles.push(data);
-    bundledToggles.push(toggle);
+    bundledTogglesFlat.push(toggle);
+  }
+  const bundledToggles: SavedToggles = {};
+  for (const item of Object.values(bundledTogglesFlat)) {
+    bundledToggles[item.id] = item;
   }
   await browser.storage.local.set({
     version: jsonData.version,
