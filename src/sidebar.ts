@@ -43,6 +43,15 @@ interface SavedToggles {
   [key: string]: IdToggle;
 }
 
+interface StyleItemUI {
+  id: string,
+  enable: HTMLInputElement,
+  customize: HTMLInputElement,
+  textarea: HTMLTextAreaElement,
+  resetButton: HTMLInputElement,
+  saveButton: HTMLInputElement,
+};
+
 async function readJson(name: string): Promise<StyleData> {
   const jsonUrl = browser.runtime.getURL(`data/${name}.json`);
   return fetch(jsonUrl)
@@ -119,6 +128,33 @@ async function saveBundled(jsonData: StyleData) {
     bundledStyles: bundledStyles,
     bundledToggles: bundledToggles,
   });
+}
+
+async function saveCustom(style: StyleItemUI) {
+  const {bundledStyles, userStyles} = await getStyles();
+  if (style.id in userStyles) {
+    userStyles[style.id].css = style.textarea.value;
+  } else if (style.id in bundledStyles) {
+    userStyles[style.id] = bundledStyles[style.id];
+    userStyles[style.id].css = style.textarea.value;
+  } else {
+    console.warn('Tried to save style with unknown ID, do not save.');
+  }
+  await browser.storage.local.set({
+    userStyles: toList(userStyles),
+    userToggles: await parseCurrentToggleChanges(),
+  });
+}
+
+async function parseCurrentToggleChanges() {
+  let customToggles = await browser.storage.local
+    .get('userToggles')
+    .then(item => item.userToggles as SavedToggles);
+  if (!customToggles) {
+    customToggles = {};
+  }
+  // do something here to fill in custom toggles based on current config state
+  // probably by parsing the entire page, and comparing them with default values.
 }
 
 /** Read id-toggle relationship from localstorage */
@@ -291,7 +327,7 @@ function rebuildStyle() {
   return css;
 }
 
-function getStyleUI(id: string | undefined) {
+function getStyleUI(id: string | undefined): StyleItemUI | undefined {
   if (!id) {
     console.warn(`Invalid style id ${id}`);
     return;
@@ -458,16 +494,7 @@ function registerCustomizeSaveEvent() {
         return;
       }
       // update style
-      const {bundledStyles, userStyles} = await getStyles();
-      if (style.id in userStyles) {
-        userStyles[style.id].css = style.textarea.value;
-      } else if (style.id in bundledStyles) {
-        userStyles[style.id] = bundledStyles[style.id];
-        userStyles[style.id].css = style.textarea.value;
-      } else {
-        console.warn('Tried to save style with unknown ID, do not save.');
-      }
-      await browser.storage.local.set({userStyles: toList(userStyles)});
+      await saveCustom(style);
       if (style.enable.checked) {
         const style = rebuildStyle();
         await sendIt(style);
