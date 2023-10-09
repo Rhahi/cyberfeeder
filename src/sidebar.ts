@@ -283,8 +283,10 @@ async function getStyles() {
   const userStyles = toDict(data.userStyles);
   return {bundledStyles, userStyles};
 }
-  const toggles = await getToggles();
 
+async function loadSidebar() {
+  const {bundledStyles, userStyles} = await getStyles();
+  const toggles = await getToggles();
   const element = document.getElementById('styles');
   if (element) {
     const categorized = getCategorizedStyles(bundledStyles, userStyles);
