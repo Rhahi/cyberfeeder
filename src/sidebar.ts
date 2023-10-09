@@ -284,7 +284,7 @@ function populateCheckbox(category: Category, toggles?: SavedToggles) {
 function rebuildStyle() {
   let css = '';
   document
-    .querySelectorAll('input.style-checkbox-enable:checked + label + details textarea')
+    .querySelectorAll('input.style-enable:checked + label + details textarea')
     .forEach(textarea => {
       css += (textarea as HTMLInputElement).value + '\n';
     });
@@ -301,11 +301,11 @@ function getStyleUI(id: string | undefined) {
     console.warn(`Could not find requested list item ${id}`);
     return;
   }
-  const enableCheckbox = li.querySelector<HTMLInputElement>('.style-checkbox-enable');
-  const customCheckbox = li.querySelector<HTMLInputElement>('.style-checkbox-customize');
+  const enableCheckbox = li.querySelector<HTMLInputElement>('.style-enable');
+  const customCheckbox = li.querySelector<HTMLInputElement>('.style-customize');
   const textarea = li.querySelector<HTMLTextAreaElement>('textarea');
-  const resetButton = li.querySelector<HTMLInputElement>('.style-checkbox-reset');
-  const saveButton = li.querySelector<HTMLInputElement>('.style-checkbox-save');
+  const resetButton = li.querySelector<HTMLInputElement>('.style-reset');
+  const saveButton = li.querySelector<HTMLInputElement>('.style-save');
   if (enableCheckbox && customCheckbox && textarea && resetButton && saveButton) {
     return {
       id: li.id,
@@ -371,18 +371,16 @@ async function loadSidebar() {
     for (const [key, category] of Object.entries(categorized)) {
       innerHTML += '<div class="category">';
       innerHTML += `<h2>${key}</h2>`;
-      innerHTML += populateRadioButton(category);
+      innerHTML += populateRadioButton(category, toggles);
       innerHTML += populateCheckbox(category, toggles);
       innerHTML += '</div>';
     }
     element.innerHTML = innerHTML;
-    // do something here to update from storage
-    // and then apply the styles once
   }
 }
 
 function registerStyleToggleEvent() {
-  const styleCheckboxes = document.getElementsByClassName('style-checkbox-enable');
+  const styleCheckboxes = document.getElementsByClassName('style-enable');
   for (let i = 0; i < styleCheckboxes.length; i++) {
     styleCheckboxes[i].addEventListener('change', async () => {
       const style = rebuildStyle();
@@ -392,7 +390,7 @@ function registerStyleToggleEvent() {
 }
 
 function registerCustomizeToggleEvent() {
-  const customCheckboxes = document.getElementsByClassName('style-checkbox-customize');
+  const customCheckboxes = document.getElementsByClassName('style-customize');
   for (let i = 0; i < customCheckboxes.length; i++) {
     customCheckboxes[i].addEventListener('change', async () => {
       const element = customCheckboxes[i];
@@ -430,7 +428,7 @@ function registerCustomizeToggleEvent() {
 }
 
 function registerCustomizeResetEvent() {
-  const applyButtons = document.getElementsByClassName('style-checkbox-reset');
+  const applyButtons = document.getElementsByClassName('style-reset');
   for (let i = 0; i < applyButtons.length; i++) {
     applyButtons[i].addEventListener('click', async () => {
       const element = applyButtons[i];
@@ -450,7 +448,7 @@ function registerCustomizeResetEvent() {
 }
 
 function registerCustomizeSaveEvent() {
-  const applyButtons = document.getElementsByClassName('style-checkbox-save');
+  const applyButtons = document.getElementsByClassName('style-save');
   for (let i = 0; i < applyButtons.length; i++) {
     applyButtons[i].addEventListener('click', async () => {
       const element = applyButtons[i];
