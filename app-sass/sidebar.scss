@@ -1,3 +1,4 @@
+/** base layout */
 body {
   font-size: 1.2rem;
   background-color: rgba(40,57,77);
@@ -10,6 +11,16 @@ main {
   white-space: nowrap;
 }
 
+h2 {
+  margin-top: 0;
+}
+
+footer {
+  margin: 0.2em 0.5em;
+  color: #888;
+}
+
+/** tabbing in the sidebar menu */
 input[name=tabset] {
   display: none;
 
@@ -58,11 +69,106 @@ main > input:nth-child(5):checked ~ .tab-custom-panels > .tab-panel:nth-child(3)
   display: block;
 }
 
-h2 {
-  margin-top: 0;
+/** style selector */
+.tab-panels > section {
+  .category {
+    background-color: rgba(255,255,255,0.1);
+    padding: 0.5em;
+    margin: 1em 0;
+  }
+
+  ul.checkbox {
+    list-style: none;
+    list-style-position: inside;
+    padding: 0;
+  }
+
+  ul.radiobox {
+    list-style: none;
+    list-style-position: inside;
+    padding: 0;
+    border-left: solid 0.25em rgba(0,0,0,0.5);
+    padding-left: 0.35em;
+  }
 }
 
-footer {
-  margin: 0.2em 0.5em;
-  color: #888;
+li.radio .style-enable {
+  &:checked ~ label::before {
+    content: "🟢 ";
+  }
+  ~ label::before {
+    content: "⚪ ";
+  }
+}
+
+li.check .style-enable {
+  &:checked ~ label::before {
+    content: "✅ ";
+  }
+  ~ label::before {
+    content: "⬜ ";
+  }
+}
+
+.style-item {
+  .style-enable {
+    display: none;
+  }
+
+  .style-enable ~ label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: block;
+    padding: 0.2em;
+    background-color: rgba(0,0,0,0.15);
+    border: 0.2em solid rgba(0,0,0,0.25);
+    cursor: pointer;
+  }
+
+  .style-enable:checked ~ label {
+    border: 0.2em solid rgba(0,0,0,0.5);
+    background-color: rgba(0,0,0,0.25);
+  }
+
+  details {
+    margin: 0.2em 0 0.7em 0.5em;
+    > summary {
+      cursor: pointer;
+      text-align: right;
+    }
+    > div {
+      display: grid;
+      grid-template-columns: 1.1em 5em 1fr 3em 3em;
+      grid-template-areas:
+        "description description description description description"
+        "checkbox customize . reset-button save-button"
+        "textarea textarea textarea textarea textarea";
+      > p {
+        font-size: 0.9em;
+        padding-left: 0.5em;
+        white-space: normal;
+        color: #AAA;
+        grid-area: description;
+        font-style: italic;
+        margin: 0;
+      }
+      input.style-customize {
+        grid-area: checkbox;
+      }
+      label {
+        height: 1.4em;
+        font-size: 0.9em;
+        line-height: 1.4em;
+        padding-left: 0.2em;
+        grid-area: customize;
+        cursor: pointer;
+      }
+      input[value="Reset"] { grid-area: reset-button; }
+      input[value="Save"] { grid-area: save-button; }
+      textarea {
+        grid-area: textarea;
+      }
+    }
+  }
 }
