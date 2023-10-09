@@ -109,8 +109,30 @@ async function saveBundled(jsonData: StyleData) {
   });
 }
 
+/** Read id-toggle relationship from localstorage */
+async function getToggles() {
+  const bundledToggles = await browser.storage.local
+    .get('bundledToggles')
+    .then(item => item.bundledToggles as SavedToggles);
+  if (!bundledToggles) {
+    console.error('Bundled toggles are expected, but there is none.');
+    return;
+  }
+  const customToggles = await browser.storage.local
+    .get('customToggles')
+    .then(item => item.customToggles as SavedToggles);
+  if (!customToggles) {
+    return bundledToggles;
+  }
+  const combinedToggles: SavedToggles = {};
+  for (const item of Object.values(bundledToggles)) {
+    combinedToggles[item.id] = item;
+  }
+  for (const item of Object.values(customToggles)) {
+    combinedToggles[item.id] = item;
+  }
+  return combinedToggles;
 }
-
 
 function populateStyleData(
   collection: CollectedStyle,
