@@ -71,22 +71,31 @@ async function initializeLocalStorage() {
     console.info('No stoarge update needed');
     return;
   }
-  await saveBundledStyles(jsonData);
+  await saveBundled(jsonData);
 }
 
 /** Read the bundled style and put them in local storage */
-async function saveBundledStyles(jsonData: StyleData) {
+async function saveBundled(jsonData: StyleData) {
   const bundledStyles = [];
+  const bundledToggles = [];
   for (const style of jsonData.style) {
+    const id = `${style.category}-${style.name}`.replace(' ', '-').trim()
     const data: IdStyle = {
-      id: `${style.category}-${style.name}`.replace(' ', '-').trim(),
+      id: id,
       ...style,
     };
+    const toggle: Toggle = {
+      id: id,
+      enabled: style.default,
+      customize: false,
+    };
     bundledStyles.push(data);
+    bundledToggles.push(toggle);
   }
   await browser.storage.local.set({
     version: jsonData.version,
     bundledStyles: bundledStyles,
+    bundledToggles: bundledToggles,
   });
 }
 
