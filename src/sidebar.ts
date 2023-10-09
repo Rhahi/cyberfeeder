@@ -33,6 +33,16 @@ interface RadioBoxSeries {
   [series: string]: IdStyle[];
 }
 
+interface IdToggle {
+  id: string;
+  enabled: boolean;
+  customize: boolean;
+}
+
+interface SavedToggles {
+  [key: string]: IdToggle;
+}
+
 async function readJson(name: string): Promise<StyleData> {
   const jsonUrl = browser.runtime.getURL(`data/${name}.json`);
   return fetch(jsonUrl)
@@ -76,15 +86,15 @@ async function initializeLocalStorage() {
 
 /** Read the bundled style and put them in local storage */
 async function saveBundled(jsonData: StyleData) {
-  const bundledStyles = [];
-  const bundledToggles = [];
+  const bundledStyles: IdStyle[] = [];
+  const bundledToggles: IdToggle[] = [];
   for (const style of jsonData.style) {
     const id = `${style.category}-${style.name}`.replace(' ', '-').trim()
     const data: IdStyle = {
       id: id,
       ...style,
     };
-    const toggle: Toggle = {
+    const toggle: IdToggle = {
       id: id,
       enabled: style.default,
       customize: false,
