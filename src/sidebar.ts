@@ -219,10 +219,25 @@ function populateCheckboxHTML(s: IdStyle, toggles?: SavedToggles) {
   return '<li>Error occured while parsing data</li>';
 }
 
+
+function populateCheckbox(category: Category, toggles?: SavedToggles) {
+  if (category.checkBoxes.length === 0) {
+    return '';
+  }
+  let innerHTML = '';
+  innerHTML += '<ul class="checkbox">';
+  for (const style of Object.values(category.checkBoxes)) {
+    innerHTML += populateCheckboxHTML(style, toggles);
+  }
+  innerHTML += '</ul>';
+  return innerHTML;
+}
+
 async function loadSidebar() {
   const data = await browser.storage.local.get(['bundledStyles', 'userStyles']);
   const bundledStyles = toDict(data.bundledStyles);
   const userStyles = toDict(data.userStyles);
+  const toggles = await getToggles();
 
   const element = document.getElementById('styles');
   if (element) {
@@ -232,7 +247,7 @@ async function loadSidebar() {
       innerHTML += '<div class="category">';
       innerHTML += `<h2>${key}</h2>`;
       innerHTML += populateRadioButton(category);
-      innerHTML += populateCheckbox(category);
+      innerHTML += populateCheckbox(category, toggles);
       innerHTML += '</div>';
     }
     element.innerHTML = innerHTML;
