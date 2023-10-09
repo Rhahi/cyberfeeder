@@ -74,11 +74,13 @@ async function initializeLocalStorage() {
     .get('version')
     .then(item => item.version);
   if (!prevVersion) {
-    console.info('There is no bundled style data definition');
+    console.info('There is no bundled style data definition. Initialize.');
+    await saveBundled(jsonData);
     return;
   }
   if (jsonData.version === 'override') {
     console.info('Overriding stored styles with development override. Update.');
+    await browser.storage.local.clear();
     await saveBundled(jsonData);
     return;
   }
