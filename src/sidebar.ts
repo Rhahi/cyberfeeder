@@ -205,7 +205,7 @@ function populateCheckboxHTML(s: IdStyle, toggles?: SavedToggles) {
       <input type="checkbox" id="style-${s.id}" name="${s.id}" class="style-checkbox-enable"${t.enabled ? ' checked' : ''} />
       <label for="style-${s.id}">${s.name}</label>
       <details>
-        <summary>view/edit style</summary>
+        <summary>view/edit</summary>
         <div>
           ${s.description ? "<p>"+s.description+"</p>" : ""}
           <input type="checkbox" id="custom-${s.id}" name="custom-${s.id}" class="style-checkbox-customize"/>
