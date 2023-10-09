@@ -73,14 +73,20 @@ async function initializeLocalStorage() {
   const prevVersion = await browser.storage.local
     .get('version')
     .then(item => item.version);
-  if (
-    prevVersion &&
-    jsonData.version === prevVersion &&
-    jsonData.version !== 'override'
-  ) {
-    console.info('No stoarge update needed');
+  if (!prevVersion) {
+    console.info('There is no bundled style data definition');
     return;
   }
+  if (jsonData.version === 'override') {
+    console.info('Overriding stored styles with development override. Update.');
+    await saveBundled(jsonData);
+    return;
+  }
+  if (jsonData.version === prevVersion) {
+    console.info('Bundled style version matches previous version');
+    return;
+  }
+  console.info('New style definition found. Update.');
   await saveBundled(jsonData);
 }
 
