@@ -207,10 +207,9 @@ function populateCheckboxHTML(s: IdStyle, toggles?: SavedToggles) {
         <div>
           <input type="checkbox" id="custom-${s.id}" name="custom-${s.id}" class="style-checkbox-customize"/>
           <label for="custom-${s.id}">Customize</label>
-          <br />
+          <input type="button" class="style-checkbox-reset" value="Reset" title="Reset to the bundled style" ${t.customize ? '' : ' disabled'} />
+          <input type="button" class="style-checkbox-save" value="Save" title="Save current customization into local storage" ${t.customize ? '' : ' disabled'} />
           <textarea${t.customize ? '' : ' disabled'}>${s.css}</textarea>
-          <input type="button" class="style-checkbox-reset" value="Reset" />
-          <input type="button" class="style-checkbox-apply" value="Apply" />
         </div>
       </details>
     </li>
