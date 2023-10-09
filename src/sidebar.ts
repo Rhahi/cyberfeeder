@@ -263,9 +263,26 @@ async function sendIt(css: string) {
     });
 }
 
+function toList(styles: {[key: string]: IdStyle}) {
+  return Object.values(styles);
+}
+
+function toDict(styles?: IdStyle[]) {
+  const dict: {[key: string]: IdStyle} = {};
+  if (styles !== undefined) {
+    for (const style of styles) {
+      dict[style.id] = style;
+    }
+  }
+  return dict;
+}
+
+async function getStyles() {
   const data = await browser.storage.local.get(['bundledStyles', 'userStyles']);
   const bundledStyles = toDict(data.bundledStyles);
   const userStyles = toDict(data.userStyles);
+  return {bundledStyles, userStyles};
+}
   const toggles = await getToggles();
 
   const element = document.getElementById('styles');
