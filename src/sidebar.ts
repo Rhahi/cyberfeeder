@@ -71,31 +71,25 @@ async function initializeLocalStorage() {
     console.info('No stoarge update needed');
     return;
   }
-  await initializeStyles(jsonData);
+  await saveBundledStyles(jsonData);
 }
 
-async function initializeStyles(jsonData: StyleData) {
-  const packagedStyles = [];
+/** Read the bundled style and put them in local storage */
+async function saveBundledStyles(jsonData: StyleData) {
+  const bundledStyles = [];
   for (const style of jsonData.style) {
     const data: IdStyle = {
       id: `${style.category}-${style.name}`.replace(' ', '-').trim(),
       ...style,
     };
-    packagedStyles.push(data);
+    bundledStyles.push(data);
   }
-  if (jsonData.version === 'override') {
-    await browser.storage.local.set({
-      version: jsonData.version,
-      styles: packagedStyles,
-      userstyles: [],
-    });
-  } else {
-    await browser.storage.local.set({
-      version: jsonData.version,
-      styles: packagedStyles,
-      userstyles: [],
-    });
-  }
+  await browser.storage.local.set({
+    version: jsonData.version,
+    bundledStyles: bundledStyles,
+  });
+}
+
 }
 
 
