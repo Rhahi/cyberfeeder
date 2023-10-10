@@ -1,11 +1,24 @@
+# Cyberfeeder
+
 This is a firefox extension that adds new scripts and stylesheet into jinteki.net.
 
-The extension shall be:
+The extension aims to be:
 - Plug and playable.
 - Mobile friendly (some day!)
 - Good for reading board states intuitively.
 - Easy to integrate into jnet.
 
-To develop the extension, see `package.json` for build commands, and corresponding assets and files that generate the code that go to `/app`.
+# Bulid instructions
+- Built with Fedora. Packages may vary in other distros.
+- Install build dependencies: `sudo dnf install sass, tsc, npm, nodejs`.
+- Install Rustup to get cargo, and `cargo install toml2json`
+- `npm run build` to run the build script (build.sh)
+- Test using `web-ext run --verbose`
 
-I always forget this command, but `web-ext run --verbose` is the easiest way to run after build (from app/ directory.).
+# Used versions (for Mozilla reviewer)
+- Fedora Spin Sway (version 38)
+- npm 9.6.7
+- node v18.17.1
+- cargo 1.73.0-nightly (d78bbf4bd 2023-08-03)
+- tsc Version 5.2.2
+- sass 1.69.0 compiled with dart2js 3.1.3
