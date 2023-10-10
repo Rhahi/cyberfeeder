@@ -9,7 +9,7 @@
     "sourceMap": false,
     "skipLibCheck": true,
     "types": ["firefox-webext-browser"],
-    "lib": ["es2018", "DOM", "ES2021.String"],
+    "lib": ["es2021", "DOM", "ES2021.String"],
   },
   "include": [
     "src/**/*.ts",
