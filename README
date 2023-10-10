@@ -1,0 +1,9 @@
+This is a firefox extension that adds new scripts and stylesheet into jinteki.net.
+
+The extension shall be:
+- Plug and playable.
+- Mobile friendly (some day!)
+- Good for reading board states intuitively.
+- Easy to integrate into jnet.
+
+To develop the extension, see `package.json` for build commands, and corresponding assets and files that generate the code that go to `/app`.
