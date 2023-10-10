@@ -790,3 +790,36 @@ css = """
   height: 8em !important;
 }
 """
+
+[[style]]
+category = "Misc"
+series = "none"
+name = "Rez flip animation"
+default = false
+description = "This animation is quite weak as it can't flip the card back. It's here to inspire others to come up with a better solution."
+css = """
+@keyframes rez {
+  from {
+    opacity: 0;
+    transform: rotateY(120deg);
+    transform-style: preserve-3d;
+  }
+  40% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+    transform: rotateY(90deg);
+  }
+  to {
+    transform: rotateY(0deg);
+  }
+}
+
+.corp-board .server .content .server-card .card div > img.card,
+.ice > .card-frame > .card div > img.card {
+  animation-duration: 0.3s;
+  animation-name: rez;
+  animation-timing-function: linear;
+}
+"""
