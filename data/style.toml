@@ -1,4 +1,4 @@
-version = "override"
+version = "1"
 
 [[style]]
 category = "Layout"
