@@ -547,6 +547,38 @@ function registerCustomizeSaveEvent() {
   }
 }
 
+async function setVersion() {
+  const element = document.getElementById('version');
+  if (!element) {
+    return console.warn(`Coudldn't find version element`);
+  }
+  const version = await browser.storage.local
+    .get('version')
+    .then(item => item.version as string);
+  element.innerHTML += `<br />style version: ${version}`;
+}
+
+function appendStatusText(...text: string[]) {
+  const element = document.getElementById('status');
+  if (!element) {
+    return console.warn(`Coudldn't find element`);
+  }
+  let innerHTML = '';
+  for (const t of text) {
+    innerHTML += t;
+  }
+  element.innerHTML = innerHTML;
+}
+
+function setStatusText(...text: string[]) {
+  const element = document.getElementById('status');
+  if (!element) {
+    return console.warn(`Coudldn't find element`);
+  }
+  element.innerHTML = '';
+  appendStatusText(...text);
+}
+
 /**
  * Loading script for sidebar
  */
@@ -559,4 +591,5 @@ document.addEventListener('DOMContentLoaded', async () => {
   registerCustomizeSaveEvent();
   const style = rebuildStyle();
   await sendIt(style);
+  await setVersion();
 });
