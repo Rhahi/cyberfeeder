@@ -1,0 +1,792 @@
+version = "override"
+
+[[style]]
+category = "Layout"
+series = "Font size"
+name = "Original"
+default = true
+css = """
+"""
+
+[[style]]
+category = "Layout"
+series = "Font size"
+name = "Increase font size (everything)"
+default = false
+css = """
+html {
+  font-size: 20px;
+}
+"""
+
+[[style]]
+category = "Layout"
+series = "Font size"
+name = "Increase font size (clik and credits)"
+default = false
+css = """
+.stats-area {
+  font-size: 18px !important;
+}
+"""
+
+[[style]]
+category = "Layout"
+series = "none"
+name = "Top navbar fix"
+default = true
+description= "Make top navbar narrower, and not spill over when zoomed in."
+css = """
+#main-content {
+  display: flex;
+  flex-direction: column;
+}
+
+#right-menu .dropdown img {
+  max-height: 1.2rem;
+}
+
+#main > .item {
+  padding-top: 0 !important;
+  height: 100%;
+}
+
+.topnav {
+  position: unset;
+  display: flex;
+  height: unset !important;
+  justify-content: left;
+  flex-wrap: wrap;
+}
+
+.topnav #left-menu,
+.topnav #right-menu,
+.topnav #status {
+  line-height: unset;
+  height: unset;
+}
+
+.topnav #left-menu {
+  order: 1;
+  flex-grow: 1;
+}
+
+.topnav li {
+  height: 20px !important;
+  line-height: unset;
+}
+
+#left-menu ul,
+#status ul {
+  display: flex;
+}
+
+#left-menu ul li,
+#status ul li {
+  margin: 0 7px !important;
+}
+
+.topnav #right-menu {
+  order: 3;
+  margin-left: auto;
+}
+
+.topnav #status {
+  order: 2;
+}
+"""
+
+[[style]]
+category = "Layout"
+series = "none"
+name = "Hide replay controls"
+default = false
+css = """
+.bottompane {
+  display: none;
+}
+"""
+
+[[style]]
+category = "Layout"
+series = "CSS grid"
+name = "Original"
+default = false
+css = ""
+
+[[style]]
+category = "Layout"
+series = "CSS grid"
+name = "Horizontal CSS-grid layout"
+description = "Use CSS grid to rebuild UI layout. Makes the layout more robust across screen sizes."
+default = true
+css = """
+.gameboard {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+}
+
+.leftpane {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.centralpane {
+  grid-column: 2 / -1;
+  grid-row: 1;
+}
+
+.right-pane {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+.content-pane {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-pane .panel-top {
+  display: flex;
+  flex-wrap: wrap;
+  height: unset !important;
+  position: unset !important;
+}
+
+.content-pane .panel-bottom {
+  position: unset !important;
+  top: unset !important;
+}
+"""
+
+[[style]]
+category = "Layout"
+series = "CSS grid"
+name = "Vertical CSS-grid layout (experimental)"
+description = "Move chat over to the bottom of the screen. Makes no sense on wide monitors"
+default = false
+css = """
+.gameboard {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 1fr auto;
+  grid-template-areas: "left right" "bottom bottom";
+}
+
+.leftpane {
+  grid-area: left;
+}
+
+.centralpane {
+  grid-area: right;
+}
+
+.right-pane {
+  grid-area: bottom;
+  display: grid !important;
+  grid-template-columns: 300px 1fr;
+  grid-template-areas: "left right";
+  width: 100% !important;
+  max-height: 450px;
+}
+
+.right-pane .card-zoom {
+  margin-top: 1.7rem !important;
+  grid-area: left;
+}
+
+.right-pane .content-pane {
+  grid-area: right;
+
+  position: unset !important;
+}
+"""
+
+[[style]]
+category = "Layout"
+series = "CSS grid"
+name = "Alternative layout (experimental)"
+description = "An alternative layout inspired from in-person gameplay"
+default = false
+css = """
+.gameboard {
+  display: grid;
+  grid-template-columns: 10rem 5.5rem auto 1fr auto;
+  grid-template-rows: auto 1fr 1rem 1fr auto;
+}
+
+.content-pane .panel-top {
+  display: flex;
+  flex-wrap: wrap;
+  height: unset !important;
+  position: unset !important;
+}
+
+.content-pane .panel-bottom {
+  position: unset !important;
+  top: unset !important;
+}
+
+/* set grid layout */
+.leftpane,
+.leftpane .inner-leftpane,
+.leftpane .inner-leftpane .left-inner-leftpane,
+.left-inner-leftpane > div
+{
+  grid-row: 1 / -1;
+  grid-column: 1 / -1;
+  display: grid !important;
+  grid-template-columns: subgrid;
+  grid-template-rows: subgrid;
+}
+
+/* remove scroll induced by previous margin */
+.leftpane .inner-leftpane .left-inner-leftpane {
+  margin: 0 !important;
+}
+
+.centralpane {
+  grid-row: 2 / -2;
+  grid-column: 3 / 6;
+}
+
+/* not necessary, just makes left pane take whole area for overflow detection */
+.inner-leftpane .left-inner-leftpane {
+  width: 100% !important;
+}
+
+/* score */
+.left-inner-leftpane .panel.scored {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0px 0 44px 0;
+  max-height: calc(50vh - 7.6rem);
+}
+
+.left-inner-leftpane .panel.scored .card-wrapper {
+  position: unset;
+  margin: 0;
+  flex-basis: 62px;
+  min-height: 20px;
+  flex-shrink: 1;
+}
+
+.left-inner-leftpane .panel.scored .card-wrapper > div {
+  transform: rotate(-90deg) translateX(23px);
+}
+
+.left-inner-leftpane div:nth-child(1).panel.scored .header {
+  top: unset;
+  bottom: 0;
+}
+
+.left-inner-leftpane .scored .stats-area {
+  background: rgba(0,0,0,0.5);
+  line-height: 1rem;
+}
+
+.left-inner-leftpane div:nth-child(1).panel.scored .stats-area {
+  bottom: unset;
+  top: 0;
+}
+
+/* opponent score */
+.left-inner-leftpane div:nth-child(1) .panel.scored {
+  grid-row: 2;
+  grid-column: 2;
+}
+
+/* me score */
+.left-inner-leftpane div:nth-child(2) .panel.scored {
+  grid-row: 4;
+  grid-column: 2;
+}
+
+/* rfg and play area */
+.right-inner-leftpane {
+  grid-row: 1 / -1;
+  grid-column: 1;
+  width: unset !important;
+  justify-content: space-between;
+}
+
+/* hand and counters */
+.leftpane .opponent {
+  grid-row: 1;
+  grid-column:4;
+}
+
+.leftpane .me {
+  grid-row: 6;
+  grid-column: 4;
+}
+
+.left-inner-leftpane > div > .panel.stats {
+  margin-left: 0.5rem;
+  grid-column: 2 / 4;
+  display: flex;
+}
+
+.left-inner-leftpane > div > .panel.stats .name-area {
+  display: flex;
+  flex-direction: column;
+  line-height: unset;
+  gap: 0.2rem;
+  margin: 0.2rem;
+  max-width: 10rem;
+  min-width: 3rem;
+}
+
+.left-inner-leftpane > div > .panel.stats .name-area .name-box .username {
+  text-overflow: ellipsis;
+  max-width: 10rem;
+}
+
+.left-inner-leftpane > div > .panel.stats .stats-area {
+  display: flex;
+  flex-direction: column;
+  line-height: unset;
+  gap: 0.2rem;
+  margin: 0.2rem;
+  min-width: 10rem;
+}
+
+.gameboard .name-area .name-box {
+  overflow: scroll;
+}
+
+.left-inner-leftpane > div:nth-child(1) > .panel.stats {
+  grid-row: 1;
+  max-height: 8em;
+}
+
+.left-inner-leftpane > div:nth-child(2) > .panel.stats {
+  grid-row: 5;
+  max-height: 8em;
+}
+
+/* hand */
+.hand-controls .panel {
+  margin: 0;
+}
+
+.left-inner-leftpane > div > .blue-shade {
+  padding: 0;
+  margin: 0;
+}
+
+.hand-controls {
+  margin: 0 0.5rem;
+  display: flex !important;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+
+.hand-controls > div:nth-child(1) {
+  float: unset;
+  height: unset;
+}
+
+.right-pane {
+  grid-column: 5;
+  grid-row: 1 / -1;
+}
+
+.content-pane {
+  display: flex;
+  flex-direction: column;
+}
+"""
+
+[[style]]
+category = "Layout"
+series = "none"
+name = "Make cards under right-pane visible"
+description = "This does not make them interactable, as they are still below the right pane layout. You need to zoom out to click them."
+default = false
+css = """
+.centralpane {
+  overflow: visible !important;
+}
+
+.card-zoom {
+  opacity: 0.85 !important;
+}
+"""
+
+[[style]]
+category = "Layout"
+series = "none"
+name = "Change right pane width"
+description = "Use svw/vw to make it proportional to browser window, otherwise use pixels/rems."
+default = true
+css = """
+:root {
+  --right-pane-width: 20svw;
+}
+
+.right-pane, .right-pane .content-pane, .right-pane .card-zoom {
+  width: var(--right-pane-width) !important;
+}
+
+.card-zoom .card-preview {
+  background: none;
+}
+
+.card-zoom img {
+  object-fit: contain;
+}
+"""
+
+[[style]]
+category = "Card size"
+series = "none"
+name = "Shrink opponent's vertical hand size"
+default = false
+css = """
+:root {
+  --hand-size: 5.6em;
+}
+
+.opponent .hand-container .panel img {
+  max-height: var(--hand-size) !important;
+  object-fit: cover;
+}
+
+.opponent .hand-container .panel {
+  max-height: var(--hand-size) !important;
+  overflow: hidden;
+}
+"""
+
+[[style]]
+category = "Labelling"
+series = "none"
+name = "Text in run arrow"
+default = true
+description = "Limitation: Some step of the run does not display text (i.e., access)"
+css = """
+.run-arrow > div::after {
+  content: attr(class);
+  writing-mode: vertical-rl;
+  margin-top: 0.5em;
+  text-shadow: 0 0 0.2em black;
+}
+
+.opponent .run-arrow > div::after {
+  writing-mode: sideways-lr;
+  margin-left: -0.2em;
+}
+"""
+
+[[style]]
+category = "Labelling"
+series = "none"
+name = "Hand label"
+description = "move hand size indicator to bottom and add labels on top"
+default = true
+css = """
+.hand-container .cardname {
+  position: absolute;
+  background-color: rgba(20, 20, 20, 0.8);
+  white-space: nowrap;
+  text-overflow: clip;
+  overflow: hidden;
+  padding: 0.1rem;
+  width: 100%;
+  z-index: 11;
+}
+
+.hand-container .cardname:hover {
+  white-space: unset;
+  text-overflow: unset;
+  overflow: unset;
+  font-size: 0.7em;
+}
+
+.hand-container .header {
+  top: unset;
+  bottom: 0;
+}
+"""
+
+[[style]]
+category = "Labelling"
+series = "none"
+name = "Corp server label"
+default = true
+css = """
+.server .content .cardname {
+  position: absolute;
+  background-color: rgba(20, 20, 20, 0.8);
+  white-space: nowrap;
+  text-overflow: clip;
+  overflow: hidden;
+  padding: 0.1rem;
+  width: 100%;
+  z-index: 11;
+}
+
+.server .content .card:hover .cardname {
+  z-index: 12;
+  background-color: rgb(50,50,50);
+}
+
+.server .content .cardname:hover {
+  white-space: unset;
+  text-overflow: unset;
+  overflow: unset;
+  font-size: 0.7em;
+  z-index: 12;
+}
+"""
+
+[[style]]
+category = "Labelling"
+series = "none"
+name = "ICE label"
+default = true
+css = """
+.ice > .card-frame > .card .cardname {
+  position: absolute;
+  right: 0;
+  writing-mode: vertical-rl;
+  background-color: rgba(20, 20, 20, 0.8);
+  white-space: nowrap;
+  text-overflow: clip;
+  overflow: hidden;
+  padding: 0.1rem;
+  height: 100%;
+}
+
+.ice > .card-frame > .card:hover .cardname {
+  z-index: 11;
+}
+
+.ice > .card-frame > .card .cardname:hover {
+  white-space: unset;
+  text-overflow: unset;
+  overflow: unset;
+  font-size: 0.7em;
+}
+
+.opponent .ice > .card-frame > .card .cardname {
+  writing-mode: sideways-lr;
+  right: unset;
+}
+
+.ices .card .additional-subtypes {
+    z-index: unset;
+}
+
+.ices .card:hover .additional-subtypes {
+    z-index: 1;
+}
+"""
+
+[[style]]
+category = "Labelling"
+series = "none"
+name = "Runner cards label"
+default = true
+css = """
+.runner-board > div:not(.runner-centrals) .card .cardname,
+.run-card .card .cardname {
+  position: absolute;
+  background-color: rgba(20, 20, 20, 0.8);
+  white-space: nowrap;
+  text-overflow: clip;
+  overflow: hidden;
+  padding: 0.1rem;
+  width: 100%;
+  z-index: 11;
+}
+
+.runner-board > div:not(.runner-centrals) .card .cardname:hover,
+.run-card .card .cardname:hover {
+  white-space: unset;
+  text-overflow: unset;
+  overflow: unset;
+  font-size: 0.7em;
+}
+
+.opponent .ice .hosted .card .cardname {
+  position: absolute;
+  background-color: rgba(20, 20, 20, 0.8);
+  white-space: nowrap;
+  text-overflow: clip;
+  overflow: hidden;
+  padding: 0.1rem;
+  width: 100%;
+  z-index: 11;
+}
+
+.opponent .ice .hosted .card:hover .cardname {
+  z-index: 12;
+}
+
+.opponent .ice .hosted .card .cardname:hover {
+  white-space: unset;
+  text-overflow: unset;
+  overflow: unset;
+  font-size: 0.7em;
+}
+
+.me .ice .hosted .card .cardname {
+  position: absolute;
+  background-color: rgba(20, 20, 20, 0.8);
+  white-space: nowrap;
+  text-overflow: clip;
+  overflow: hidden;
+  padding: 0.1rem;
+  width: 100%;
+  z-index: 11;
+}
+
+.me .ice .hosted .card .cardname:hover {
+  white-space: unset;
+  text-overflow: unset;
+  overflow: unset;
+  font-size: 0.7em;
+}
+"""
+
+[[style]]
+category = "Labelling"
+series = "none"
+name = "Runner ID and heap label"
+default = true
+css = """
+.runner-board > .runner-centrals .card .cardname {
+  position: absolute;
+  background-color: rgba(20, 20, 20, 0.8);
+  white-space: nowrap;
+  text-overflow: clip;
+  overflow: hidden;
+  padding: 0.1rem;
+  width: 100%;
+  z-index: 11;
+}
+
+.runner-board > .runner-centrals .card .cardname:hover {
+  white-space: unset;
+  text-overflow: unset;
+  overflow: unset;
+  font-size: 0.7em;
+}
+"""
+
+[[style]]
+category = "Labelling"
+series = "none"
+name = "Smaller ICE strengh indicator"
+default = false
+css = """
+.ice > .card-frame > .card .strength {
+  width: unset;
+  height: 1.5em;
+  min-width: 1.5em;
+  line-height: 1.5em;
+  padding: 0 0.2em;
+}
+"""
+
+[[style]]
+category = "Labelling"
+series = "none"
+name = "Alternative ICE strength indicator position"
+description = "Useful if you want to see the image better, or when using labels"
+default = true
+css = """
+.me .ice > .card-frame > .card .strength {
+  top: 0.4em;
+}
+
+.opponent .ice > .card-frame > .card .strength {
+  top: 0.4em;
+  left: unset;
+  right: 0.4em;
+}
+"""
+
+[[style]]
+category = "Labelling"
+series = "none"
+name = "Smaller icebreaker strengh indicator"
+default = false
+css = """
+.runner-board .card .strength {
+  width: unset;
+  height: 1.5em;
+  min-width: 1.5em;
+  line-height: 1.5em;
+  padding: 0 0.2em;
+}
+
+.hosted .card .strength {
+  width: unset;
+  height: 1.5em;
+  min-width: 1.5em;
+  line-height: 1.5em;
+  padding: 0 0.2em;
+}
+"""
+
+[[style]]
+category = "Card size"
+series = "Runner board card size"
+name = "Original"
+default = true
+css = ""
+
+[[style]]
+category = "Card size"
+series = "Runner board card size"
+name = "Shrink runner card down to image"
+default = false
+css = """
+.runner-board > div:not(.runner-centrals) .card,
+.run-card .card
+{
+  position: relative;
+  overflow: hidden;
+  height: 4.6em !important;
+}
+
+.runner-board > div:not(.runner-centrals) .card > div > img,
+.run-card .card > div > img {
+  overflow: hidden !important;
+  object-fit: cover;
+  height: 8em !important;
+}
+"""
+
+[[style]]
+category = "Card size"
+series = "Runner board card size"
+name = "Shrink runner card down to image (with blank space)"
+default = false
+css = """
+.runner-board > div:not(.runner-centrals) .card .cardname,
+.run-card .card .cardname {
+  border: solid 0.1rem black;
+  min-height: 1.1rem;
+}
+
+.runner-board > div:not(.runner-centrals) .card,
+.run-card .card {
+  position: relative;
+  overflow: hidden;
+  height: 5.1em !important;
+}
+
+.runner-board > div:not(.runner-centrals) .card > div > img,
+.run-card .card > div > img {
+  overflow: hidden !important;
+  object-fit: cover;
+  top: 16%;
+  height: 8em !important;
+}
+"""
