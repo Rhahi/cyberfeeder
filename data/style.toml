@@ -157,6 +157,18 @@ css = """
   position: unset !important;
   top: unset !important;
 }
+
+.left-inner-leftpane .panel .header.darkbg {
+  top: unset;
+  left: unset;
+  right: 0;
+  bottom: 0;
+}
+
+.right-inner-leftpane .panel .header.darkbg {
+  top: unset;
+  bottom: 0;
+}
 """
 
 [[style]]
@@ -199,6 +211,18 @@ css = """
   grid-area: right;
 
   position: unset !important;
+}
+
+.left-inner-leftpane .panel .header.darkbg {
+  top: unset;
+  left: unset;
+  right: 0;
+  bottom: 0;
+}
+
+.right-inner-leftpane .panel .header.darkbg {
+  top: unset;
+  bottom: 0;
 }
 """
 
@@ -262,7 +286,7 @@ css = """
   display: flex;
   flex-direction: column;
   padding: 0px 0 44px 0;
-  max-height: calc(50vh - 7.6rem);
+  max-height: calc(50vh - 6.3rem);
 }
 
 .left-inner-leftpane .panel.scored .card-wrapper {
@@ -288,8 +312,17 @@ css = """
 }
 
 .left-inner-leftpane div:nth-child(1).panel.scored .stats-area {
-  bottom: unset;
-  top: 0;
+  position: unset;
+  order: 1000;
+}
+
+.left-inner-leftpane div:nth-child(1).panel.scored .stats-area {
+  position: unset;
+  order: -1;
+}
+
+.left-inner-leftpane .panel.scored .card-frame .panel {
+  transform: rotate(90deg);
 }
 
 /* opponent score */
@@ -398,6 +431,20 @@ css = """
   display: flex;
   flex-direction: column;
 }
+
+/* move play area label to another corner */
+.right-inner-leftpane .panel .header.darkbg {
+  top: unset;
+  left: unset;
+  bottom: 0;
+}
+
+/* fix play card preview size */
+.button-pane .prompt-card-preview .card,
+.button-pane .prompt-card-preview .card img {
+  width: 100% !important;
+  height: auto !important;
+}
 """
 
 [[style]]
@@ -441,9 +488,9 @@ css = """
 """
 
 [[style]]
-category = "Card size"
+category = "UI Downsizing"
 series = "none"
-name = "Shrink opponent's vertical hand size"
+name = "Compress opponent's vertical hand size"
 default = false
 css = """
 :root {
@@ -458,6 +505,21 @@ css = """
 .opponent .hand-container .panel {
   max-height: var(--hand-size) !important;
   overflow: hidden;
+}
+"""
+
+[[style]]
+category = "UI Downsizing"
+series = "none"
+name = "Compress player's stats area"
+default = false
+css = """
+:root {
+  --stats-line-height: 1rem;
+}
+
+.left-inner-leftpane .stats-area {
+  line-height: var(--stats-line-height) !important;
 }
 """
 
@@ -651,6 +713,11 @@ css = """
   overflow: unset;
   font-size: 0.7em;
 }
+
+/* mark over label */
+.runner-board > div:not(.runner-centrals) .card .card-target {
+  z-index: 12;
+}
 """
 
 [[style]]
@@ -671,6 +738,36 @@ css = """
 }
 
 .runner-board > .runner-centrals .card .cardname:hover {
+  white-space: unset;
+  text-overflow: unset;
+  overflow: unset;
+  font-size: 0.7em;
+}
+
+.runner-board > div.runner-centrals .card .card-target {
+  z-index: 11;
+}
+"""
+
+[[style]]
+category = "Labelling"
+series = "none"
+name = "Misc. card label"
+default = true
+description = "Add card label for RFG, agendas, and play area"
+css = """
+.inner-leftpane div:not(.prompt-card-preview) > .card-frame .card .cardname {
+  position: absolute;
+  background-color: rgba(20, 20, 20, 0.8);
+  white-space: nowrap;
+  text-overflow: clip;
+  overflow: hidden;
+  padding: 0.1rem;
+  width: 100%;
+  z-index: 11;
+}
+
+.inner-leftpane div:not(.prompt-card-preview) > .card-frame .card .cardname:hover {
   white-space: unset;
   text-overflow: unset;
   overflow: unset;
@@ -821,5 +918,28 @@ css = """
   animation-duration: 0.3s;
   animation-name: rez;
   animation-timing-function: linear;
+}
+"""
+
+[[style]]
+category = "Misc"
+series = "none"
+name = "Flex-based hand size"
+default = true
+description = "Infinitely stackable hand size"
+css = """
+.hand-controls .hand > div {
+    display: flex;
+    padding-right: 30px;
+}
+
+.hand-controls .hand > div > .card-wrapper {
+    position: unset;
+    flex-basis: 60px;
+    min-width: 2px;
+}
+
+.gameboard .hand {
+    width: calc(384px + 30px);
 }
 """
