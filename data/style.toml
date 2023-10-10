@@ -22,7 +22,7 @@ html {
 [[style]]
 category = "Layout"
 series = "Font size"
-name = "Increase font size (clik and credits)"
+name = "Increase font size (click and credits)"
 default = false
 css = """
 .stats-area {
