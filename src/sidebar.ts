@@ -142,19 +142,54 @@ async function saveCustom(style: StyleItemUI) {
   }
   await browser.storage.local.set({
     userStyles: toList(userStyles),
-    userToggles: await parseCurrentToggleChanges(),
   });
 }
 
-async function parseCurrentToggleChanges() {
-  let customToggles = await browser.storage.local
+async function saveUserToggles() {
+  let bundledToggles = await browser.storage.local
+    .get('bundledToggles')
+    .then(item => item.bundledToggles as SavedToggles);
+  if (!bundledToggles) {
+    console.warn(`Couldn't find bundled toggles, saving all settings`)
+    bundledToggles = {};
+  }
+  console.log(bundledToggles);
+  let userToggles = await browser.storage.local
     .get('userToggles')
     .then(item => item.userToggles as SavedToggles);
-  if (!customToggles) {
-    customToggles = {};
+  if (!userToggles) {
+    userToggles = {};
   }
-  // do something here to fill in custom toggles based on current config state
-  // probably by parsing the entire page, and comparing them with default values.
+  const styleItems = document.querySelectorAll<HTMLElement>('.style-item');
+  styleItems.forEach(element => {
+    const id = element.id;
+    const style = getStyleUI(id);
+    if (style && !isDefault(style, bundledToggles)) {
+      userToggles[id] = {
+        id: id,
+        enabled: style.enable.checked,
+        customize: style.customize.checked,
+      };
+    }
+  })
+  await browser.storage.local.set({
+    userToggles: userToggles,
+  });
+  console.log(userToggles);
+}
+
+function isDefault(style: StyleItemUI, bundledToggles: SavedToggles) {
+  const id = style.id;
+  if (!(id in bundledToggles)) {
+    return false;
+  }
+  if (bundledToggles[id].enabled !== style.enable.checked) {
+    return false;
+  }
+  if (bundledToggles[id].customize !== style.customize.checked) {
+    return false;
+  }
+  return true;
 }
 
 /** Read id-toggle relationship from localstorage */
@@ -327,14 +362,19 @@ function rebuildStyle() {
   return css;
 }
 
-function getStyleUI(id: string | undefined): StyleItemUI | undefined {
-  if (!id) {
-    console.warn(`Invalid style id ${id}`);
+function getStyleUI(from: string | undefined | HTMLElement): StyleItemUI | undefined {
+  if (!from) {
+    console.warn(`Invalid style id ${from}`);
     return;
   }
-  const li = document.getElementById(id);
+  let li: HTMLElement | null;
+  if (typeof from === 'string') {
+    li = document.getElementById(from);
+  } else {
+    li = from;
+  }
   if (!li) {
-    console.warn(`Could not find requested list item ${id}`);
+    console.warn(`Could not find requested list item ${from}`);
     return;
   }
   const enableCheckbox = li.querySelector<HTMLInputElement>('.style-enable');
@@ -353,7 +393,7 @@ function getStyleUI(id: string | undefined): StyleItemUI | undefined {
     };
   }
   if (!li) {
-    console.warn(`Could not find data from list item ${id}`);
+    console.warn(`Could not find data from list item ${from}`);
     return;
   }
   return;
@@ -373,7 +413,8 @@ async function sendIt(css: string) {
           payload: css,
         });
       }
-    });
+    })
+    .catch(e => console.log(e));
 }
 
 function toList(styles: {[key: string]: IdStyle}) {
@@ -420,6 +461,7 @@ function registerStyleToggleEvent() {
   for (let i = 0; i < styleCheckboxes.length; i++) {
     styleCheckboxes[i].addEventListener('change', async () => {
       const style = rebuildStyle();
+      await saveUserToggles();
       await sendIt(style);
     });
   }
@@ -456,6 +498,7 @@ function registerCustomizeToggleEvent() {
           console.warn('bundled style not found, do not modify text area');
         }
       }
+      await saveUserToggles();
       if (style.enable.checked) {
         await sendIt(rebuildStyle());
       }
@@ -495,6 +538,7 @@ function registerCustomizeSaveEvent() {
       }
       // update style
       await saveCustom(style);
+      await saveUserToggles();
       if (style.enable.checked) {
         const style = rebuildStyle();
         await sendIt(style);
