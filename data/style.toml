@@ -929,17 +929,17 @@ default = true
 description = "Infinitely stackable hand size"
 css = """
 .hand-controls .hand > div {
-    display: flex;
-    padding-right: 30px;
+  display: flex;
+  padding-right: 30px;
 }
 
 .hand-controls .hand > div > .card-wrapper {
-    position: unset;
-    flex-basis: 60px;
-    min-width: 2px;
+  position: unset;
+  flex-basis: 60px;
+  min-width: 2px;
 }
 
 .gameboard .hand {
-    width: calc(384px + 30px);
+  width: calc(384px + 30px);
 }
 """
