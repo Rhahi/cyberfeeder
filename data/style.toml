@@ -357,7 +357,6 @@ css = """
 }
 
 .left-inner-leftpane > div > .panel.stats {
-  margin-left: 0.5rem;
   grid-column: 2 / 4;
   display: flex;
 }
