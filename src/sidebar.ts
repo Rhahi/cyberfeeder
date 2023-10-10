@@ -106,7 +106,7 @@ async function saveBundled(jsonData: StyleData) {
   const bundledStyles: IdStyle[] = [];
   const bundledTogglesFlat: IdToggle[] = [];
   for (const style of jsonData.style) {
-    const id = `${style.category}-${style.name}`.replaceAll(' ', '-').trim();
+    const id = `${style.category}-${style.series}-${style.name}`.replaceAll(' ', '-').trim();
     const data: IdStyle = {
       id: id,
       ...style,
