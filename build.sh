@@ -2,6 +2,7 @@
 
 npm run clean
 npm run compile
+mkdir -p "./app/js"
 cp build/src/*.js app/js
 
 # dnf install sass
