@@ -15,18 +15,15 @@
 
   "content_scripts": [
     {
-      "matches": ["*://*.jinteki.net/play"],
-      "js": ["js/play.js"]
-    },
-    {
-      "matches": ["*://*.jinteki.net/deckbuilder"],
-      "js": ["js/deckbuilder.js"]
+      "matches": ["*://*.jinteki.net/*"],
+      "js": ["js/jnet.js"]
     }
   ],
 
   "permissions": [
     "scripting",
-    "activeTab"
+    "activeTab",
+    "storage"
   ],
 
   "sidebar_action": {
