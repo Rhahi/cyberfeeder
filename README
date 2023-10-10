@@ -8,12 +8,14 @@ The extension aims to be:
 - Good for reading board states intuitively.
 - Easy to integrate into jnet.
 
-# Bulid instructions
+# Bulid and test instructions
 - Built with Fedora. Packages may vary in other distros.
-- Install build dependencies: `sudo dnf install sass, tsc, npm, nodejs`.
+- Install build dependencies: `sudo dnf install sass tsc npm nodejs web-ext`.
 - Install Rustup to get cargo, and `cargo install toml2json`
+- `nom install` to setup project
 - `npm run build` to run the build script (build.sh)
-- Test using `web-ext run --verbose`
+- `cd` into `app` and Test using `web-ext run --verbose`
+- go to `jinteki.net`, login, navigate to `Play`, and click `Load replay`, select the `replay.json` file in the root of the project and load a replay (attached as replay.json) and click `Start Replay`. Test the application as you see the replay. (you can use arrow keys to navigate game steps.)
 
 # Used versions (for Mozilla reviewer)
 - Fedora Spin Sway (version 38)
@@ -22,3 +24,4 @@ The extension aims to be:
 - cargo 1.73.0-nightly (d78bbf4bd 2023-08-03)
 - tsc Version 5.2.2
 - sass 1.69.0 compiled with dart2js 3.1.3
+- web-ext 7.7.0
