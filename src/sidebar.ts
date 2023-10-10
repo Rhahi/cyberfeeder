@@ -166,17 +166,17 @@ async function getToggles() {
     console.error('Bundled toggles are expected, but there is none.');
     return;
   }
-  const customToggles = await browser.storage.local
-    .get('customToggles')
-    .then(item => item.customToggles as SavedToggles);
-  if (!customToggles) {
+  const userToggles = await browser.storage.local
+    .get('userToggles')
+    .then(item => item.userToggles as SavedToggles);
+  if (!userToggles) {
     return bundledToggles;
   }
   const combinedToggles: SavedToggles = {};
   for (const item of Object.values(bundledToggles)) {
     combinedToggles[item.id] = item;
   }
-  for (const item of Object.values(customToggles)) {
+  for (const item of Object.values(userToggles)) {
     combinedToggles[item.id] = item;
   }
   return combinedToggles;
