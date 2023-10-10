@@ -7,3 +7,5 @@ The extension shall be:
 - Easy to integrate into jnet.
 
 To develop the extension, see `package.json` for build commands, and corresponding assets and files that generate the code that go to `/app`.
+
+I always forget this command, but `web-ext run --verbose` is the easiest way to run after build (from app/ directory.).
