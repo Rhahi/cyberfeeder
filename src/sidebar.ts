@@ -692,7 +692,8 @@ async function setVersion() {
   const version = await browser.storage.local
     .get('version')
     .then(item => item.version as string);
-  element.textContent = element.textContent += `<br />style version: ${version}`;
+  const appVersion = browser.runtime.getManifest().version;
+  element.textContent = `app version: ${appVersion}, style version: ${version}`;
 }
 
 /**
