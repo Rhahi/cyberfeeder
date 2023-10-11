@@ -1,4 +1,4 @@
-version = "1"
+version = "1.1"
 
 [[style]]
 category = "Layout"
@@ -450,7 +450,7 @@ css = """
 category = "Layout"
 series = "none"
 name = "Make cards under right-pane visible"
-description = "This does not make them interactable, as they are still below the right pane layout. You need to zoom out to click them."
+description = "Has no effect when using CSS grid layouts. This does not make them interactable, as they are still below the right pane layout. You need to zoom out to click them."
 default = false
 css = """
 .centralpane {
@@ -793,13 +793,9 @@ css = """
 category = "Labelling"
 series = "none"
 name = "Alternative ICE strength indicator position"
-description = "Useful if you want to see the image better, or when using labels"
+description = "Useful when using labels"
 default = true
 css = """
-.me .ice > .card-frame > .card .strength {
-  top: 0.4em;
-}
-
 .opponent .ice > .card-frame > .card .strength {
   top: 0.4em;
   left: unset;
@@ -924,8 +920,8 @@ css = """
 category = "Misc"
 series = "none"
 name = "Flex-based hand size"
-default = true
-description = "Infinitely stackable hand size"
+default = false
+description = "Alternative way to arrange hand. Should be more robust to resizing."
 css = """
 .hand-controls .hand > div {
   display: flex;
