@@ -553,6 +553,10 @@ async function sendIt(css?: string) {
     console.warn('cannot send CSS when there is no cached css and no style was given');
     return;
   }
+  const currentStyleTextArea = document.getElementById('currentStyle') as HTMLTextAreaElement;
+  if (currentStyleTextArea) {
+    currentStyleTextArea.value = css;
+  }
   await browser.tabs
     .query({active: true, currentWindow: true})
     .then(async tabs => {
