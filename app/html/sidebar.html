@@ -18,8 +18,11 @@
       <section id="styles" class="tab-panel"></section>
       <section id="scripts" class="tab-panel"></section>
       <section id="settings" class="tab-panel">
-        <input type="button" name="backup" value="Backup" title="Download all stored data">
-        <input type="button" name="import" value="Import" title="Upload backed up data into local storage. This will wipe out your current storage.">
+        <h3>Backup</h3>
+        <input type="button" id="backup" value="Download" title="Download all stored data">
+        <h3>Import</h3>
+        <input type="file" id="importInput" name="import" accept=".json" />
+        <button for="import" id="import" title="This does not validate use input, if the file is not complete, the app might not work correctly.">Confirm</button>
       </section>
     </div>
     <div class="tab-custom-panels" class="not-released">

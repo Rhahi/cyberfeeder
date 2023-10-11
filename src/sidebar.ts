@@ -699,6 +699,74 @@ async function setVersion() {
   element.textContent = `app version: ${appVersion}, style version: ${version}`;
 }
 
+function registerBackupEvent() {
+  const button = document.getElementById('backup');
+  if (!button) {
+    console.error('Backup button not found');
+    return;
+  }
+  button?.addEventListener('click', async () => {
+    const storage = await browser.storage.local.get(null as any);
+    const data = JSON.stringify(storage);
+    const blob = new Blob([data], {type: 'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.id = 'download';
+    a.href = url;
+    a.download = 'cyberfeeder-backup.json';
+
+    document.body.appendChild(a);
+    a.click()
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  })
+}
+
+function registerImportEvent() {
+  const button = document.getElementById('import') as HTMLElement;
+  const input = document.getElementById('importInput') as HTMLInputElement;
+  if (!button || !input) {
+    console.error('Import button not found');
+    return;
+  }
+  button.addEventListener('click', async () => {
+    let reloadNeeded = false;
+    if (!input.files || input.files?.length === 0) {
+      console.info('No files selected');
+      return;
+    }
+    const file = input.files[0];
+    if (file && file.type == 'application/json') {
+      const content = await readFile(file);
+      if (!content) {
+        console.warn('failed to read loaded file');
+        return;
+      }
+      try {
+        const jsonData = JSON.parse(content)
+        await browser.storage.local.set(jsonData);
+        reloadNeeded = true;
+      } catch(e) {
+        console.debug(e);
+        console.warn('Failed to parse JSON data');
+      }
+    }
+    if (reloadNeeded) {
+      browser.runtime.reload();
+    }
+  })
+}
+
+function readFile(file: File): Promise<string | undefined> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result?.toString());
+    reader.onerror = () => reject(reader.error);
+    reader.readAsText(file);
+  })
+}
+
 /**
  * Loading script for sidebar
  */
@@ -709,6 +777,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   registerCustomizeToggleEvent();
   registerCustomizeResetEvent();
   registerCustomizeSaveEvent();
+  registerBackupEvent();
+  registerImportEvent();
   const style = rebuildStyle();
   await sendIt(style);
   await setVersion();
