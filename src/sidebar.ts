@@ -159,12 +159,7 @@ async function saveUserToggles() {
     console.warn(`Couldn't find bundled toggles, saving all settings`)
     bundledToggles = {};
   }
-  let userToggles = await browser.storage.local
-    .get('userToggles')
-    .then(item => item.userToggles as SavedToggles);
-  if (!userToggles) {
-    userToggles = {};
-  }
+  let userToggles: SavedToggles = {};
   const styleItems = document.querySelectorAll<HTMLElement>('.style-item');
   let toggleSaveCount = 0;
   styleItems.forEach(element => {
