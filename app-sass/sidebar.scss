@@ -64,8 +64,7 @@ main > input:first-child:checked ~ .tab-panels > .tab-panel:first-child,
 main > input:nth-child(3):checked ~ .tab-panels > .tab-panel:nth-child(2),
 main > input:nth-child(5):checked ~ .tab-panels > .tab-panel:nth-child(3),
 main > input:first-child:checked ~ .tab-custom-panels > .tab-panel:first-child,
-main > input:nth-child(3):checked ~ .tab-custom-panels > .tab-panel:nth-child(2),
-main > input:nth-child(5):checked ~ .tab-custom-panels > .tab-panel:nth-child(3) {
+main > input:nth-child(3):checked ~ .tab-custom-panels > .tab-panel:nth-child(2) {
   display: block;
 }
 

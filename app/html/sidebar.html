@@ -12,17 +12,19 @@
     <input type="radio" name="tabset" id="tab2" aria-controls="scripts" class="not-released">
     <label for="tab2" class="not-released">Scripts</label>
     <input type="radio" name="tabset" id="tab3" aria-controls="experimental" class="not-released">
-    <label for="tab3" class="not-released">Status</label>
+    <label for="tab3">Settings</label>
 
     <div class="tab-panels">
       <section id="styles" class="tab-panel"></section>
       <section id="scripts" class="tab-panel"></section>
-      <section id="status" class="tab-panel"></section>
+      <section id="settings" class="tab-panel">
+        <input type="button" name="backup" value="Backup" title="Download all stored data">
+        <input type="button" name="import" value="Import" title="Upload backed up data into local storage. This will wipe out your current storage.">
+      </section>
     </div>
     <div class="tab-custom-panels" class="not-released">
-      <section id="styles" class="tab-panel not-released">Not implemented</section>
-      <section id="scripts" class="tab-panel not-released">Not implemented</section>
-      <section id="status" class="tab-panel not-released">Not implemented</section>
+      <section id="styles-custom" class="tab-panel not-released">Not implemented</section>
+      <section id="scripts-custom" class="tab-panel not-released">Not implemented</section>
     </div>
   </main>
   <footer id="version">1.1</footer>
