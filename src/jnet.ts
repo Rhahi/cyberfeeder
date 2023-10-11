@@ -7,7 +7,7 @@ interface Message {
 browser.storage.local.get('cachedCss')
   .then(item => {
     const css: string = item.cachedCss;
-    applyStyle('style', css);
+    applyStyle('cyberfeeder-style', css);
   })
   .catch(() => {
     console.log('Failed to apply cached CSS');
