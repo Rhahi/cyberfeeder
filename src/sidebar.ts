@@ -324,6 +324,7 @@ function populateRadioButtonHTML(ul: HTMLElement, s: IdStyle, radioName: string,
     inputCheckbox.id = `custom-${s.id}`;
     inputCheckbox.name = `custom-${s.id}`;
     inputCheckbox.className = 'style-customize';
+    inputCheckbox.checked = t.customize;
     div.appendChild(inputCheckbox);
 
     // <label for="custom-${s.id}" title="Turn on or off customizaion. Unsaved customization will be lost.">Customize</label>
@@ -439,6 +440,7 @@ function populateCheckboxHTML(ul: HTMLElement, s: IdStyle, toggles?: SavedToggle
     customCheckbox.id = `custom-${s.id}`;
     customCheckbox.name = `custom-${s.id}`;
     customCheckbox.className = "style-customize";
+    customCheckbox.checked = t.customize;
     div.appendChild(customCheckbox);
 
     //       <label for="custom-${s.id}" title="Turn on or off customizaion. Unsaved customization will be lost.">Customize</label>
