@@ -1,4 +1,4 @@
-version = "1.1"
+version = "1.2"
 
 [[style]]
 category = "Layout"
@@ -157,18 +157,6 @@ css = """
   position: unset !important;
   top: unset !important;
 }
-
-.left-inner-leftpane .panel .header.darkbg {
-  top: unset;
-  left: unset;
-  right: 0;
-  bottom: 0;
-}
-
-.right-inner-leftpane .panel .header.darkbg {
-  top: unset;
-  bottom: 0;
-}
 """
 
 [[style]]
@@ -211,18 +199,6 @@ css = """
   grid-area: right;
 
   position: unset !important;
-}
-
-.left-inner-leftpane .panel .header.darkbg {
-  top: unset;
-  left: unset;
-  right: 0;
-  bottom: 0;
-}
-
-.right-inner-leftpane .panel .header.darkbg {
-  top: unset;
-  bottom: 0;
 }
 """
 
@@ -429,13 +405,6 @@ css = """
 .content-pane {
   display: flex;
   flex-direction: column;
-}
-
-/* move play area label to another corner */
-.right-inner-leftpane .panel .header.darkbg {
-  top: unset;
-  left: unset;
-  bottom: 0;
 }
 
 /* fix play card preview size */
@@ -771,6 +740,34 @@ css = """
   text-overflow: unset;
   overflow: unset;
   font-size: 0.7em;
+}
+"""
+
+[[style]]
+category = "Labelling"
+series = "none"
+name = "Move RFG label to bottom"
+description = "Useful when using card labels, as it overlaps with labels."
+default = true
+css = """
+.right-inner-leftpane .panel .header.darkbg {
+  top: unset;
+  bottom: 0;
+}
+"""
+
+[[style]]
+category = "Labelling"
+series = "none"
+name = "Move scored area label to bottom"
+description = "Useful when using misc card labels, as it overlaps with labels."
+default = false
+css = """
+.left-inner-leftpane .panel .header.darkbg {
+  top: unset;
+  left: unset;
+  right: 0;
+  bottom: 0;
 }
 """
 
