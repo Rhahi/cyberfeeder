@@ -23,7 +23,8 @@
   "permissions": [
     "scripting",
     "activeTab",
-    "storage"
+    "storage",
+    "downloads"
   ],
 
   "sidebar_action": {
