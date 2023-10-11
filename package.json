@@ -1,6 +1,6 @@
 {
   "name": "cyberfeeder",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Jinteki.net enhancements",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

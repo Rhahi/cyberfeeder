@@ -769,6 +769,15 @@ function readFile(file: File): Promise<string | undefined> {
   })
 }
 
+async function registerMessageHandler() {
+  browser.runtime.onMessage.addListener(async (message) => {
+    console.info('Got initialize request from jnet, sending style');
+    if (message.action === 'init') {
+      await sendIt(rebuildStyle());
+    }
+  })
+}
+
 /**
  * Loading script for sidebar
  */
@@ -781,7 +790,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   registerCustomizeSaveEvent();
   registerBackupEvent();
   registerImportEvent();
-  const style = rebuildStyle();
-  await sendIt(style);
+  await registerMessageHandler();
   await setVersion();
 });

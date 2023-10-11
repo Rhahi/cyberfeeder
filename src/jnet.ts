@@ -4,8 +4,10 @@ interface Message {
   payload: string;
 }
 
+browser.runtime.sendMessage({action: 'init'});
+
 browser.runtime.onMessage.addListener((message: Message) => {
-  console.log('got message');
+  console.info('Got new style');
   if (message.action === 'style') {
     let styleElement = document.getElementById(message.id);
     if (!styleElement) {
