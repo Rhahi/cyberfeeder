@@ -105,7 +105,9 @@ async function initializeLocalStorage() {
 async function saveBundled(jsonData: StyleData) {
   const bundledStyles: IdStyle[] = [];
   const bundledTogglesFlat: IdToggle[] = [];
+  let styleCount = 0;
   for (const style of jsonData.style) {
+    styleCount++;
     const id = `${style.category}-${style.series}-${style.name}`.replaceAll(' ', '-').trim();
     const data: IdStyle = {
       id: id,
@@ -119,6 +121,7 @@ async function saveBundled(jsonData: StyleData) {
     bundledStyles.push(data);
     bundledTogglesFlat.push(toggle);
   }
+  console.info(`Found ${styleCount} bundled styles`);
   const bundledToggles: SavedToggles = {};
   for (const item of Object.values(bundledTogglesFlat)) {
     bundledToggles[item.id] = item;
@@ -128,6 +131,7 @@ async function saveBundled(jsonData: StyleData) {
     bundledStyles: bundledStyles,
     bundledToggles: bundledToggles,
   });
+  console.info('Saved version, bundledStyles, bundledToggles');
 }
 
 async function saveCustom(style: StyleItemUI) {
@@ -140,9 +144,11 @@ async function saveCustom(style: StyleItemUI) {
   } else {
     console.warn('Tried to save style with unknown ID, do not save.');
   }
+  const userStylesList = toList(userStyles);
   await browser.storage.local.set({
-    userStyles: toList(userStyles),
+    userStyles: userStylesList,
   });
+  console.info(`Saved ${userStylesList.length} userStyles`);
 }
 
 async function saveUserToggles() {
@@ -208,13 +214,16 @@ async function getToggles() {
   if (!userToggles) {
     return bundledToggles;
   }
+  let userTogglesLoadCount = 0;
   const combinedToggles: SavedToggles = {};
   for (const item of Object.values(bundledToggles)) {
     combinedToggles[item.id] = item;
   }
   for (const item of Object.values(userToggles)) {
+    userTogglesLoadCount++;
     combinedToggles[item.id] = item;
   }
+  console.info(`Loaded ${userTogglesLoadCount} user defined toggles`);
   return combinedToggles;
 }
 
