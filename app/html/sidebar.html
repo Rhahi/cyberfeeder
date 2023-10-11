@@ -18,13 +18,27 @@
       <section id="styles" class="tab-panel"></section>
       <section id="scripts" class="tab-panel"></section>
       <section id="settings" class="tab-panel">
-        <h3>Backup</h3>
-        <input type="button" id="backup" value="Download" title="Download all stored data">
-        <h3>Import</h3>
-        <input type="file" id="importInput" name="import" accept=".json" />
-        <button for="import" id="import" title="This does not validate use input, if the file is not complete, the app might not work correctly.">Confirm</button>
-        <h3>Current style</h3>
-        <textarea id="currentStyle" disabled></textarea>
+        <div class="category">
+          <h3>Operation</h3>
+          <input type="button" id="settings-rebuild" value="Rebuild" title="Manually rebuild styles">
+          <p class="desc">Rebuild styles. This typically happens when the sidebar is loaded and when you select/save styles</p>
+          <input type="button" id="settings-reset" value="Temporarily clear" title="Reset currently applied styles and purge cached CSS (does not purge storage)">
+          <p class="desc">Temporarily clear all styles set by Cyberfeeder. Your styles will be rebuilt when re-opening the sidebar or when you toggle new options.</p>
+          <p><input type="button" id="backup" value="Download current settings" title="Download all stored data"></p>
+          <h3>Current style</h3>
+          <textarea id="currentStyle" disabled></textarea>
+        </div>
+        <div class="category">
+          <h2>Danger zone</h2>
+          <h3>Import</h3>
+          <input type="file" id="importInput" name="import" accept=".json" />
+          <button for="import" id="import" title="This does not validate use input, if the file is not complete, the app might not work correctly.">Confirm</button>
+          <p class="desc">Import back the exported json file</p>
+
+          <h3>Purge</h3>
+          <input type="button" id="settings-purge" value="Purge storage" title="The last option. If something is buggy, forget everything and start anew.">
+          <p class="desc">Purge removes all local storage and restarts Cyberfeeder. Default options will be used on startup.</p>
+        </div>
       </section>
     </div>
     <div class="tab-custom-panels" class="not-released">

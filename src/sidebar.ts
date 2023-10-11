@@ -793,6 +793,41 @@ async function registerMessageHandler() {
   })
 }
 
+function registerResetHandler() {
+  const button = document.getElementById('settings-reset');
+  if (!button) {
+    console.warn(`Couldn't find reset button`);
+    return;
+  }
+  button.addEventListener('click', async () => {
+    await sendIt('');
+  });
+}
+
+function registerPurgeHandler() {
+  const button = document.getElementById('settings-purge');
+  if (!button) {
+    console.warn(`Couldn't find purge button`);
+    return;
+  }
+  button.addEventListener('click', async () => {
+    await sendIt('');
+    await browser.storage.local.clear();
+    browser.runtime.reload();
+  });
+}
+
+function registerRebuildHandler() {
+  const button = document.getElementById('settings-rebuild');
+  if (!button) {
+    console.warn(`Couldn't find rebuild button`);
+    return;
+  }
+  button.addEventListener('click', async () => {
+    await sendIt(rebuildStyle());
+  });
+}
+
 /**
  * Loading script for sidebar
  */
@@ -805,6 +840,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   registerCustomizeSaveEvent();
   registerBackupEvent();
   registerImportEvent();
+  registerRebuildHandler();
+  registerResetHandler();
+  registerPurgeHandler();
   await registerMessageHandler();
   await sendIt(rebuildStyle());
   await setVersion();
