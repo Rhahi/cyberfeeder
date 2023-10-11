@@ -791,5 +791,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   registerBackupEvent();
   registerImportEvent();
   await registerMessageHandler();
+  await sendIt(rebuildStyle());
   await setVersion();
 });
