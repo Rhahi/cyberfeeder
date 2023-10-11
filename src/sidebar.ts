@@ -541,7 +541,18 @@ function getStyleUI(from: string | undefined | HTMLElement): StyleItemUI | undef
 /**
  * Inject CSS style into jinteki.net background listener
  */
-async function sendIt(css: string) {
+async function sendIt(css?: string) {
+  if (css) {
+    await browser.storage.local.set({'cachedCss': css});
+  } else {
+    css = await browser.storage.local
+      .get('cachedCss')
+      .then(item => item.cachedCss);
+  }
+  if (!css) {
+    console.warn('cannot send CSS when there is no cached css and no style was given');
+    return;
+  }
   await browser.tabs
     .query({active: true, currentWindow: true})
     .then(async tabs => {
