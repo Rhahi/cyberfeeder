@@ -1,4 +1,4 @@
-version = "1.3"
+version = "2.0"
 
 [[style]]
 category = "Layout"
@@ -140,23 +140,6 @@ css = """
   grid-column: 3;
   grid-row: 1;
 }
-
-.content-pane {
-  display: flex;
-  flex-direction: column;
-}
-
-.content-pane .panel-top {
-  display: flex;
-  flex-wrap: wrap;
-  height: unset !important;
-  position: unset !important;
-}
-
-.content-pane .panel-bottom {
-  position: unset !important;
-  top: unset !important;
-}
 """
 
 [[style]]
@@ -213,18 +196,6 @@ css = """
   display: grid;
   grid-template-columns: 10rem 5.5rem auto 1fr auto;
   grid-template-rows: auto 1fr 1rem 1fr auto;
-}
-
-.content-pane .panel-top {
-  display: flex;
-  flex-wrap: wrap;
-  height: unset !important;
-  position: unset !important;
-}
-
-.content-pane .panel-bottom {
-  position: unset !important;
-  top: unset !important;
 }
 
 /* set grid layout */
@@ -402,11 +373,6 @@ css = """
   grid-row: 1 / -1;
 }
 
-.content-pane {
-  display: flex;
-  flex-direction: column;
-}
-
 /* fix play card preview size */
 .button-pane .prompt-card-preview .card,
 .button-pane .prompt-card-preview .card img {
@@ -460,6 +426,31 @@ css = """
 
 .right-pane .implementation {
   right: var(--right-pane-width) !important;
+}
+"""
+
+[[style]]
+category = "Layout"
+series = "none"
+name = "Fix chat menu layout"
+description = "It used to spill over into chat, and causes scroll issues when used with Cyberfeeder. This fixes that."
+default = false
+css = """
+.content-pane {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-pane .panel-top {
+  display: flex;
+  flex-wrap: wrap;
+  height: unset !important;
+  position: unset !important;
+}
+
+.content-pane .panel-bottom {
+  position: unset !important;
+  top: unset !important;
 }
 """
 
