@@ -153,7 +153,6 @@ async function saveUserToggles() {
     console.warn(`Couldn't find bundled toggles, saving all settings`)
     bundledToggles = {};
   }
-  console.log(bundledToggles);
   let userToggles = await browser.storage.local
     .get('userToggles')
     .then(item => item.userToggles as SavedToggles);
@@ -161,10 +160,12 @@ async function saveUserToggles() {
     userToggles = {};
   }
   const styleItems = document.querySelectorAll<HTMLElement>('.style-item');
+  let toggleSaveCount = 0;
   styleItems.forEach(element => {
     const id = element.id;
     const style = getStyleUI(id);
     if (style && !isDefault(style, bundledToggles)) {
+      toggleSaveCount += 1;
       userToggles[id] = {
         id: id,
         enabled: style.enable.checked,
@@ -175,7 +176,7 @@ async function saveUserToggles() {
   await browser.storage.local.set({
     userToggles: userToggles,
   });
-  console.log(userToggles);
+  console.info(`Saved ${toggleSaveCount} user toggles`);
 }
 
 function isDefault(style: StyleItemUI, bundledToggles: SavedToggles) {
@@ -546,7 +547,7 @@ async function sendIt(css: string) {
         });
       }
     })
-    .catch(e => console.log(e));
+    .catch(e => console.warn(`Could not send style to Jnet. Is jnet open?`));
 }
 
 function toList(styles: {[key: string]: IdStyle}) {
@@ -624,8 +625,6 @@ function registerCustomizeToggleEvent() {
         // only enable editing but do not send the styles to jnet
         if (style.id in styles.userStyles) {
           style.textarea.value = styles.userStyles[style.id].css;
-        } else {
-          console.log('user style not found, do not modify text area');
         }
       } else {
         // reset textarea to bundled style
