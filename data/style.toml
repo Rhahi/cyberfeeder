@@ -350,7 +350,6 @@ css = """
 
 .hand-controls > div:nth-child(1) {
   float: unset;
-  height: unset;
 }
 
 .right-pane {
@@ -904,7 +903,7 @@ name = "Flex-based hand size"
 default = false
 description = "Alternative way to arrange hand. Should be more robust to resizing."
 css = """
-.hand-controls .hand > div {
+.hand-controls .hand > div:first-child {
   display: flex;
   padding-right: 30px;
 }
