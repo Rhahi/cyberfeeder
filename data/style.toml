@@ -934,3 +934,20 @@ css = """
   width: calc(384px + 30px);
 }
 """
+
+[[style]]
+category = "Misc"
+series = "none"
+name = "Ayla extra hand scroll fix"
+default = false
+description = "Does the extra scroll bar bother you? Replace it with extra blue shade."
+css = """
+.me .runner-centrals > div {
+  height: unset !important;
+}
+
+.me .runner-centrals > div > div.header.darkbg {
+  top: calc(100% - 1.125rem);
+  /* 100% down, and then up line height */
+}
+"""
