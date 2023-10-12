@@ -1,4 +1,4 @@
-version = "3"
+version = "4"
 
 [[style]]
 category = "Layout"
@@ -218,7 +218,7 @@ css = """
 
 .centralpane {
   grid-row: 2 / -2;
-  grid-column: 3 / 6;
+  grid-column: 2 / 6;
 }
 
 /* not necessary, just makes left pane take whole area for overflow detection */
@@ -231,8 +231,8 @@ css = """
   position: relative;
   height: 100%;
   display: flex;
-  flex-direction: column;
-  padding: 0px 0 44px 0;
+  flex-direction: row;
+  padding-right: 40px;
   max-height: calc(50vh - 6.3rem);
 }
 
@@ -240,17 +240,8 @@ css = """
   position: unset;
   margin: 0;
   flex-basis: 62px;
-  min-height: 20px;
+  min-width: 10px;
   flex-shrink: 1;
-}
-
-.left-inner-leftpane .panel.scored .card-wrapper > div {
-  transform: rotate(-90deg) translateX(23px);
-}
-
-.left-inner-leftpane div:nth-child(1).panel.scored .header {
-  top: unset;
-  bottom: 0;
 }
 
 .left-inner-leftpane .scored .stats-area {
@@ -259,34 +250,27 @@ css = """
 }
 
 .left-inner-leftpane div:nth-child(1).panel.scored .stats-area {
-  position: unset;
-  order: 1000;
 }
 
 .left-inner-leftpane div:nth-child(1).panel.scored .stats-area {
-  position: unset;
-  order: -1;
 }
 
-.left-inner-leftpane .panel.scored .card-frame .panel {
-  transform: rotate(90deg);
-}
 
 /* opponent score */
 .left-inner-leftpane div:nth-child(1) .panel.scored {
-  grid-row: 2;
-  grid-column: 2;
+  grid-row: 1;
+  grid-column: 1;
 }
 
 /* me score */
 .left-inner-leftpane div:nth-child(2) .panel.scored {
-  grid-row: 4;
-  grid-column: 2;
+  grid-row: -1;
+  grid-column: 1;
 }
 
 /* rfg and play area */
 .right-inner-leftpane {
-  grid-row: 1 / -1;
+  grid-row: 2 / -2;
   grid-column: 1;
   width: unset !important;
   justify-content: space-between;
