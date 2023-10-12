@@ -37,7 +37,7 @@
     },
     "default_title": "Cyberfeeder",
     "default_panel": "html/sidebar.html",
-    "open_at_install": true
+    "open_at_install": false
   },
 
   "page_action": {
