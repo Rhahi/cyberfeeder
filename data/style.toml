@@ -334,6 +334,7 @@ css = """
 
 .gameboard .name-area .name-box {
   overflow: scroll;
+  scrollbar-width: none;
 }
 
 .left-inner-leftpane > div:nth-child(1) > .panel.stats {
