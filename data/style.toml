@@ -1,4 +1,4 @@
-version = "2.0"
+version = "2"
 
 [[style]]
 category = "Layout"
@@ -402,7 +402,7 @@ category = "Layout"
 series = "none"
 name = "Change right pane width"
 description = "Use svw/vw to make it proportional to browser window, otherwise use pixels/rems."
-default = true
+default = false
 css = """
 :root {
   --right-pane-width: 18svw;
@@ -434,7 +434,7 @@ category = "Layout"
 series = "none"
 name = "Fix chat menu layout"
 description = "It used to spill over into chat, and causes scroll issues when used with Cyberfeeder. This fixes that."
-default = false
+default = true
 css = """
 .content-pane {
   display: flex;
