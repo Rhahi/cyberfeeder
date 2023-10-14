@@ -12,7 +12,7 @@ The extension aims to be:
 - Built with Fedora. Packages may vary in other distros.
 - Install build dependencies: `sudo dnf install sass tsc npm nodejs web-ext`.
 - Install Rustup to get cargo, and `cargo install toml2json`
-- `nom install` to setup project
+- `npm install` to setup project
 - `npm run build` to run the build script (build.sh)
 - `cd` into `app` and Test using `web-ext run --verbose`
 - go to `jinteki.net`, login, navigate to `Play`, and click `Load replay`, select the `replay.json` file in the root of the project and load a replay (attached as replay.json) and click `Start Replay`. Test the application as you see the replay. (you can use arrow keys to navigate game steps.)
