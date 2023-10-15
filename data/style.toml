@@ -1,4 +1,4 @@
-version = "5"
+version = "6"
 
 [[style]]
 category = "Layout"
@@ -564,6 +564,10 @@ css = """
   font-size: 0.7em;
   z-index: 12;
 }
+
+.corp-board .card .card-target {
+  top: 1rem;
+}
 """
 
 [[style]]
@@ -675,9 +679,8 @@ css = """
   font-size: 0.7em;
 }
 
-/* mark over label */
 .runner-board > div:not(.runner-centrals) .card .card-target {
-  z-index: 12;
+  top: 1rem;
 }
 """
 
@@ -706,7 +709,7 @@ css = """
 }
 
 .runner-board > div.runner-centrals .card .card-target {
-  z-index: 11;
+  top: 1rem;
 }
 """
 
