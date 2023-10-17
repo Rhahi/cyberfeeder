@@ -417,13 +417,6 @@ css = """
   line-height: 1rem;
 }
 
-.left-inner-leftpane div:nth-child(1).panel.scored .stats-area {
-}
-
-.left-inner-leftpane div:nth-child(1).panel.scored .stats-area {
-}
-
-
 /* opponent score */
 .left-inner-leftpane div:nth-child(1) .panel.scored {
   grid-row: 1;
