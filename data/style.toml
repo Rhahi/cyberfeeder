@@ -146,42 +146,210 @@ css = """
 category = "Layout"
 series = "CSS grid"
 name = "Vertical CSS-grid layout (experimental)"
-description = "Move chat over to the bottom of the screen. Makes no sense on wide monitors"
+description = "Move chat over to the bottom of the screen. Makes no sense on wide monitors. Enable 'Fix chat menu layout' to use this layout properly."
 default = false
 css = """
-.gameboard {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  grid-template-rows: 1fr auto;
-  grid-template-areas: "left right" "bottom bottom";
+:root {
+  --chat-height: 20rem;
 }
 
-.leftpane {
-  grid-area: left;
+.gameboard {
+  display: grid;
+  grid-template-columns: 10rem 5.5rem auto 1fr;
+  grid-template-rows: auto 1fr 1rem 1fr auto var(--chat-height);
+}
+
+/* set grid layout */
+.leftpane,
+.leftpane .inner-leftpane,
+.leftpane .inner-leftpane .left-inner-leftpane,
+.left-inner-leftpane > div
+{
+  grid-row: 1 / -1;
+  grid-column: 1 / -1;
+  display: grid !important;
+  grid-template-columns: subgrid;
+  grid-template-rows: subgrid;
+}
+
+/* remove scroll induced by previous margin */
+.leftpane .inner-leftpane .left-inner-leftpane {
+  margin: 0 !important;
 }
 
 .centralpane {
-  grid-area: right;
+  grid-row: 2 / -3;
+  grid-column: 2 / 5;
+}
+
+/* not necessary, just makes left pane take whole area for overflow detection */
+.inner-leftpane .left-inner-leftpane {
+  width: 100% !important;
+}
+
+/* score */
+.left-inner-leftpane .panel.scored {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  padding-right: 40px;
+  max-height: calc(50vh - 6.3rem);
+}
+
+.left-inner-leftpane .panel.scored .card-wrapper {
+  position: unset;
+  margin: 0;
+  flex-basis: 62px;
+  min-width: 10px;
+  flex-shrink: 1;
+}
+
+.left-inner-leftpane .scored .stats-area {
+  background: rgba(0,0,0,0.5);
+  line-height: 1rem;
+}
+
+/* opponent score */
+.left-inner-leftpane div:nth-child(1) .panel.scored {
+  grid-row: 1;
+  grid-column: 1;
+}
+
+/* me score */
+.left-inner-leftpane div:nth-child(2) .panel.scored {
+  grid-row: 5;
+  grid-column: 1;
+}
+
+/* rfg and play area */
+.right-inner-leftpane {
+  grid-row: 2 / 5;
+  grid-column: 1;
+  width: unset !important;
+  justify-content: space-between;
+}
+
+/* hand and counters */
+.leftpane .opponent {
+  grid-row: 1;
+  grid-column:4;
+}
+
+.leftpane .me {
+  grid-row: 5;
+  grid-column: 4;
+}
+
+.left-inner-leftpane > div > .panel.stats {
+  grid-column: 2 / 4;
+  display: flex;
+}
+
+.left-inner-leftpane > div > .panel.stats .name-area {
+  display: flex;
+  flex-direction: column;
+  line-height: unset;
+  gap: 0.2rem;
+  margin: 0.2rem;
+  max-width: 10rem;
+  min-width: 3rem;
+}
+
+.left-inner-leftpane > div > .panel.stats .name-area .name-box .username {
+  text-overflow: ellipsis;
+  max-width: 10rem;
+}
+
+.left-inner-leftpane > div > .panel.stats .stats-area {
+  display: flex;
+  flex-direction: column;
+  line-height: unset;
+  gap: 0.2rem;
+  margin: 0.2rem;
+  min-width: 10rem;
+}
+
+.gameboard .name-area .name-box {
+  overflow: scroll;
+  scrollbar-width: none;
+}
+
+.left-inner-leftpane > div:nth-child(1) > .panel.stats {
+  grid-row: 1;
+  max-height: 8em;
+}
+
+.left-inner-leftpane > div:nth-child(2) > .panel.stats {
+  grid-row: 5;
+  max-height: 8em;
+}
+
+/* hand */
+.hand-controls .panel {
+  margin: 0;
+}
+
+.left-inner-leftpane > div > .blue-shade {
+  padding: 0;
+  margin: 0;
+}
+
+.hand-controls {
+  margin: 0 0.5rem;
+  display: flex !important;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+
+.hand-controls > div:nth-child(1) {
+  float: unset;
 }
 
 .right-pane {
-  grid-area: bottom;
   display: grid !important;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: auto 1fr;
   grid-template-areas: "left right";
   width: 100% !important;
-  max-height: 450px;
+  height: var(--chat-height);
+  grid-column: 1 / -1;
+  grid-row: 6;
 }
 
 .right-pane .card-zoom {
-  margin-top: 1.7rem !important;
   grid-area: left;
+  margin-top: 0 !important;
+  width: calc(var(--chat-height) * 0.71) !important;
 }
 
 .right-pane .content-pane {
   grid-area: right;
-
   position: unset !important;
+  width: unset !important;
+}
+
+.right-pane, .right-pane .content-pane, .right-pane .card-zoom {
+  height: var(--chat-height) !important;
+}
+
+.card-zoom img {
+  object-fit: contain;
+}
+
+.card-zoom .card-preview {
+  margin: 0;
+}
+
+/* fix for chat height getting smaller over zoom */
+.card-zoom {
+  aspect-ratio: 0.71;
+}
+
+/* fix play card preview size */
+.button-pane .prompt-card-preview .card,
+.button-pane .prompt-card-preview .card img {
+  width: 100% !important;
+  height: auto !important;
 }
 """
 
