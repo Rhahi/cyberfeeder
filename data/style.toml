@@ -218,7 +218,7 @@ css = """
 
 .centralpane {
   grid-row: 2 / -2;
-  grid-column: 2 / 6;
+  grid-column: 2 / 5;
 }
 
 /* not necessary, just makes left pane take whole area for overflow detection */
