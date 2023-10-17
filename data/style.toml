@@ -923,15 +923,12 @@ css = """
 [[style]]
 category = "Labelling"
 series = "none"
-name = "Move scored area label to bottom"
-description = "Useful when using misc card labels, as it overlaps with labels."
+name = "Make scored area label appear below cards"
+description = "Once agendas are in, this label is probably not needed. Hide it."
 default = false
 css = """
-.left-inner-leftpane .panel .header.darkbg {
-  top: unset;
-  left: unset;
-  right: 0;
-  bottom: 0;
+.scored .header.darkbg {
+  z-index: -1;
 }
 """
 
