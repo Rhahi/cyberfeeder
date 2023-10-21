@@ -3,7 +3,9 @@
 npm run clean
 npm run compile
 mkdir -p "./app/js"
-cp build/src/*.js app/js
+for CONFIG_FILE in "./rollup"/*.js; do
+    rollup --config $CONFIG_FILE
+done
 
 # dnf install sass
 rm -rf "./app/css/*"

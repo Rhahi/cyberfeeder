@@ -2,7 +2,7 @@
   "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
     "rootDir": ".",
-    "target": "ES6",
+    "target": "ES2017",
     "module": "ES6",
     "moduleResolution": "node",
     "outDir": "build",
@@ -10,6 +10,7 @@
     "skipLibCheck": true,
     "types": ["firefox-webext-browser"],
     "lib": ["es2021", "DOM", "ES2021.String"],
+    "declaration": false
   },
   "include": [
     "src/**/*.ts",

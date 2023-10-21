@@ -4,7 +4,8 @@ interface Message {
   payload: string;
 }
 
-browser.storage.local.get('cachedCss')
+browser.storage.local
+  .get('cachedCss')
   .then(item => {
     const css: string = item.cachedCss;
     applyStyle('cyberfeeder-style', css);
@@ -15,12 +16,12 @@ browser.storage.local.get('cachedCss')
 
 function applyStyle(id: string, css: string) {
   let styleElement = document.getElementById(id);
-    if (!styleElement) {
-      styleElement = document.createElement('style');
-      styleElement.id = id;
-      document.head.appendChild(styleElement);
-    }
-    styleElement.textContent = css;
+  if (!styleElement) {
+    styleElement = document.createElement('style');
+    styleElement.id = id;
+    document.head.appendChild(styleElement);
+  }
+  styleElement.textContent = css;
 }
 
 browser.runtime.onMessage.addListener((message: Message) => {

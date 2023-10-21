@@ -20,6 +20,8 @@
     "node": ">= 10.0.0"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
     "@types/firefox-webext-browser": "^111.0.2",
     "@types/node": "20.4.6",
     "gts": "^5.0.1",
