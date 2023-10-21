@@ -15,4 +15,8 @@
   "overrides": [
     {"files": ["./src/**/*.ts"]}
   ],
+  "ignorePatterns": [
+    "app/**/*.js",
+    "rollup/**/*.js"
+  ]
 }
