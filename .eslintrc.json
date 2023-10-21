@@ -2,5 +2,17 @@
   "extends": "./node_modules/gts/",
   "rules": {
     "node/no-unpublished-import": "off"
-  }
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "globals": {
+    "browser": true
+  },
+  "env": {
+    "browser": true
+  },
+  "overrides": [
+    {"files": ["./src/**/*.ts"]}
+  ],
 }

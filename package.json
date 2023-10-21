@@ -16,6 +16,9 @@
   },
   "author": "Rhahi",
   "license": "MIT",
+  "engines": {
+    "node": ">= 10.0.0"
+  },
   "devDependencies": {
     "@types/firefox-webext-browser": "^111.0.2",
     "@types/node": "20.4.6",
