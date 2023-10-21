@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "gts lint",
     "clean": "gts clean && rm -rf app/js/*",
-    "build": "sh build.sh",
+    "build": "sh scripts/build.sh",
     "compile": "tsc",
     "fix": "gts fix",
     "prepare": "npm run compile",
