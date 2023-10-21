@@ -12,7 +12,8 @@
     "prepare": "npm run compile",
     "pretest": "npm run compile",
     "posttest": "npm run lint",
-    "package": "rm -f ./.package/cyberfeeder.zip && zip -r -FS .package/cyberfeeder.zip * --exclude './.*' --exclude './node_modules/*'"
+    "package": "rm -f ./.package/cyberfeeder.zip && zip -r -FS .package/cyberfeeder.zip * --exclude './.*' --exclude './node_modules/*'",
+    "postversion": "sh scripts/version.sh"
   },
   "author": "Rhahi",
   "license": "MIT",
