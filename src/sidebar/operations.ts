@@ -30,7 +30,7 @@ export async function sendIt(css?: string) {
         });
       }
     })
-    .catch(e => console.warn('Could not send style to Jnet. Is jnet open?'));
+    .catch(() => console.warn('Could not send style to Jnet. Is jnet open?'));
 }
 
 /**

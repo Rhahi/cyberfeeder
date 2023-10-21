@@ -123,6 +123,7 @@ function registerBackupEvent() {
     return;
   }
   button?.addEventListener('click', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const storage = await browser.storage.local.get(null as any);
     const data = JSON.stringify(storage);
     const blob = new Blob([data], {type: 'application/json'});
