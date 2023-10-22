@@ -1,5 +1,8 @@
 #!/bin/sh
 
+set -e
+
+npm run lint
 npm run clean
 npm run compile
 mkdir -p "./app/js"
