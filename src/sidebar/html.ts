@@ -1,4 +1,4 @@
-import {getCategorizedStyles, getStyles, getToggles} from './data';
+import {getCategorizedStyles, getStyles, getStyleToggles} from './data';
 import {Category, IdStyle, SavedToggles, StyleItemUI} from './types';
 
 /**
@@ -17,7 +17,7 @@ export function rebuildStyle() {
  */
 export async function buildSidebar() {
   const {bundledStyles, userStyles} = await getStyles();
-  const toggles = await getToggles();
+  const toggles = await getStyleToggles();
   const element = document.getElementById('styles');
   if (element) {
     const categorized = getCategorizedStyles(bundledStyles, userStyles);

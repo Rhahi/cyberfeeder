@@ -84,7 +84,7 @@ async function saveBundled(jsonData: StyleData) {
 }
 
 /** Read id-toggle relationship from localstorage */
-export async function getToggles() {
+export async function getStyleToggles() {
   const bundledToggles = await browser.storage.local.get('bundledToggles').then(item => item.bundledToggles as SavedToggles);
   if (!bundledToggles) {
     console.error('Bundled toggles are expected, but there is none.');
