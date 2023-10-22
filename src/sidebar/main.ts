@@ -1,5 +1,5 @@
 import {initializeLocalStorage} from './data';
-import {buildSidebar, rebuildStyle} from './html';
+import {buildSidebarStyles, buildSidebarScripts, rebuildStyle} from './html';
 import {sendIt} from './operations';
 import {registerHandlers} from './handlers';
 
@@ -8,7 +8,7 @@ import {registerHandlers} from './handlers';
  */
 document.addEventListener('DOMContentLoaded', async () => {
   await initializeLocalStorage();
-  await buildSidebar();
+  await buildSidebarStyles();
   await registerHandlers();
   await sendIt(rebuildStyle());
 });

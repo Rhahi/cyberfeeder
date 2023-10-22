@@ -15,7 +15,7 @@ export function rebuildStyle() {
 /**
  * Populate HTML in the sidebar based on CSS data and configurations
  */
-export async function buildSidebar() {
+export async function buildSidebarStyles() {
   const {bundledStyles, userStyles} = await getStyles();
   const toggles = await getStyleToggles();
   const element = document.getElementById('styles');
