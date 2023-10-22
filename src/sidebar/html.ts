@@ -302,9 +302,23 @@ function populateCheckbox(div: HTMLElement, classPrefix: string, category: Categ
 async function setVersion() {
   const element = document.getElementById('version');
   if (!element) {
-    return console.warn("Coudldn't find version element");
+    console.warn("Coudldn't find version element");
+    return;
   }
+  if (!element.textContent || element.textContent.length === 0) {
+    return;
+  }
+  element.textContent = '';
   const version = await browser.storage.local.get('version').then(item => item.version as string);
+  const scriptVersion = await browser.storage.local.get('scriptVersion').then(item => item.scriptVersion as string);
   const appVersion = browser.runtime.getManifest().version;
-  element.textContent = `app version: ${appVersion}, style version: ${version}`;
+  const appSpan = document.createElement('span');
+  const styleSpan = document.createElement('span');
+  const scriptSpan = document.createElement('span');
+  appSpan.textContent = `app version: ${appVersion}`;
+  styleSpan.textContent = `style version: ${version}`;
+  scriptSpan.textContent = `script version: ${scriptVersion}`;
+  element.appendChild(appSpan);
+  element.appendChild(styleSpan);
+  element.appendChild(scriptSpan);
 }
