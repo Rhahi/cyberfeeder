@@ -32,8 +32,8 @@ export async function buildSidebarStyles() {
       h2.textContent = key;
       div.appendChild(h2);
 
-      populateRadioButton(div, category, toggles);
-      populateCheckbox(div, category, toggles);
+      populateRadioButton(div, 'style', category, toggles);
+      populateCheckbox(div, 'style', category, toggles);
     }
   }
   await setVersion();
@@ -79,34 +79,28 @@ export function getStyleUI(from: string | undefined | HTMLElement): StyleItemUI 
   return;
 }
 
-function populateRadioButtonHTML(ul: HTMLElement, s: IdStyle, radioName: string, toggles?: SavedToggles) {
-  const t = toggles
-    ? toggles[s.id]
-    : {
-        enabled: s.default,
-        customize: false,
-      };
-
+function populateRadioButtonHTML(ul: HTMLElement, prefix: string, s: IdStyle, radioName: string, toggles?: SavedToggles) {
+  const t = toggles ? toggles[s.id] : {enabled: s.default, customize: false};
   const li = document.createElement('li');
   if (!s.id) {
     li.textContent = 'Error occured while parsing data';
   } else {
     // <li class="style-item radio" id=${s.id}>
-    li.className = 'style-item radio';
+    li.className = `${prefix}-item radio`;
     li.id = s.id;
 
     // <input type="radio" id="style-${s.id}" name="${radioName}" class="style-enable"${t.enabled ? ' checked' : ''} />
     const inputRadio = document.createElement('input');
     inputRadio.type = 'radio';
-    inputRadio.id = `style-${s.id}`;
+    inputRadio.id = `${prefix}-${s.id}`;
     inputRadio.name = radioName;
-    inputRadio.className = 'style-enable';
+    inputRadio.className = `${prefix}-enable`;
     inputRadio.checked = t.enabled;
     li.appendChild(inputRadio);
 
     // <label for="style-${s.id}">${s.name}</label>
     const labelForRadio = document.createElement('label');
-    labelForRadio.htmlFor = `style-${s.id}`;
+    labelForRadio.htmlFor = `${prefix}-${s.id}`;
     labelForRadio.textContent = s.name;
     li.appendChild(labelForRadio);
 
@@ -133,9 +127,9 @@ function populateRadioButtonHTML(ul: HTMLElement, s: IdStyle, radioName: string,
     // <input type="checkbox" id="custom-${s.id}" name="custom-${s.id}" class="style-customize"/>
     const inputCheckbox = document.createElement('input');
     inputCheckbox.type = 'checkbox';
-    inputCheckbox.id = `custom-${s.id}`;
-    inputCheckbox.name = `custom-${s.id}`;
-    inputCheckbox.className = 'style-customize';
+    inputCheckbox.id = `${prefix}-custom-${s.id}`;
+    inputCheckbox.name = `${prefix}-custom-${s.id}`;
+    inputCheckbox.className = `${prefix}-customize`;
     inputCheckbox.checked = t.customize;
     div.appendChild(inputCheckbox);
 
@@ -149,7 +143,7 @@ function populateRadioButtonHTML(ul: HTMLElement, s: IdStyle, radioName: string,
     // <input type="button" class="style-reset" value="Reset" title="Reset to the bundled style"${t.customize ? '' : ' disabled'} />
     const inputReset = document.createElement('input');
     inputReset.type = 'button';
-    inputReset.className = 'style-reset';
+    inputReset.className = `${prefix}-reset`;
     inputReset.value = 'Reset';
     inputReset.title = 'Reset to the bundled style';
     inputReset.disabled = !t.customize;
@@ -158,7 +152,7 @@ function populateRadioButtonHTML(ul: HTMLElement, s: IdStyle, radioName: string,
     // <input type="button" class="style-save" value="Save" title="Save current customization into local storage"${t.customize ? '' : ' disabled'} />
     const inputSave = document.createElement('input');
     inputSave.type = 'button';
-    inputSave.className = 'style-save';
+    inputSave.className = `${prefix}-save`;
     inputSave.value = 'Save';
     inputSave.title = 'Save current customization into local storage';
     inputSave.disabled = !t.customize;
@@ -173,7 +167,7 @@ function populateRadioButtonHTML(ul: HTMLElement, s: IdStyle, radioName: string,
   ul.appendChild(li);
 }
 
-function populateRadioButton(div: HTMLElement, category: Category, toggles?: SavedToggles) {
+function populateRadioButton(div: HTMLElement, classPrefix: string, category: Category, toggles?: SavedToggles) {
   if (Object.keys(category.radioButton).length === 0) {
     return;
   }
@@ -192,12 +186,12 @@ function populateRadioButton(div: HTMLElement, category: Category, toggles?: Sav
     ul.appendChild(h3);
 
     for (const style of group) {
-      populateRadioButtonHTML(ul, style, radioId, toggles);
+      populateRadioButtonHTML(ul, classPrefix, style, radioId, toggles);
     }
   }
 }
 
-function populateCheckboxHTML(ul: HTMLElement, s: IdStyle, toggles?: SavedToggles) {
+function populateCheckboxHTML(ul: HTMLElement, prefix: string, s: IdStyle, toggles?: SavedToggles) {
   const t = toggles
     ? toggles[s.id]
     : {
@@ -210,21 +204,21 @@ function populateCheckboxHTML(ul: HTMLElement, s: IdStyle, toggles?: SavedToggle
     li.textContent = 'Error occured while parsing data';
   } else {
     // <li class="style-item check" id=${s.id}>
-    li.className = 'style-item check';
+    li.className = `${prefix}-item check`;
     li.id = s.id;
 
     //   <input type="checkbox" id="style-${s.id}" name="${s.id}" class="style-enable"${t.enabled ? ' checked' : ''} />
     const input = document.createElement('input');
     input.type = 'checkbox';
-    input.id = `style-${s.id}`;
+    input.id = `${prefix}-${s.id}`;
     input.name = s.id;
-    input.className = 'style-enable';
+    input.className = `${prefix}-enable`;
     input.checked = t.enabled;
     li.appendChild(input);
 
     //   <label for="style-${s.id}">${s.name}</label>
     const label = document.createElement('label');
-    label.htmlFor = `style-${s.id}`;
+    label.htmlFor = `${prefix}-${s.id}`;
     label.textContent = s.name;
     li.appendChild(label);
 
@@ -251,15 +245,15 @@ function populateCheckboxHTML(ul: HTMLElement, s: IdStyle, toggles?: SavedToggle
     //       <input type="checkbox" id="custom-${s.id}" name="custom-${s.id}" class="style-customize"/>
     const customCheckbox = document.createElement('input');
     customCheckbox.type = 'checkbox';
-    customCheckbox.id = `custom-${s.id}`;
-    customCheckbox.name = `custom-${s.id}`;
-    customCheckbox.className = 'style-customize';
+    customCheckbox.id = `${prefix}-custom-${s.id}`;
+    customCheckbox.name = `${prefix}-custom-${s.id}`;
+    customCheckbox.className = `${prefix}-customize`;
     customCheckbox.checked = t.customize;
     div.appendChild(customCheckbox);
 
     //       <label for="custom-${s.id}" title="Turn on or off customizaion. Unsaved customization will be lost.">Customize</label>
     const customLabel = document.createElement('label');
-    customLabel.htmlFor = `custom-${s.id}`;
+    customLabel.htmlFor = `${prefix}-custom-${s.id}`;
     customLabel.title = 'Turn on or off customization. Unsaved customization will be lost.';
     customLabel.textContent = 'Customize';
     div.appendChild(customLabel);
@@ -267,7 +261,7 @@ function populateCheckboxHTML(ul: HTMLElement, s: IdStyle, toggles?: SavedToggle
     //       <input type="button" class="style-reset" value="Reset" title="Reset to the bundled style"${t.customize ? '' : ' disabled'} />
     const resetButton = document.createElement('input');
     resetButton.type = 'button';
-    resetButton.className = 'style-reset';
+    resetButton.className = `${prefix}-reset`;
     resetButton.value = 'Reset';
     resetButton.title = 'Reset to the bundled style';
     resetButton.disabled = !t.customize;
@@ -276,7 +270,7 @@ function populateCheckboxHTML(ul: HTMLElement, s: IdStyle, toggles?: SavedToggle
     //       <input type="button" class="style-save" value="Save" title="Save current customization into local storage"${t.customize ? '' : ' disabled'} />
     const saveButton = document.createElement('input');
     saveButton.type = 'button';
-    saveButton.className = 'style-save';
+    saveButton.className = `${prefix}-save`;
     saveButton.value = 'Save';
     saveButton.title = 'Save current customization into local storage';
     saveButton.disabled = !t.customize;
@@ -291,7 +285,7 @@ function populateCheckboxHTML(ul: HTMLElement, s: IdStyle, toggles?: SavedToggle
   ul.appendChild(li);
 }
 
-function populateCheckbox(div: HTMLElement, category: Category, toggles?: SavedToggles) {
+function populateCheckbox(div: HTMLElement, classPrefix: string, category: Category, toggles?: SavedToggles) {
   if (category.checkBoxes.length === 0) {
     return;
   }
@@ -301,7 +295,7 @@ function populateCheckbox(div: HTMLElement, category: Category, toggles?: SavedT
   div.appendChild(ul);
 
   for (const style of Object.values(category.checkBoxes)) {
-    populateCheckboxHTML(ul, style, toggles);
+    populateCheckboxHTML(ul, classPrefix, style, toggles);
   }
 }
 
