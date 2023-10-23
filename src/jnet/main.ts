@@ -1,32 +1,29 @@
+import * as css from './css';
+import * as script from './script';
+
+css.onLoad();
+script.onLoad();
+
 interface Message {
   id: string;
-  action: 'style';
-  payload: string;
-}
-
-browser.storage.local
-  .get('cachedCss')
-  .then(item => {
-    const css: string = item.cachedCss;
-    applyStyle('cyberfeeder-style', css);
-  })
-  .catch(() => {
-    console.log('Failed to apply cached CSS');
-  });
-
-function applyStyle(id: string, css: string) {
-  let styleElement = document.getElementById(id);
-  if (!styleElement) {
-    styleElement = document.createElement('style');
-    styleElement.id = id;
-    document.head.appendChild(styleElement);
-  }
-  styleElement.textContent = css;
+  action: 'style' | 'script';
+  toggles?: script.Toggle[];
+  css: string;
 }
 
 browser.runtime.onMessage.addListener((message: Message) => {
-  console.info('Got new style');
   if (message.action === 'style') {
-    applyStyle(message.id, message.payload);
+    css.applyStyle(message.id, message.css);
+    return;
+  }
+  if (message.action === 'script') {
+    css.applyStyle(message.id, message.css);
+    if (!message.toggles) {
+      return;
+    }
+    for (const toggle of message.toggles) {
+      script.setScript(toggle);
+    }
+    return;
   }
 });
