@@ -1,12 +1,18 @@
 import {sendIt, saveUserToggles, saveCustom} from './operations';
 import {getStyleUI, rebuildStyle} from './html';
 import {getStyles} from './data';
+import * as operations from './operations';
+import {TabType} from './types';
 
 export async function registerHandlers() {
-  registerStyleToggleEvent();
-  registerCustomizeToggleEvent();
-  registerCustomizeResetEvent();
-  registerCustomizeSaveEvent();
+  registerStyleToggleEvent('style');
+  registerStyleToggleEvent('script');
+  registerCustomizeToggleEvent('style');
+  registerCustomizeToggleEvent('script');
+  registerCustomizeResetEvent('style');
+  registerCustomizeResetEvent('script');
+  registerCustomizeSaveEvent('style');
+  registerCustomizeSaveEvent('script');
   registerBackupEvent();
   registerImportEvent();
   registerRebuildHandler();
@@ -18,13 +24,13 @@ export async function registerHandlers() {
 /**
  * Activates when user changes CSS toggles
  */
-function registerStyleToggleEvent() {
-  const styleCheckboxes = document.getElementsByClassName('style-enable');
+function registerStyleToggleEvent(type: TabType) {
+  const styleCheckboxes = document.getElementsByClassName(`${type}-enable`);
   for (let i = 0; i < styleCheckboxes.length; i++) {
     styleCheckboxes[i].addEventListener('change', async () => {
-      const style = rebuildStyle();
-      await saveUserToggles();
-      await sendIt(style);
+      const style = rebuildStyle(type);
+      await saveUserToggles(type);
+      await operations.sendIt(type, style);
     });
   }
 }
@@ -32,38 +38,38 @@ function registerStyleToggleEvent() {
 /**
  * Activates when user toggles CSS customization
  */
-function registerCustomizeToggleEvent() {
-  const customCheckboxes = document.getElementsByClassName('style-customize');
+function registerCustomizeToggleEvent(type: TabType) {
+  const customCheckboxes = document.getElementsByClassName(`${type}-customize`);
   for (let i = 0; i < customCheckboxes.length; i++) {
     customCheckboxes[i].addEventListener('change', async () => {
       const element = customCheckboxes[i];
       const li = element.closest('li');
-      const style = getStyleUI(li?.id);
+      const style = getStyleUI(li?.id, type);
       if (!style) {
         console.warn('Enable/disable target not found');
         return;
       }
 
-      const styles = await getStyles();
+      const {bundledStyles, userStyles} = await getStyles(type);
       style.textarea.disabled = !style.customize.checked;
       style.resetButton.disabled = !style.customize.checked;
       style.saveButton.disabled = !style.customize.checked;
       if (style.customize.checked) {
         // only enable editing but do not send the styles to jnet
-        if (style.id in styles.userStyles) {
-          style.textarea.value = styles.userStyles[style.id].css;
+        if (style.id in userStyles) {
+          style.textarea.value = userStyles[style.id].css;
         }
       } else {
         // reset textarea to bundled style
-        if (style.id in styles.bundledStyles) {
-          style.textarea.value = styles.bundledStyles[style.id].css;
+        if (style.id in bundledStyles) {
+          style.textarea.value = bundledStyles[style.id].css;
         } else {
           console.warn('bundled style not found, do not modify text area');
         }
       }
-      await saveUserToggles();
+      await saveUserToggles(type);
       if (style.enable.checked) {
-        await sendIt(rebuildStyle());
+        await sendIt(type, rebuildStyle(type));
       }
     });
   }
@@ -72,19 +78,19 @@ function registerCustomizeToggleEvent() {
 /**
  * Activates when user presses "reset" on customization
  */
-function registerCustomizeResetEvent() {
-  const applyButtons = document.getElementsByClassName('style-reset');
+function registerCustomizeResetEvent(type: TabType) {
+  const applyButtons = document.getElementsByClassName(`${type}-reset`);
   for (let i = 0; i < applyButtons.length; i++) {
     applyButtons[i].addEventListener('click', async () => {
       const element = applyButtons[i];
       const li = element.closest('li');
-      const style = getStyleUI(li?.id);
+      const style = getStyleUI(li?.id, type);
       if (!style) {
         return;
       }
-      const styles = await getStyles();
-      if (style.id in styles.bundledStyles) {
-        style.textarea.value = styles.bundledStyles[style.id].css;
+      const {bundledStyles} = await getStyles(type);
+      if (style.id in bundledStyles) {
+        style.textarea.value = bundledStyles[style.id].css;
       } else {
         console.info('Tried to revert to bundled style, but there was none.');
       }
@@ -95,22 +101,21 @@ function registerCustomizeResetEvent() {
 /**
  * Activates when user presses "save" button on customization
  */
-function registerCustomizeSaveEvent() {
-  const applyButtons = document.getElementsByClassName('style-save');
+function registerCustomizeSaveEvent(type: TabType) {
+  const applyButtons = document.getElementsByClassName(`${type}-save`);
   for (let i = 0; i < applyButtons.length; i++) {
     applyButtons[i].addEventListener('click', async () => {
       const element = applyButtons[i];
       const li = element.closest('li');
-      const style = getStyleUI(li?.id);
+      const style = getStyleUI(li?.id, type);
       if (!style) {
         return;
       }
-      // update style
-      await saveCustom(style);
-      await saveUserToggles();
+      await saveCustom(type, style);
+      await saveUserToggles(type);
       if (style.enable.checked) {
-        const style = rebuildStyle();
-        await sendIt(style);
+        const style = rebuildStyle(type);
+        await sendIt(type, style);
       }
     });
   }
@@ -180,7 +185,8 @@ async function registerMessageHandler() {
   browser.runtime.onMessage.addListener(async message => {
     console.info('Got initialize request from jnet, sending style');
     if (message.action === 'init') {
-      await sendIt(rebuildStyle());
+      await sendIt('style', rebuildStyle('style'));
+      await sendIt('script', rebuildStyle('script'));
     }
   });
 }
@@ -192,7 +198,8 @@ function registerResetHandler() {
     return;
   }
   button.addEventListener('click', async () => {
-    await sendIt('');
+    await sendIt('style', '');
+    await sendIt('script', '');
   });
 }
 
@@ -203,7 +210,8 @@ function registerPurgeHandler() {
     return;
   }
   button.addEventListener('click', async () => {
-    await sendIt('');
+    await sendIt('style', '');
+    await sendIt('script', '');
     await browser.storage.local.clear();
     browser.runtime.reload();
   });
@@ -216,7 +224,8 @@ function registerRebuildHandler() {
     return;
   }
   button.addEventListener('click', async () => {
-    await sendIt(rebuildStyle());
+    await sendIt('style', rebuildStyle('style'));
+    await sendIt('script', rebuildStyle('script'));
   });
 }
 

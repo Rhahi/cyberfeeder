@@ -51,3 +51,5 @@ export interface StyleItemUI {
   resetButton: HTMLInputElement;
   saveButton: HTMLInputElement;
 }
+
+export type TabType = 'style' | 'script';

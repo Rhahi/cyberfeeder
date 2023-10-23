@@ -1,12 +1,12 @@
-import {getCategorizedStyles, getStyles, getStyleToggles} from './data';
-import {Category, IdStyle, SavedToggles, StyleItemUI} from './types';
+import * as data from './data';
+import {Category, IdStyle, SavedToggles, StyleItemUI, TabType} from './types';
 
 /**
  * Collect activated CSS styles and concatenate them into one
  */
-export function rebuildStyle() {
+export function rebuildStyle(prefix: string) {
   let css = '';
-  document.querySelectorAll('input.style-enable:checked + label + details textarea').forEach(textarea => {
+  document.querySelectorAll(`input.${prefix}-enable:checked + label + details textarea`).forEach(textarea => {
     css += (textarea as HTMLInputElement).value + '\n';
   });
   return css;
@@ -15,34 +15,38 @@ export function rebuildStyle() {
 /**
  * Populate HTML in the sidebar based on CSS data and configurations
  */
-export async function buildSidebarStyles() {
-  const {bundledStyles, userStyles} = await getStyles();
-  const toggles = await getStyleToggles();
-  const element = document.getElementById('styles');
+export async function buildSidebar(type: TabType) {
+  const {bundledStyles, userStyles} = await data.getStyles(type);
+  console.log(bundledStyles);
+  let toggles;
+  if (type === 'style') {
+    toggles = await data.getStyleToggles();
+  }
+  if (type === 'script') {
+    toggles = await data.getScriptToggles();
+  }
+  const element = document.getElementById(`${type}s`);
   if (element) {
-    const categorized = getCategorizedStyles(bundledStyles, userStyles);
+    const categorized = data.getCategorizedStyles(bundledStyles, userStyles);
     for (const [key, category] of Object.entries(categorized)) {
-      // innerHTML += '<div class="category">';
       const div = document.createElement('div');
       div.className = 'category';
       element.appendChild(div);
-
-      // innerHTML += `<h2>${key}</h2>`;
       const h2 = document.createElement('h2');
       h2.textContent = key;
       div.appendChild(h2);
-
-      populateRadioButton(div, 'style', category, toggles);
-      populateCheckbox(div, 'style', category, toggles);
+      populateRadioButton(div, type, category, toggles);
+      populateCheckbox(div, type, category, toggles);
     }
+  } else {
+    console.warn('Could not build sidebar, element not found');
   }
-  await setVersion();
 }
 
 /**
  * Search style UI unit based on ID and return its interactable HTML elements
  */
-export function getStyleUI(from: string | undefined | HTMLElement): StyleItemUI | undefined {
+export function getStyleUI(from: string | undefined | HTMLElement, type: TabType): StyleItemUI | undefined {
   if (!from) {
     console.warn(`Invalid style id ${from}`);
     return;
@@ -57,11 +61,11 @@ export function getStyleUI(from: string | undefined | HTMLElement): StyleItemUI 
     console.warn(`Could not find requested list item ${from}`);
     return;
   }
-  const enableCheckbox = li.querySelector<HTMLInputElement>('.style-enable');
-  const customCheckbox = li.querySelector<HTMLInputElement>('.style-customize');
+  const enableCheckbox = li.querySelector<HTMLInputElement>(`.${type}-enable`);
+  const customCheckbox = li.querySelector<HTMLInputElement>(`.${type}-customize`);
   const textarea = li.querySelector<HTMLTextAreaElement>('textarea');
-  const resetButton = li.querySelector<HTMLInputElement>('.style-reset');
-  const saveButton = li.querySelector<HTMLInputElement>('.style-save');
+  const resetButton = li.querySelector<HTMLInputElement>(`.${type}-reset`);
+  const saveButton = li.querySelector<HTMLInputElement>(`.${type}-save`);
   if (enableCheckbox && customCheckbox && textarea && resetButton && saveButton) {
     return {
       id: li.id,
@@ -299,7 +303,7 @@ function populateCheckbox(div: HTMLElement, classPrefix: string, category: Categ
   }
 }
 
-async function setVersion() {
+export async function setVersion() {
   const element = document.getElementById('version');
   if (!element) {
     console.warn("Coudldn't find version element");

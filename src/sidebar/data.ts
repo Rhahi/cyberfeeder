@@ -1,4 +1,4 @@
-import {CollectedStyle, IdStyle, IdToggle, SavedToggles, StyleData} from './types';
+import {CollectedStyle, IdStyle, IdToggle, SavedToggles, StyleData, TabType} from './types';
 
 /**
  * Read json file from app's data directory
@@ -21,38 +21,87 @@ async function readJson(name: string): Promise<StyleData> {
 }
 
 /**
- * There are 4 storage keys:
+ * Local storage names:
  *
- * - version = simple version string
- * - toggles = save toggle status per style ID
- * - styles = styles packaged with the app, not controlled by user
- * - userstyles = styles that the user has modified or created. untouched by updates.
+ * (styles tab)
+ * version
+ * bundledStyles
+ * bundledToggles
+ * userStyles
+ * userToggles
+ *
+ * (scripts tab)
+ * scriptVersion
+ * bundledScriptStyles
+ * bundledScriptToggles
+ * userScriptStyles
+ * userScriptToggles
  */
 export async function initializeLocalStorage() {
-  const jsonData = await readJson('style');
-  const prevVersion = await browser.storage.local.get('version').then(item => item.version);
-  if (!prevVersion) {
-    console.info('There is no bundled style data definition. Initialize.');
-    await saveBundled(jsonData);
-    return;
-  }
-  if (jsonData.version === 'override') {
-    console.info('Overriding stored styles with development override. Update.');
+  const prevStyleVersion = await browser.storage.local.get('version').then(item => item.version);
+  const prevScriptVersion = await browser.storage.local.get('scriptVersion').then(item => item.scriptVersion);
+  if (prevStyleVersion === 'override' || prevScriptVersion === 'override') {
     await browser.storage.local.clear();
-    await saveBundled(jsonData);
+    console.info('Overriding stored styles with development override.');
+  }
+  await initializeLocalStorageStyle(prevStyleVersion);
+  await initializeLocalStorageScript(prevScriptVersion);
+}
+
+async function initializeLocalStorageStyle(prevVersion: string) {
+  const data = await readJson('style');
+  if (!prevVersion || prevVersion === 'override') {
+    console.info('Initialize bundled style');
+    await saveBundledStyle(data);
     return;
   }
-  if (jsonData.version === prevVersion) {
-    console.info('Bundled style version matches previous version');
+  if (data.version === prevVersion) {
+    console.info('Bundled style OK');
     return;
   }
-  console.info('New style definition found. Update.');
-  await saveBundled(jsonData);
+  console.info('Update bundled style');
+  await saveBundledStyle(data);
+}
+
+async function initializeLocalStorageScript(prevVersion: string) {
+  const data = await readJson('script');
+  if (!prevVersion || prevVersion === 'override') {
+    console.info('Initialize bundled script style');
+    await saveBundledScript(data);
+    return;
+  }
+  if (data.version === prevVersion) {
+    console.info('Bundled script style OK');
+    return;
+  }
+  console.info('Update bundled script style');
+  await saveBundledScript(data);
 }
 
 /** Read the bundled style and put them in local storage */
-async function saveBundled(jsonData: StyleData) {
-  const bundledStyles: IdStyle[] = [];
+async function saveBundledStyle(data: StyleData) {
+  const {styles: bundledStyles, toggles: bundledToggles} = processBundled(data);
+  await browser.storage.local.set({
+    version: data.version,
+    bundledStyles: bundledStyles,
+    bundledToggles: bundledToggles,
+  });
+  console.info('Saved bundled data (style)');
+}
+
+async function saveBundledScript(data: StyleData) {
+  const {styles: bundledScriptStyles, toggles: bundledScriptToggles} = processBundled(data);
+  await browser.storage.local.set({
+    scriptVersion: data.version,
+    bundledScriptStyles: bundledScriptStyles,
+    bundledScriptToggles: bundledScriptToggles,
+  });
+  console.info('Saved bundled data (script)');
+}
+
+function processBundled(jsonData: StyleData) {
+  const styles: IdStyle[] = [];
+  const toggles: SavedToggles = {};
   const bundledTogglesFlat: IdToggle[] = [];
   let styleCount = 0;
   for (const style of jsonData.style) {
@@ -67,20 +116,14 @@ async function saveBundled(jsonData: StyleData) {
       enabled: style.default,
       customize: false,
     };
-    bundledStyles.push(data);
+    styles.push(data);
     bundledTogglesFlat.push(toggle);
   }
-  console.info(`Found ${styleCount} bundled styles`);
-  const bundledToggles: SavedToggles = {};
+  console.info(`Found ${styleCount} bundled styles/scripts`);
   for (const item of Object.values(bundledTogglesFlat)) {
-    bundledToggles[item.id] = item;
+    toggles[item.id] = item;
   }
-  await browser.storage.local.set({
-    version: jsonData.version,
-    bundledStyles: bundledStyles,
-    bundledToggles: bundledToggles,
-  });
-  console.info('Saved version, bundledStyles, bundledToggles');
+  return {styles, toggles};
 }
 
 /** Read id-toggle relationship from localstorage */
@@ -94,6 +137,23 @@ export async function getStyleToggles() {
   if (!userToggles) {
     return bundledToggles;
   }
+  return combineToggles(bundledToggles, userToggles);
+}
+
+export async function getScriptToggles() {
+  const bundledToggles = await browser.storage.local.get('bundledScriptToggles').then(item => item.bundledScriptToggles as SavedToggles);
+  if (!bundledToggles) {
+    console.error('Bundled toggles are expected, but there is none.');
+    return;
+  }
+  const userToggles = await browser.storage.local.get('userScriptToggles').then(item => item.userScriptToggles as SavedToggles);
+  if (!userToggles) {
+    return bundledToggles;
+  }
+  return combineToggles(bundledToggles, userToggles);
+}
+
+function combineToggles(bundledToggles: SavedToggles, userToggles: SavedToggles) {
   let userTogglesLoadCount = 0;
   const combinedToggles: SavedToggles = {};
   for (const item of Object.values(bundledToggles)) {
@@ -163,9 +223,17 @@ function toDict(styles?: IdStyle[]) {
 /**
  * get bundledStyles and userStyles data as dictionary
  */
-export async function getStyles() {
-  const data = await browser.storage.local.get(['bundledStyles', 'userStyles']);
-  const bundledStyles = toDict(data.bundledStyles);
-  const userStyles = toDict(data.userStyles);
+export async function getStyles(type: TabType) {
+  let bundledStyles;
+  let userStyles;
+  if (type === 'style') {
+    const data = await browser.storage.local.get(['bundledStyles', 'userStyles']);
+    bundledStyles = toDict(data.bundledStyles);
+    userStyles = toDict(data.userStyles);
+  } else {
+    const data = await browser.storage.local.get(['bundledScriptStyles', 'userScriptStyles']);
+    bundledStyles = toDict(data.bundledScriptStyles);
+    userStyles = toDict(data.userScriptStyles);
+  }
   return {bundledStyles, userStyles};
 }

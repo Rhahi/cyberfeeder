@@ -1,6 +1,6 @@
 import {initializeLocalStorage} from './data';
-import {buildSidebarStyles, buildSidebarScripts, rebuildStyle} from './html';
-import {sendIt} from './operations';
+import * as html from './html';
+import * as operations from './operations';
 import {registerHandlers} from './handlers';
 
 /**
@@ -8,7 +8,10 @@ import {registerHandlers} from './handlers';
  */
 document.addEventListener('DOMContentLoaded', async () => {
   await initializeLocalStorage();
-  await buildSidebarStyles();
+  await html.buildSidebar('style');
+  await html.buildSidebar('script');
+  await html.setVersion();
   await registerHandlers();
-  await sendIt(rebuildStyle());
+  await operations.sendIt('style', html.rebuildStyle('style'));
+  await operations.sendIt('script', html.rebuildStyle('script'));
 });
