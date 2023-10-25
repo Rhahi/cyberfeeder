@@ -90,7 +90,7 @@ main > input:nth-child(3):checked ~ .tab-custom-panels > .tab-panel:nth-child(2)
   }
 }
 
-li.radio .style-enable {
+li.radio .style-enable, li.radio .script-enable {
   &:checked ~ label::before {
     content: "🟢 ";
   }
@@ -99,7 +99,7 @@ li.radio .style-enable {
   }
 }
 
-li.check .style-enable {
+li.check .style-enable, li.check .script-enable {
   &:checked ~ label::before {
     content: "✅ ";
   }
@@ -108,12 +108,12 @@ li.check .style-enable {
   }
 }
 
-.style-item {
-  .style-enable {
+.style-item, .script-item {
+  .style-enable, .script-enable {
     display: none;
   }
 
-  .style-enable ~ label {
+  .style-enable ~ label, .script-enable ~ label {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -124,7 +124,7 @@ li.check .style-enable {
     cursor: pointer;
   }
 
-  .style-enable:checked ~ label {
+  .style-enable:checked ~ label, .script-enable:checked ~ label {
     border: 0.2em solid rgba(0,0,0,0.5);
     background-color: rgba(0,0,0,0.25);
   }
@@ -150,7 +150,7 @@ li.check .style-enable {
         font-style: italic;
         margin: 0;
       }
-      input.style-customize {
+      input.style-customize, input.script-customize {
         grid-area: checkbox;
       }
       label {
@@ -174,9 +174,9 @@ li.check .style-enable {
   display: none !important;
 }
 
-#currentStyle {
+#currentStyle, #currentScriptStyle {
   width: 100%;
-  height: 18rem;
+  height: 12rem;
 }
 
 .desc {
