@@ -9,9 +9,9 @@
   <main>
     <input type="radio" name="tabset" id="tab1" aria-controls="styles" checked>
     <label for="tab1">Styles</label>
-    <input type="radio" name="tabset" id="tab2" aria-controls="scripts" class="not-released">
-    <label for="tab2" class="not-released">Scripts</label>
-    <input type="radio" name="tabset" id="tab3" aria-controls="experimental" class="not-released">
+    <input type="radio" name="tabset" id="tab2" aria-controls="scripts">
+    <label for="tab2">Scripts</label>
+    <input type="radio" name="tabset" id="tab3" aria-controls="settings">
     <label for="tab3">Settings</label>
 
     <div class="tab-panels">
@@ -27,6 +27,7 @@
           <p><input type="button" id="backup" value="Download current settings" title="Download all stored data"></p>
           <h3>Current style</h3>
           <textarea id="currentStyle" disabled></textarea>
+          <textarea id="currentScriptStyle" disabled></textarea>
         </div>
         <div class="category">
           <h2>Danger zone</h2>
