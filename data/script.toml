@@ -1,0 +1,19 @@
+version = "1"
+
+[[style]]
+category = "UI improvements"
+series = "none"
+name = "Sort cards in archive"
+default = true
+css = """
+.discard-container .panel.popup {
+  /* display: flex does not work here, since it gets overwritten by scripts */
+  padding-top: 1.2rem;
+  flex-wrap: wrap;
+}
+
+.discard-container .panel.popup > div:first-child {
+  position: absolute;
+  top: 0;
+}
+"""
