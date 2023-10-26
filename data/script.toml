@@ -1,4 +1,4 @@
-version = "1"
+version = "2"
 
 [[style]]
 category = "UI improvements"
@@ -15,5 +15,17 @@ css = """
 .discard-container .panel.popup > div:first-child {
   position: absolute;
   top: 0;
+}
+"""
+
+[[style]]
+category = "Chat interface"
+series = "none"
+name = "New message highlight"
+default = true
+description = "When a new message is available, and you are not scrolled down, chat color will change."
+css = """
+#log-input[newchat="yes"] {
+  background-color: #FF7;
 }
 """
