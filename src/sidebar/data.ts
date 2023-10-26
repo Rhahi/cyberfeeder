@@ -1,4 +1,4 @@
-import {CollectedStyle, IdStyle, IdStyleDict, IdToggle, SavedToggles, StyleData, TabType} from './types';
+import {CollectedStyle, IdStyle, IdStyleDict, IdToggle, SavedToggles, ScriptToggle, StyleData, TabType} from './types';
 
 /**
  * Read json file from app's data directory
@@ -151,6 +151,20 @@ export async function getScriptToggles() {
     return bundledToggles;
   }
   return combineToggles(bundledToggles, userToggles);
+}
+
+export async function getAndCacheCurrentScriptToggles() {
+  const combined = await getScriptToggles();
+  const toggles: ScriptToggle[] = [];
+  await browser.storage.local.set({
+    cachedScriptToggles: combined,
+  });
+  if (combined) {
+    for (const st of Object.values(combined)) {
+      toggles.push({id: st.id, isEnabled: st.enabled});
+    }
+  }
+  return toggles;
 }
 
 function combineToggles(bundledToggles: SavedToggles, userToggles: SavedToggles) {

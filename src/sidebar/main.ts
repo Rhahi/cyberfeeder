@@ -1,4 +1,4 @@
-import {initializeLocalStorage} from './data';
+import {getAndCacheCurrentScriptToggles, initializeLocalStorage} from './data';
 import * as html from './html';
 import * as operations from './operations';
 import {registerHandlers} from './handlers';
@@ -13,5 +13,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   await html.setVersion();
   await registerHandlers();
   await operations.sendIt('style', html.rebuildStyle('style'));
-  await operations.sendIt('script', html.rebuildStyle('script'));
+  const toggles = await getAndCacheCurrentScriptToggles();
+  await operations.sendIt('script', html.rebuildStyle('script'), toggles);
 });
