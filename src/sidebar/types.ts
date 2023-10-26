@@ -19,6 +19,10 @@ export interface IdStyle extends Style {
   id: string;
 }
 
+export interface IdStyleDict {
+  [key: string]: IdStyle;
+}
+
 /** Style representation when loaded in the extension */
 export interface CollectedStyle {
   [category: string]: Category;
@@ -50,6 +54,12 @@ export interface StyleItemUI {
   textarea: HTMLTextAreaElement;
   resetButton: HTMLInputElement;
   saveButton: HTMLInputElement;
+}
+
+export interface ScriptToggle {
+  id: string;
+  isEnabled: boolean;
+  args?: unknown;
 }
 
 export type TabType = 'style' | 'script';

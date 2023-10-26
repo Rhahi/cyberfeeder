@@ -1,4 +1,4 @@
-import {CollectedStyle, IdStyle, IdToggle, SavedToggles, StyleData, TabType} from './types';
+import {CollectedStyle, IdStyle, IdStyleDict, IdToggle, SavedToggles, StyleData, TabType} from './types';
 
 /**
  * Read json file from app's data directory
@@ -167,7 +167,7 @@ function combineToggles(bundledToggles: SavedToggles, userToggles: SavedToggles)
   return combinedToggles;
 }
 
-function populateStyleData(collection: CollectedStyle, primary: {[key: string]: IdStyle}, secondary: {[key: string]: IdStyle}, strategy: 'overwrite-with-secondary' | 'userdata') {
+function populateStyleData(collection: CollectedStyle, primary: IdStyleDict, secondary: IdStyleDict, strategy: 'overwrite-with-secondary' | 'userdata') {
   for (const [key, s] of Object.entries(primary)) {
     if (strategy === 'userdata' && key in secondary) {
       continue;
@@ -199,19 +199,19 @@ function populateStyleData(collection: CollectedStyle, primary: {[key: string]: 
   }
 }
 
-export function getCategorizedStyles(data: {[key: string]: IdStyle}, userdata: {[key: string]: IdStyle}) {
+export function getCategorizedStyles(data: IdStyleDict, userdata: IdStyleDict) {
   const collection: CollectedStyle = {};
   populateStyleData(collection, data, userdata, 'overwrite-with-secondary');
   populateStyleData(collection, userdata, data, 'userdata');
   return collection;
 }
 
-export function toList(styles: {[key: string]: IdStyle}) {
+export function toList(styles: IdStyleDict) {
   return Object.values(styles);
 }
 
 function toDict(styles?: IdStyle[]) {
-  const dict: {[key: string]: IdStyle} = {};
+  const dict: IdStyleDict = {};
   if (styles !== undefined) {
     for (const style of styles) {
       dict[style.id] = style;

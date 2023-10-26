@@ -1,12 +1,12 @@
 import {sendIt, saveUserToggles, saveCustom} from './operations';
 import {getStyleUI, rebuildStyle} from './html';
-import {getStyles} from './data';
+import {getScriptToggles, getStyles} from './data';
 import * as operations from './operations';
-import {TabType} from './types';
+import {ScriptToggle, TabType} from './types';
 
 export async function registerHandlers() {
   registerStyleToggleEvent('style');
-  registerStyleToggleEvent('script');
+  registerScriptToggleEvent();
   registerCustomizeToggleEvent('style');
   registerCustomizeToggleEvent('script');
   registerCustomizeResetEvent('style');
@@ -31,6 +31,24 @@ function registerStyleToggleEvent(type: TabType) {
       const style = rebuildStyle(type);
       await saveUserToggles(type);
       await operations.sendIt(type, style);
+    });
+  }
+}
+
+function registerScriptToggleEvent() {
+  const checkboxes = document.getElementsByClassName('script-enable');
+  for (let i = 0; i < checkboxes.length; i++) {
+    checkboxes[i].addEventListener('change', async () => {
+      const style = rebuildStyle('script');
+      await saveUserToggles('script');
+      const savedToggles = await getScriptToggles();
+      if (savedToggles) {
+        const toggles: ScriptToggle[] = [];
+        for (const st of Object.values(savedToggles)) {
+          toggles.push({id: st.id, isEnabled: st.enabled});
+        }
+        await operations.sendIt('script', style, toggles);
+      }
     });
   }
 }
