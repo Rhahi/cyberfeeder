@@ -1,8 +1,10 @@
 import {applyStyle} from './css';
 import * as sortArchive from './features/sortArchive';
+import * as chatScrollHighlight from './features/chatScrollHighlight';
 
 enum KnownScripts {
   sortAcrhive = 'UI-improvements-none-Sort-cards-in-archive',
+  newMessage = 'Chat-interface-none-New-message-highlight',
 }
 
 export interface Toggle {
@@ -31,8 +33,10 @@ export function onLoad() {
 }
 
 export function setScript(toggle: Toggle) {
-  console.log(toggle);
   if (toggle.id === KnownScripts.sortAcrhive.valueOf()) {
     toggle.isEnabled ? sortArchive.enable() : sortArchive.disable();
+  }
+  if (toggle.id === KnownScripts.newMessage.valueOf()) {
+    toggle.isEnabled ? chatScrollHighlight.enable() : chatScrollHighlight.disable();
   }
 }
