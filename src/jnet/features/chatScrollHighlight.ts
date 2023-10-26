@@ -17,7 +17,7 @@ export function enable() {
   const newChatObserver = new MutationObserver(() => {
     if (!isFullyDown(chat)) {
       input.setAttribute('newchat', 'yes');
-      input.setAttribute('placeholder', 'Scroll down for more messages');
+      input.setAttribute('placeholder', 'Scroll down for new messages');
     }
   });
   const toggleFeatureObserver = new MutationObserver(() => {
