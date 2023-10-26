@@ -4,7 +4,7 @@ import * as chatScrollHighlight from './features/chatScrollHighlight';
 
 enum KnownScripts {
   sortAcrhive = 'UI-improvements-none-Sort-cards-in-archive',
-  newMessage = 'Chat-interface-none-New-message-highlight',
+  newMessage = 'Chat-interface-none-New-message-indicator',
 }
 
 export interface Toggle {

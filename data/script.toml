@@ -21,7 +21,7 @@ css = """
 [[style]]
 category = "Chat interface"
 series = "none"
-name = "New message highlight"
+name = "New message indicator"
 default = true
 description = "When a new message is available, and you are not scrolled down, chat color will change."
 css = """
