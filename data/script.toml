@@ -19,6 +19,49 @@ css = """
 """
 
 [[style]]
+category = "UI improvements"
+series = "none"
+name = "Hand size reminder"
+default = false
+description = "Helps you not draw up to 5 and make unwanted discards."
+css = """
+.panel.hand[handsize]::before {
+  content: "<< hand limit";
+  bottom: 0;
+  font-size: 0.7rem;
+  width: 64px;
+  position: absolute;
+  opacity: 0.5;
+  visibility: hidden;
+}
+
+.panel.hand[handsize="0"]::before {
+  left: 0;
+  visibility: visible;
+}
+
+.panel.hand[handsize="1"]::before {
+  left: calc(64px * 1);
+  visibility: visible;
+}
+
+.panel.hand[handsize="2"]::before {
+  left: calc(64px * 2);
+  visibility: visible;
+}
+
+.panel.hand[handsize="3"]::before {
+  left: calc(64px * 3);
+  visibility: visible;
+}
+
+.panel.hand[handsize="4"]::before {
+  left: calc(64px * 4);
+  visibility: visible;
+}
+"""
+
+[[style]]
 category = "Chat interface"
 series = "none"
 name = "New message indicator"
