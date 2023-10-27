@@ -89,7 +89,7 @@ function setPopupFlex(container: Element) {
 
 function unsetPopupFlex(container: Element) {
   const oldStyle = container.getAttribute('style');
-  if (oldStyle?.includes('display: flex;')) {
+  if (oldStyle?.includes('flex;')) {
     container.setAttribute('style', 'display: block;');
   }
 }
