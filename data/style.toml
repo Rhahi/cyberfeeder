@@ -1026,58 +1026,22 @@ css = """
 
 [[style]]
 category = "Card size"
-series = "Runner board card size"
-name = "Original"
-default = true
-css = ""
-
-[[style]]
-category = "Card size"
-series = "Runner board card size"
+series = "none"
 name = "Shrink runner card down to image"
 default = false
 css = """
 .runner-board > div:not(.runner-centrals) .card,
-.run-card .card
-{
-  position: relative;
-  overflow: hidden;
-  height: 4.6em !important;
-}
-
-.runner-board > div:not(.runner-centrals) .card > div > img,
-.run-card .card > div > img {
-  overflow: hidden !important;
-  object-fit: cover;
-  height: 8em !important;
-}
-"""
-
-[[style]]
-category = "Card size"
-series = "Runner board card size"
-name = "Shrink runner card down to image (with blank space)"
-default = false
-css = """
-.runner-board > div:not(.runner-centrals) .card .cardname,
-.run-card .card .cardname {
-  border: solid 0.1rem black;
-  min-height: 1.1rem;
-}
-
-.runner-board > div:not(.runner-centrals) .card,
 .run-card .card {
   position: relative;
   overflow: hidden;
-  height: 5.1em !important;
+  height: 52px !important;
 }
 
 .runner-board > div:not(.runner-centrals) .card > div > img,
 .run-card .card > div > img {
   overflow: hidden !important;
   object-fit: cover;
-  top: 16%;
-  height: 8em !important;
+  height: var(--card-height) !important;
 }
 """
 
