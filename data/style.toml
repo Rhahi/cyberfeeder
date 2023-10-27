@@ -1,4 +1,19 @@
-version = "7"
+
+[[style]]
+category = "Mandatory"
+series = "Variables"
+name = "Widths and heights"
+default = true
+description = "Some other settings will refer to the shared variables set here."
+css = """
+:root {
+  --card-width: 60px;
+  --card-height: 84px;
+  --label-height: 1rem;
+  --label-font-size: 0.9rem;
+  --card-border-radius: 3.5px;
+}
+"""
 
 [[style]]
 category = "Layout"
