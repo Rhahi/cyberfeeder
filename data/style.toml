@@ -748,6 +748,11 @@ css = """
   z-index: 12;
 }
 
+.server .content .central.server-card:hover .cardname {
+  /* make R&D card name appear after hover */
+  z-index: 30;
+}
+
 .corp-board .card .card-target {
   top: 1rem;
 }
