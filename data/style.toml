@@ -965,7 +965,7 @@ category = "Labelling"
 series = "none"
 name = "Make scored area label appear below cards"
 description = "Once agendas are in, this label is probably not needed. Hide it."
-default = false
+default = true
 css = """
 .scored .header.darkbg {
   z-index: -1;
