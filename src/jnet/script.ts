@@ -5,8 +5,8 @@ import * as handsizeReminder from './features/handsizeReminder';
 
 enum KnownScripts {
   sortAcrhive = 'Quality-of-life-none-Sort-cards-in-archive',
-  newMessage = 'Reminder-none-New-message-indicator',
-  handsizeReminder = 'Reminder-none-Hand-size-reminder',
+  newMessage = 'Reminders-none-New-message-indicator',
+  handsizeReminder = 'Reminders-none-Hand-size-reminder',
 }
 
 export interface Toggle {
