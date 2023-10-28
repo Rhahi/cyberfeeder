@@ -4,9 +4,9 @@ import * as chatScrollHighlight from './features/chatScrollHighlight';
 import * as handsizeReminder from './features/handsizeReminder';
 
 enum KnownScripts {
-  sortAcrhive = 'UI-improvements-none-Sort-cards-in-archive',
-  newMessage = 'Chat-interface-none-New-message-indicator',
-  handsizeReminder = 'UI-improvements-none-Hand-size-reminder',
+  sortAcrhive = 'Quality-of-life-none-Sort-cards-in-archive',
+  newMessage = 'Reminder-none-New-message-indicator',
+  handsizeReminder = 'Reminder-none-Hand-size-reminder',
 }
 
 export interface Toggle {

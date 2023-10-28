@@ -1,4 +1,4 @@
-version = "8"
+version = "9"
 
 [[style]]
 category = "Mandatory"
@@ -626,42 +626,6 @@ css = """
 """
 
 [[style]]
-category = "UI Downsizing"
-series = "none"
-name = "Compress opponent's vertical hand size"
-default = false
-css = """
-:root {
-  --hand-size: 5.6em;
-}
-
-.opponent .hand-container .panel img {
-  max-height: var(--hand-size) !important;
-  object-fit: cover;
-}
-
-.opponent .hand-container .panel {
-  max-height: var(--hand-size) !important;
-  overflow: hidden;
-}
-"""
-
-[[style]]
-category = "UI Downsizing"
-series = "none"
-name = "Compress player's stats area"
-default = false
-css = """
-:root {
-  --stats-line-height: 1rem;
-}
-
-.left-inner-leftpane .stats-area {
-  line-height: var(--stats-line-height) !important;
-}
-"""
-
-[[style]]
 category = "Labelling"
 series = "none"
 name = "Text in run arrow"
@@ -1031,7 +995,43 @@ css = """
 """
 
 [[style]]
-category = "Card size"
+category = "UI Downsizing"
+series = "none"
+name = "Compress opponent's vertical hand size"
+default = false
+css = """
+:root {
+  --hand-size: 5.6em;
+}
+
+.opponent .hand-container .panel img {
+  max-height: var(--hand-size) !important;
+  object-fit: cover;
+}
+
+.opponent .hand-container .panel {
+  max-height: var(--hand-size) !important;
+  overflow: hidden;
+}
+"""
+
+[[style]]
+category = "UI Downsizing"
+series = "none"
+name = "Compress player's stats area"
+default = false
+css = """
+:root {
+  --stats-line-height: 1rem;
+}
+
+.left-inner-leftpane .stats-area {
+  line-height: var(--stats-line-height) !important;
+}
+"""
+
+[[style]]
+category = "UI Downsizing"
 series = "none"
 name = "Shrink runner card down to image"
 default = false

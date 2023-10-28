@@ -1,10 +1,11 @@
-version = "2"
+version = "3"
 
 [[style]]
-category = "UI improvements"
+category = "Quality of life"
 series = "none"
 name = "Sort cards in archive"
 default = false
+description = "Known issue: in replay mode, you need to cycle this option to apply sorting when changing views"
 css = """
 .discard-container .panel.popup {
   /* display: flex does not work here, since it gets overwritten by scripts */
@@ -19,7 +20,7 @@ css = """
 """
 
 [[style]]
-category = "UI improvements"
+category = "Reminders"
 series = "none"
 name = "Hand size reminder"
 default = false
@@ -62,7 +63,7 @@ css = """
 """
 
 [[style]]
-category = "Chat interface"
+category = "Reminders"
 series = "none"
 name = "New message indicator"
 default = true
