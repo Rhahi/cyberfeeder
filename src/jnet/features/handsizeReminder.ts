@@ -6,7 +6,6 @@ interface Hand {
 }
 
 export function enable() {
-  console.log('enable handsize reminder');
   const hands = getHands();
   if (hands.length !== 2) {
     console.warn('Something went wrong while trying to find player hands');
@@ -32,7 +31,6 @@ export function enable() {
 }
 
 export function disable() {
-  console.log('disable handsize reminder');
   for (const hand of getHands()) {
     hand.indicator.setAttribute('cyberfeeder', 'off');
   }
