@@ -58,7 +58,7 @@ export interface StyleItemUI {
 
 export interface ScriptToggle {
   id: string;
-  isEnabled: boolean;
+  enabled: boolean;
   args?: unknown;
 }
 

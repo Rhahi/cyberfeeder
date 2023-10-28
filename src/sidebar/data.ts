@@ -161,7 +161,7 @@ export async function getAndCacheCurrentScriptToggles() {
   });
   if (combined) {
     for (const st of Object.values(combined)) {
-      toggles.push({id: st.id, isEnabled: st.enabled});
+      toggles.push({id: st.id, enabled: st.enabled});
     }
   }
   return toggles;

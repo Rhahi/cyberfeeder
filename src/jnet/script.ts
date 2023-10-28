@@ -11,7 +11,7 @@ enum KnownScripts {
 
 export interface Toggle {
   id: string;
-  isEnabled: boolean;
+  enabled: boolean;
   args?: unknown;
 }
 
@@ -31,13 +31,13 @@ export function onLoad() {
 
 export function setScript(toggle: Toggle) {
   if (toggle.id === KnownScripts.sortAcrhive.valueOf()) {
-    toggle.isEnabled ? sortArchive.enable() : sortArchive.disable();
+    toggle.enabled ? sortArchive.enable() : sortArchive.disable();
   }
   if (toggle.id === KnownScripts.newMessage.valueOf()) {
-    toggle.isEnabled ? chatScrollHighlight.enable() : chatScrollHighlight.disable();
+    toggle.enabled ? chatScrollHighlight.enable() : chatScrollHighlight.disable();
   }
   if (toggle.id === KnownScripts.handsizeReminder.valueOf()) {
-    toggle.isEnabled ? handsizeReminder.enable() : handsizeReminder.disable();
+    toggle.enabled ? handsizeReminder.enable() : handsizeReminder.disable();
   }
 }
 
@@ -50,7 +50,6 @@ function setupScripts() {
     console.log(toggles);
     for (const toggle of Object.values(toggles)) {
       setScript(toggle);
-      console.log(`set ${toggle.id} ${toggle.isEnabled}`);
     }
   });
 }
