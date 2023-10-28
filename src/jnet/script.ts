@@ -27,7 +27,10 @@ export function onLoad() {
     });
 
   browser.storage.local.get('cachedScriptToggles').then(item => {
-    const toggles: Toggle[] = item.cachedScriptToggles;
+    const toggles: Toggle[] | null = item.cachedScriptToggles;
+    if (!toggles) {
+      return;
+    }
     for (const toggle of toggles) {
       setScript(toggle);
     }
