@@ -25,16 +25,8 @@ export function onLoad() {
     .catch(() => {
       console.log('Failed to apply cached script CSS');
     });
-
-  browser.storage.local.get('cachedScriptToggles').then(item => {
-    const toggles: Toggle[] | null = item.cachedScriptToggles;
-    if (!toggles) {
-      return;
-    }
-    for (const toggle of toggles) {
-      setScript(toggle);
-    }
-  });
+  setupScripts();
+  watchNavigate();
 }
 
 export function setScript(toggle: Toggle) {
@@ -46,5 +38,42 @@ export function setScript(toggle: Toggle) {
   }
   if (toggle.id === KnownScripts.handsizeReminder.valueOf()) {
     toggle.isEnabled ? handsizeReminder.enable() : handsizeReminder.disable();
+  }
+}
+
+function setupScripts() {
+  browser.storage.local.get('cachedScriptToggles').then(item => {
+    const toggles: {[key: string]: Toggle} | null = item.cachedScriptToggles;
+    if (!toggles) {
+      return;
+    }
+    console.log(toggles);
+    for (const toggle of Object.values(toggles)) {
+      setScript(toggle);
+      console.log(`set ${toggle.id} ${toggle.isEnabled}`);
+    }
+  });
+}
+
+function disableAll() {
+  handsizeReminder.disable();
+  chatScrollHighlight.disable();
+  sortArchive.disable();
+}
+
+/**
+ * Watch user navigating in/out of game, and re-enable scripts if they do
+ */
+function watchNavigate() {
+  const item = document.querySelector('#main-content > #main > .item');
+  if (item) {
+    const observer = new MutationObserver(() => {
+      console.log('User navigate event');
+      disableAll();
+      setupScripts();
+    });
+    observer.observe(item, {childList: true, subtree: false});
+  } else {
+    console.warn("Could not find .main .item, won't watch navigation");
   }
 }
