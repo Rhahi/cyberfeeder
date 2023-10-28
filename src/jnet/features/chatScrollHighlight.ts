@@ -36,7 +36,7 @@ export function enable() {
 }
 
 function isFullyDown(element: Element) {
-  return element.scrollHeight - element.clientHeight - element.scrollTop < 1;
+  return element.scrollHeight - element.clientHeight - element.scrollTop < 2;
 }
 
 export function disable() {
