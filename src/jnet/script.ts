@@ -19,7 +19,7 @@ export function onLoad() {
   browser.storage.local
     .get('cachedScriptCss')
     .then(item => {
-      const css: string = item.cachedCss;
+      const css: string = item.cachedScriptCss;
       applyStyle('cyberfeeder-script', css);
     })
     .catch(() => {
