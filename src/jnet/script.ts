@@ -47,7 +47,6 @@ function setupScripts() {
     if (!toggles) {
       return;
     }
-    console.log(toggles);
     for (const toggle of Object.values(toggles)) {
       setScript(toggle);
     }
@@ -67,7 +66,6 @@ function watchNavigate() {
   const item = document.querySelector('#main-content > #main > .item');
   if (item) {
     const observer = new MutationObserver(() => {
-      console.log('User navigate event');
       disableAll();
       setupScripts();
     });
