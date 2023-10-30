@@ -1,3 +1,4 @@
+_*.ts
 /.assets
 /.package
 /app/css
