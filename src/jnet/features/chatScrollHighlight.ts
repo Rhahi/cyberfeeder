@@ -5,7 +5,7 @@ export function enable() {
     console.warn('Could not find chat content or input box');
     return;
   }
-  input.setAttribute('cyberfeeder', 'on');
+  input.setAttribute('scrollhighlight', 'on');
   const onScroll = () => {
     if (isFullyDown(chat)) {
       input.setAttribute('newchat', 'no');
@@ -21,12 +21,12 @@ export function enable() {
     }
   });
   const toggleFeatureObserver = new MutationObserver(() => {
-    if (input.getAttribute('cyberfeeder') === 'off') {
+    if (input.getAttribute('scrollhighlight') === 'off') {
       newChatObserver.disconnect();
       toggleFeatureObserver.disconnect();
       chat.removeEventListener('scroll', onScroll);
 
-      input.removeAttribute('cyberfeeder');
+      input.removeAttribute('scrollhighlight');
       input.removeAttribute('newchat');
       input.setAttribute('placeholder', 'Say something...');
     }
@@ -41,8 +41,8 @@ function isFullyDown(element: Element) {
 
 export function disable() {
   const element = getChatInputbox();
-  if (element?.getAttribute('cyberfeeder') === 'on') {
-    element.setAttribute('cyberfeeder', 'off');
+  if (element?.getAttribute('scrollhighlight') === 'on') {
+    element.setAttribute('scrollhighlight', 'off');
   }
 }
 
