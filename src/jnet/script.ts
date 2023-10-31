@@ -2,11 +2,16 @@ import {applyStyle} from './css';
 import * as sortArchive from './features/sortArchive';
 import * as chatScrollHighlight from './features/chatScrollHighlight';
 import * as handsizeReminder from './features/handsizeReminder';
+import * as chatLog from './features/chatLog';
 
 enum KnownScripts {
   sortAcrhive = 'Quality-of-life-none-Sort-cards-in-archive',
   newMessage = 'Reminders-none-New-message-indicator',
   handsizeReminder = 'Reminders-none-Hand-size-reminder',
+  newTurnHighlight = 'Information-none-Highlight-new-turns-in-chat',
+  playerActionHighlight = 'Information-none-Highlight-player-actions-in-chat',
+  accessLogHighlight = 'Information-none-Colored-access-log-highlight',
+  secret = 'Information-none-Remember-secret-information',
 }
 
 export interface Toggle {
@@ -38,6 +43,18 @@ export function setScript(toggle: Toggle) {
   }
   if (toggle.id === KnownScripts.handsizeReminder.valueOf()) {
     toggle.enabled ? handsizeReminder.enable() : handsizeReminder.disable();
+  }
+  if (toggle.id === KnownScripts.newTurnHighlight.valueOf()) {
+    toggle.enabled ? chatLog.enable('turnhighlight') : chatLog.disable('turnhighlight');
+  }
+  if (toggle.id === KnownScripts.accessLogHighlight.valueOf()) {
+    toggle.enabled ? chatLog.enable('accesshighlight') : chatLog.disable('accesshighlight');
+  }
+  if (toggle.id === KnownScripts.playerActionHighlight.valueOf()) {
+    // toggle.enabled ? chatLog.enable('actionhighlight') : chatLog.disable('actionhighlight');
+  }
+  if (toggle.id === KnownScripts.secret.valueOf()) {
+    toggle.enabled ? chatLog.secretEnable() : chatLog.secretDisable();
   }
 }
 

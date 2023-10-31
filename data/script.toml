@@ -1,4 +1,4 @@
-version = "3"
+version = "4"
 
 [[style]]
 category = "Quality of life"
@@ -71,5 +71,64 @@ description = "When a new message is available, and you are not scrolled down, c
 css = """
 #log-input[newchat="yes"] {
   background-color: #FF7;
+}
+"""
+
+[[style]]
+category = "Information"
+series = "none"
+name = "Highlight new turns in chat"
+default = true
+css = """
+.log .messages > .system[turn]::before {
+  content: attr(turn);
+  padding: 0 0.15em;
+  margin-right: 0.15em;
+  font-size: 1.2em;
+  background-color: orange;
+}
+"""
+
+[[style]]
+category = "Information"
+series = "none"
+name = "Highlight player actions in chat"
+default = true
+css = """
+"""
+
+[[style]]
+category = "Information"
+series = "none"
+name = "Colored access log highlight"
+default = true
+css = """
+.log .messages > .run-hq {
+  background-color: #4062bf;
+}
+
+.log .messages > .run-rnd {
+  background-color: green;
+}
+
+.log .messages > .run-archives {
+  background-color: #7a2118;
+}
+
+.log .messages > .run-remote {
+  background-color: grey;
+}
+"""
+
+[[style]]
+category = "Information"
+series = "none"
+name = "Remember secret information"
+default = true
+description = "Experimental. This information is not disclosed to your opponent and doesn't stay in replay log."
+css = """
+.log .messages > div[secret]::after {
+  content: attr(secret);
+  display: block;
 }
 """
