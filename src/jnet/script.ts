@@ -54,7 +54,7 @@ export function setScript(toggle: Toggle) {
     // toggle.enabled ? chatLog.enable('actionhighlight') : chatLog.disable('actionhighlight');
   }
   if (toggle.id === KnownScripts.secret.valueOf()) {
-    toggle.enabled ? chatLog.secretEnable() : chatLog.secretDisable();
+    toggle.enabled ? chatLog.secretEnable() : chatLog.disableSecret();
   }
 }
 
