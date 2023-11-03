@@ -87,7 +87,7 @@ export function secretEnable() {
   toggleFeatureObserver.observe(panel, {attributes: true});
 }
 
-export function secretDisable() {
+export function disableSecret() {
   const element = getPanel();
   if (element?.getAttribute('secret') === 'on') {
     element.setAttribute('secret', 'off');
