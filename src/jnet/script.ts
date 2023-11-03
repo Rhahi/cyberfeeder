@@ -74,6 +74,10 @@ function disableAll() {
   handsizeReminder.disable();
   chatScrollHighlight.disable();
   sortArchive.disable();
+  chatLog.disable('turnhighlight');
+  chatLog.disable('accesshighlight');
+  chatLog.disable('actionhighlight');
+  chatLog.disableSecret();
 }
 
 /**
