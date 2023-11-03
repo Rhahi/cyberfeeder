@@ -3,6 +3,7 @@ import * as sortArchive from './features/sortArchive';
 import * as chatScrollHighlight from './features/chatScrollHighlight';
 import * as handsizeReminder from './features/handsizeReminder';
 import * as chatLog from './features/chatLog';
+import * as secretLog from './features/secretLog';
 
 enum KnownScripts {
   sortAcrhive = 'Quality-of-life-none-Sort-cards-in-archive',
@@ -54,7 +55,7 @@ export function setScript(toggle: Toggle) {
     // toggle.enabled ? chatLog.enable('actionhighlight') : chatLog.disable('actionhighlight');
   }
   if (toggle.id === KnownScripts.secret.valueOf()) {
-    toggle.enabled ? chatLog.secretEnable() : chatLog.disableSecret();
+    toggle.enabled ? secretLog.enable() : secretLog.disable();
   }
 }
 
@@ -77,7 +78,7 @@ function disableAll() {
   chatLog.disable('turnhighlight');
   chatLog.disable('accesshighlight');
   chatLog.disable('actionhighlight');
-  chatLog.disableSecret();
+  secretLog.disable();
 }
 
 /**

@@ -1,6 +1,8 @@
+import * as util from './util';
+
 export function enable() {
-  const chat = getChat();
-  const input = getChatInputbox();
+  const chat = util.getChat();
+  const input = util.getChatInputbox();
   if (!chat || !input) {
     console.warn('Could not find chat content or input box');
     return;
@@ -40,16 +42,8 @@ function isFullyDown(element: Element) {
 }
 
 export function disable() {
-  const element = getChatInputbox();
+  const element = util.getChatInputbox();
   if (element?.getAttribute('scrollhighlight') === 'on') {
     element.setAttribute('scrollhighlight', 'off');
   }
-}
-
-function getChat() {
-  return document.querySelector('.panel > .log > .messages');
-}
-
-function getChatInputbox() {
-  return document.getElementById('log-input');
 }
