@@ -8,7 +8,7 @@ interface Hand {
 export function enable() {
   const hands = getHands();
   if (hands.length !== 2) {
-    console.warn('Something went wrong while trying to find player hands');
+    console.warn('[Cyberfeeder] Something went wrong while trying to find player hands');
     return;
   }
   for (const hand of hands) {
@@ -56,7 +56,7 @@ function getHandsizeNumber(text: string | null) {
       }
     }
   }
-  console.warn('Failed to parse hand size, no reminder will be showed');
+  console.warn('[Cyberfeeder] Failed to parse hand size, no reminder will be showed');
   return 5;
 }
 

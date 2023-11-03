@@ -3,7 +3,7 @@ import * as util from './util';
 export function enable() {
   const panel = util.getCommandPanel();
   if (!panel) {
-    console.warn('Could not find control');
+    console.warn('[Cyberfeeder] Could not find control panel');
     return;
   }
   panel.setAttribute('secret', 'on');
@@ -57,7 +57,7 @@ function processSecretNode(node: Node) {
   }
   if (candidate) {
     if (candidate.includes('You accessed') && getRunServer() === 'run-rnd') {
-      appendChat(candidate, 'R&D');
+      addChatSecretData(candidate, 'R&D');
       return true;
     }
   }
@@ -104,7 +104,10 @@ function getRunServer(): util.RunTarget {
   return 'run-unknown';
 }
 
-function appendChat(text: string, target: string) {
+/**
+ * Add secret metadata to the latest chat message
+ */
+function addChatSecretData(text: string, target: string) {
   const chat = util.getChat();
   if (!chat) {
     return;
@@ -116,7 +119,7 @@ function appendChat(text: string, target: string) {
   const shouldRescroll = util.isFullyDown(chat);
   const element = lastMessage as Element;
   if (element.hasAttribute('secret')) {
-    console.log('already has attribute');
+    console.log('[Cyberfeeder] Skipping secret data attribute, it already has one');
     return;
   }
   element.setAttribute('secret', `(Secret: ${text})`);

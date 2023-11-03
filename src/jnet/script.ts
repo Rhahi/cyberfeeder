@@ -29,7 +29,7 @@ export function onLoad() {
       applyStyle('cyberfeeder-script', css);
     })
     .catch(() => {
-      console.log('Failed to apply cached script CSS');
+      console.log('[Cyberfeeder] Failed to apply cached script CSS');
     });
   setupScripts();
   watchNavigate();
@@ -93,6 +93,6 @@ function watchNavigate() {
     });
     observer.observe(item, {childList: true, subtree: false});
   } else {
-    console.warn("Could not find .main .item, won't watch navigation");
+    console.warn("[Cyberfeeder] Could not find .main .item, won't watch navigation");
   }
 }

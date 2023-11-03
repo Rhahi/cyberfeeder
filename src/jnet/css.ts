@@ -6,7 +6,7 @@ export function onLoad() {
       applyStyle('cyberfeeder-style', css);
     })
     .catch(() => {
-      console.log('Failed to apply cached CSS');
+      console.log('[Cyberfeeder] Failed to apply cached CSS');
     });
 }
 
@@ -18,5 +18,5 @@ export function applyStyle(id: string, css: string) {
     document.head.appendChild(styleElement);
   }
   styleElement.textContent = css;
-  console.info('Cyberfeeder: CSS styles applied');
+  console.info('[Cyberfeeder] CSS styles applied');
 }
