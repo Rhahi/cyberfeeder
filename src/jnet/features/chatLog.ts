@@ -25,7 +25,7 @@ export function enable(type: Option) {
           return;
         }
         if (type === 'turnhighlight') {
-          turnHighlight(messageDiv);
+          turnHighlight(chat, messageDiv);
           return;
         }
         if (type === 'accesshighlight') {
@@ -56,13 +56,17 @@ export function disable(type: Option) {
   }
 }
 
-function turnHighlight(node: Element) {
-  const text = node.textContent;
+function turnHighlight(chat: Element, message: Element) {
+  const text = message.textContent;
+  const shouldRescroll = util.isFullyDown(chat);
   if (text && text.includes('started their turn')) {
     const turn = findTurnInformation(text);
     if (turn !== 'unknown') {
-      node.setAttribute('turn', turn);
+      message.setAttribute('turn', turn);
     }
+  }
+  if (shouldRescroll) {
+    chat.scrollTop = chat.scrollHeight;
   }
 }
 
