@@ -20,7 +20,7 @@ export function enable(type: Option) {
           return;
         }
         const messageDiv = node as Element;
-        if (messageDiv.tagName !== 'div' || messageDiv.className !== 'system') {
+        if (!(messageDiv.tagName.toUpperCase() === 'DIV' && messageDiv.classList.contains('system'))) {
           // do not match user messages
           return;
         }
