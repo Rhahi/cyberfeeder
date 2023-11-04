@@ -8,8 +8,8 @@ export function getCommandPanel() {
   return document.querySelector('.leftpane .inner-leftpane .right-inner-leftpane .button-pane');
 }
 
-export function isFullyDown(element: Element) {
-  return element.scrollHeight - element.clientHeight - element.scrollTop < 2;
+export function isFullyDown(element: Element, tolerance = 2) {
+  return Math.abs(element.scrollHeight - element.clientHeight - element.scrollTop) <= tolerance;
 }
 
 export function getArrow() {
