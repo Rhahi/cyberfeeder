@@ -1,10 +1,10 @@
 import * as util from './util';
+import * as secretLog from './secretLog';
 
 const turnRegex = /turn\s+(\d+)/;
 const accessRegex = /accesses.*(?:from|in)\s+(HQ|R&D|Archives|Server)/;
-const rndRegex = /You accessed +(.*)\./;
 
-type Option = 'turnhighlight' | 'accesshighlight' | 'actionhighlight';
+type Option = 'turnhighlight' | 'accesshighlight' | 'actionhighlight' | 'secret';
 
 export function enable(type: Option) {
   const chat = util.getChat();
@@ -32,7 +32,8 @@ export function enable(type: Option) {
           accessHighlight(messageDiv);
           return;
         }
-        if (type === 'actionhighlight') {
+        if (type === 'secret') {
+          secretLog.processMessage(messageDiv);
           return;
         }
       });

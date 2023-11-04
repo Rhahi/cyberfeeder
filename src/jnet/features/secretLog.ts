@@ -1,67 +1,95 @@
 import * as util from './util';
 
-export function enable() {
-  const panel = util.getCommandPanel();
-  if (!panel) {
-    console.warn('[Cyberfeeder] Could not find control panel');
+interface SecretPattern {
+  matcher: string | RegExp;
+  dispatch: (chat: Element, info: PanelInfo) => void;
+}
+
+const secretPatterns: SecretPattern[] = [
+  {
+    matcher: 'unseen card from R&D',
+    dispatch: handleRnDAccess,
+  },
+];
+
+interface PanelInfo {
+  card?: string;
+  text?: string;
+  buttons: string[];
+}
+
+export function processMessage(chat: Element) {
+  console.log('process');
+  const msg = chat.textContent;
+  if (!msg) {
     return;
   }
-  panel.setAttribute('secret', 'on');
-  const panelObserver = new MutationObserver(mutations => {
-    let done = false;
-    for (const m of mutations) {
-      if (done) {
-        return;
-      }
-      // check newly added nodes for target text
-      m.addedNodes.forEach(node => {
-        if (done) {
-          return;
-        }
-        done = processSecretNode(node);
-      });
-      if (done) {
-        return;
-      }
-      done = processSecretNode(m.target);
+  console.log(msg);
+  const panel = parseCommandPanel();
+  if (!panel) {
+    return;
+  }
+  console.log(panel);
+  const shouldRescroll = util.isFullyDown(chat);
+  for (const pattern of secretPatterns) {
+    const match = msg.match(pattern.matcher);
+    console.log(match);
+    if (!match) {
+      continue;
     }
-  });
-  const toggleFeatureObserver = new MutationObserver(() => {
-    if (panel.getAttribute('secret') === 'off') {
-      panelObserver.disconnect();
-      toggleFeatureObserver.disconnect();
-      panel.removeAttribute('secret');
-    }
-  });
-  panelObserver.observe(panel, {childList: true, subtree: true});
-  toggleFeatureObserver.observe(panel, {attributes: true});
-}
-
-export function disable() {
-  const element = util.getCommandPanel();
-  if (element?.getAttribute('secret') === 'on') {
-    element.setAttribute('secret', 'off');
+    pattern.dispatch(chat, panel);
+    break;
+  }
+  if (shouldRescroll) {
+    chat.scrollTop = chat.scrollHeight;
   }
 }
 
-function processSecretNode(node: Node) {
-  if (node.nodeType !== Node.ELEMENT_NODE) {
-    return false;
+function parseCommandPanel() {
+  const panel = util.getCommandPanel();
+  if (!panel) {
+    return;
   }
-  const element = node as Element;
-  let candidate: string | null | undefined;
-  if (element.className === 'panel blue-shade') {
-    candidate = element.querySelector(':scope > h4')?.textContent;
-  } else if (element.tagName === 'h4') {
-    candidate = element.textContent;
+  const info: PanelInfo = {
+    card: getPanelCardName(panel),
+    text: getPanelText(panel),
+    buttons: getPanelButtons(panel),
+  };
+  return info;
+}
+
+function getPanelCardName(panel: Element) {
+  const card = panel.querySelector(':scope > .panel > div:first-child > span.fake-link');
+  if (card?.textContent) {
+    return card.textContent;
   }
-  if (candidate) {
-    if (candidate.includes('You accessed') && getRunServer() === 'run-rnd') {
-      addChatSecretData(candidate, 'R&D');
-      return true;
+  return;
+}
+
+function getPanelText(panel: Element) {
+  const text = panel.querySelector(':scope > .panel > h4');
+  if (text?.textContent) {
+    return text.textContent;
+  }
+  return;
+}
+
+function getPanelButtons(panel: Element) {
+  const buttons: string[] = [];
+  const elements = panel.querySelectorAll(':scope > .panel > button');
+  elements.forEach(button => {
+    if (button.textContent) {
+      buttons.push(button.textContent);
     }
+  });
+  return buttons;
+}
+
+function handleRnDAccess(message: Element, info: PanelInfo) {
+  if (!info.text) {
+    return;
   }
-  return false;
+  addChatSecretData(message, info.text, 'run-rnd');
 }
 
 /**
@@ -107,24 +135,11 @@ function getRunServer(): util.RunTarget {
 /**
  * Add secret metadata to the latest chat message
  */
-function addChatSecretData(text: string, target: string) {
-  const chat = util.getChat();
-  if (!chat) {
-    return;
-  }
-  const lastMessage = chat.lastChild;
-  if (!lastMessage || lastMessage.nodeType !== Node.ELEMENT_NODE) {
-    return;
-  }
-  const shouldRescroll = util.isFullyDown(chat);
-  const element = lastMessage as Element;
-  if (element.hasAttribute('secret')) {
+function addChatSecretData(message: Element, text: string, target: util.RunTarget) {
+  if (message.hasAttribute('secret')) {
     console.log('[Cyberfeeder] Skipping secret data attribute, it already has one');
     return;
   }
-  element.setAttribute('secret', `(Secret: ${text})`);
-  element.classList.add(target);
-  if (shouldRescroll) {
-    chat.scrollTop = chat.scrollHeight;
-  }
+  message.setAttribute('secret', `(Secret: ${text})`);
+  message.classList.add(target);
 }
