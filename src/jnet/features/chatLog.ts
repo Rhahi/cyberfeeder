@@ -19,12 +19,17 @@ export function enable(type: Option) {
         if (node.nodeType !== Node.ELEMENT_NODE) {
           return;
         }
+        const messageDiv = node as Element;
+        if (messageDiv.tagName !== 'div' || messageDiv.className !== 'system') {
+          // do not match user messages
+          return;
+        }
         if (type === 'turnhighlight') {
-          turnHighlight(node as Element);
+          turnHighlight(messageDiv);
           return;
         }
         if (type === 'accesshighlight') {
-          accessHighlight(node as Element);
+          accessHighlight(messageDiv);
           return;
         }
         if (type === 'actionhighlight') {
