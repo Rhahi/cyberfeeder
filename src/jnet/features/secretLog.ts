@@ -19,21 +19,17 @@ interface PanelInfo {
 }
 
 export function processMessage(chat: Element) {
-  console.log('process');
   const msg = chat.textContent;
   if (!msg) {
     return;
   }
-  console.log(msg);
   const panel = parseCommandPanel();
   if (!panel) {
     return;
   }
-  console.log(panel);
   const shouldRescroll = util.isFullyDown(chat);
   for (const pattern of secretPatterns) {
     const match = msg.match(pattern.matcher);
-    console.log(match);
     if (!match) {
       continue;
     }
