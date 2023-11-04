@@ -14,6 +14,8 @@ export function enable(type: Option) {
   }
   chat.setAttribute(type, 'on');
   const newChatObserver = new MutationObserver(mutations => {
+    // the tolerance here should be adjusted empirically
+    const shouldRescroll = util.isFullyDown(chat, 20);
     for (const m of mutations) {
       m.addedNodes.forEach(node => {
         if (node.nodeType !== Node.ELEMENT_NODE) {
@@ -38,6 +40,9 @@ export function enable(type: Option) {
         }
       });
     }
+    if (shouldRescroll) {
+      chat.scrollTop = chat.scrollHeight;
+    }
   });
   const toggleFeatureObserver = new MutationObserver(() => {
     if (chat.getAttribute(type) === 'off') {
@@ -59,15 +64,11 @@ export function disable(type: Option) {
 
 function turnHighlight(chat: Element, message: Element) {
   const text = message.textContent;
-  const shouldRescroll = util.isFullyDown(chat);
   if (text && text.includes('started their turn')) {
     const turn = findTurnInformation(text);
     if (turn !== 'unknown') {
       message.setAttribute('turn', turn);
     }
-  }
-  if (shouldRescroll) {
-    chat.scrollTop = chat.scrollHeight;
   }
 }
 

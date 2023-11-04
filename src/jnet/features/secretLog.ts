@@ -30,7 +30,6 @@ export function processMessage(chat: Element) {
   if (panel.text === '') {
     return;
   }
-  const shouldRescroll = util.isFullyDown(chat);
   for (const pattern of secretPatterns) {
     const match = msg.match(pattern.matcher);
     if (!match) {
@@ -38,9 +37,6 @@ export function processMessage(chat: Element) {
     }
     pattern.dispatch(chat, panel);
     break;
-  }
-  if (shouldRescroll) {
-    chat.scrollTop = chat.scrollHeight;
   }
 }
 
