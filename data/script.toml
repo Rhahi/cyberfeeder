@@ -100,6 +100,21 @@ css = """
 [[style]]
 category = "Information"
 series = "none"
+name = "Remember secret information"
+default = true
+description = "Experimental. This information is not disclosed to your opponent and doesn't stay in replay log."
+css = """
+.log .messages > div[secret]::after {
+  content: attr(secret);
+  display: block;
+  background-color: rgba(255,255,255,0.2);
+  text-align: right;
+}
+"""
+
+[[style]]
+category = "Information"
+series = "none"
 name = "Colored access log highlight"
 default = true
 css = """
@@ -117,18 +132,5 @@ css = """
 
 .log .messages > .run-remote {
   background-color: grey;
-}
-"""
-
-[[style]]
-category = "Information"
-series = "none"
-name = "Remember secret information"
-default = true
-description = "Experimental. This information is not disclosed to your opponent and doesn't stay in replay log."
-css = """
-.log .messages > div[secret]::after {
-  content: attr(secret);
-  display: block;
 }
 """
