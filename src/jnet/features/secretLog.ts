@@ -14,7 +14,7 @@ const secretPatterns: SecretPattern[] = [
 
 interface PanelInfo {
   card?: string;
-  text?: string;
+  text: string;
   buttons: string[];
 }
 
@@ -25,6 +25,9 @@ export function processMessage(chat: Element) {
   }
   const panel = parseCommandPanel();
   if (!panel) {
+    return;
+  }
+  if (panel.text === '') {
     return;
   }
   const shouldRescroll = util.isFullyDown(chat);
@@ -67,7 +70,7 @@ function getPanelText(panel: Element) {
   if (text?.textContent) {
     return text.textContent;
   }
-  return;
+  return '';
 }
 
 function getPanelButtons(panel: Element) {
@@ -82,9 +85,6 @@ function getPanelButtons(panel: Element) {
 }
 
 function handleRnDAccess(message: Element, info: PanelInfo) {
-  if (!info.text) {
-    return;
-  }
   addChatSecretData(message, info.text, 'run-rnd');
 }
 
