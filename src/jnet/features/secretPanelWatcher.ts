@@ -1,20 +1,16 @@
 import * as util from './util';
 
-const topCardRegex = /top(?: \d+)? cards? of (?:the )?(stack|R&D)/;
+type MatchType = string | RegExp;
+
 const genericButtons = ['Remove Tag', 'Run', 'Draw', 'Gain Credit', 'Done', 'No'];
-
+const maybeSecretPatterns: MatchType[] = [
+  // these text will be excluded from being cached
+  /^You accessed (?<card>.*)\.$/,
+  /^Add (?<card>.*) to bottom of (?:the )?(?<location>stack)\?$/,
+  /top (?<number> \d)? cards? of (?:the )?(?<location>stack|R&D) (?:is|are|will be) (?<card>.*)$/,
+];
 export const lastClicks: string[] = [];
-export const lastSecret: SecretPanelInfo = {
-  age: 0,
-  panel: {text: '', buttons: [], location: 'unknown'},
-  handled: true,
-};
-
-interface SecretPanelInfo {
-  age: number;
-  panel: util.PanelInfo;
-  handled: boolean;
-}
+export let lastSecret: util.PanelInfo = {age: -1, text: '', buttons: [], location: 'unknown'};
 
 export function enable() {
   const panel = util.getCommandPanel();
@@ -55,6 +51,37 @@ export function disable() {
   if (element?.getAttribute('secret') === 'on') {
     element.setAttribute('secret', 'off');
   }
+}
+
+/** Given current chat message div, get secret information from cached secret of current panel */
+export function fetchSecret(message: Element, ageThreshold = 5) {
+  const panel = util.getCommandPanelInfo();
+  if (matchSecret(panel)) {
+    return panel;
+  }
+  const currentAge = util.getChatAge(message);
+  if (currentAge - lastSecret.age > ageThreshold || lastSecret.age > currentAge) {
+    console.log(`rejected by age CUR${currentAge}, PAN${lastSecret.age}`);
+    return;
+  }
+  if (matchSecret(lastSecret)) {
+    return lastSecret;
+  }
+  return;
+}
+
+/** Scan given panel and if it matches secret profile, update its match field and return true */
+export function matchSecret(panel: util.PanelInfo | undefined) {
+  if (panel && panel.text) {
+    for (const pattern of maybeSecretPatterns) {
+      const match = panel.text.match(pattern)
+      if (match) {
+        panel.match = match;
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 function handleMutation(element: Element, isNew: boolean) {
