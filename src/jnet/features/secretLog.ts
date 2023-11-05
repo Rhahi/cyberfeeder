@@ -1,21 +1,25 @@
 import * as util from './util';
-
-interface SecretPattern {
-  matcher: string | RegExp;
-  dispatch: (chat: Element, info: PanelInfo) => void;
-}
+import * as watcher from './secretPanelWatcher';
 
 const secretPatterns: SecretPattern[] = [
   {
     matcher: 'unseen card from R&D',
     dispatch: handleRnDAccess,
   },
+  {
+    matcher: 'adds one to the bottom of the stack',
+    dispatch: handleBottom,
+  },
+  {
+    matcher: /looks? at the top( \d+)? cards? of/,
+    dispatch: handlePeek,
+  },
 ];
 
-interface PanelInfo {
-  card?: string;
-  text: string;
-  buttons: string[];
+interface SecretPattern {
+  matcher: string | RegExp;
+  dispatch: (message: Element, info: util.PanelInfo) => void;
+  validate?: string | RegExp;
 }
 
 export function processMessage(chat: Element) {
@@ -23,13 +27,12 @@ export function processMessage(chat: Element) {
   if (!msg) {
     return;
   }
-  const panel = parseCommandPanel();
+  const panel = util.getCommandPanelInfo();
   if (!panel) {
     return;
   }
-  if (panel.text === '') {
-    return;
-  }
+  console.log(msg);
+  console.log(panel);
   for (const pattern of secretPatterns) {
     const match = msg.match(pattern.matcher);
     if (!match) {
@@ -40,94 +43,42 @@ export function processMessage(chat: Element) {
   }
 }
 
-function parseCommandPanel() {
-  const panel = util.getCommandPanel();
-  if (!panel) {
+function handleRnDAccess(message: Element, info: util.PanelInfo) {
+  if (info.text === '') {
     return;
   }
-  const info: PanelInfo = {
-    card: getPanelCardName(panel),
-    text: getPanelText(panel),
-    buttons: getPanelButtons(panel),
-  };
-  return info;
+  addChatSecretData(message, info.text, 'rnd');
 }
 
-function getPanelCardName(panel: Element) {
-  const card = panel.querySelector(':scope > .panel > div:first-child > span.fake-link');
-  if (card?.textContent) {
-    return card.textContent;
+function handleBottom(message: Element, info: util.PanelInfo) {
+  const text = watcher.lastClicks.pop();
+  console.log(`-> Handle Bottom: ${text}`);
+  if (text) {
+    addChatSecretData(message, text, info.location);
   }
-  return;
 }
 
-function getPanelText(panel: Element) {
-  const text = panel.querySelector(':scope > .panel > h4');
-  if (text?.textContent) {
-    return text.textContent;
-  }
-  return '';
-}
-
-function getPanelButtons(panel: Element) {
-  const buttons: string[] = [];
-  const elements = panel.querySelectorAll(':scope > .panel > button');
-  elements.forEach(button => {
-    if (button.textContent) {
-      buttons.push(button.textContent);
+function handlePeek(message: Element, info: util.PanelInfo) {
+  if (!info.text) {
+    console.log('-> handlePeek');
+    console.log(watcher.lastSecret);
+    const panel = watcher.lastSecret.panel;
+    if (!watcher.lastSecret.handled) {
+      if (panel.text) {
+        addChatSecretData(message, panel.text, panel.location);
+        watcher.lastSecret.handled = true;
+        return;
+      }
     }
-  });
-  return buttons;
-}
-
-function handleRnDAccess(message: Element, info: PanelInfo) {
-  addChatSecretData(message, info.text, 'run-rnd');
-}
-
-/**
- * Inspect run arrow to determine target server
- */
-function getRunServer(): util.RunTarget {
-  const arrow = util.getArrow();
-  if (!arrow) {
-    return 'not-in-a-run';
+  } else {
+    addChatSecretData(message, info.text, info.location);
   }
-
-  let server = arrow.parentElement?.parentElement;
-  if (server?.className === 'ices') {
-    server = server.parentElement;
-  }
-  if (!server) {
-    return 'run-unknown';
-  }
-  const archiveOrRnD = server.querySelector(':scope > .content > div[data-server]');
-  if (archiveOrRnD) {
-    const target = archiveOrRnD.getAttribute('data-server');
-    if (target === 'R&D') {
-      return 'run-rnd';
-    }
-    if (target === 'Archives') {
-      return 'run-archives';
-    }
-    return 'run-unknown';
-  }
-  const HQ = server.querySelector(':scope > .content > .identity');
-  if (HQ) {
-    return 'run-hq';
-  }
-  const remote = server.querySelector(':scope > .content > .server-label');
-  if (remote) {
-    if (remote.textContent?.includes('Server')) {
-      return 'run-remote';
-    }
-  }
-  return 'run-unknown';
 }
 
 /**
  * Add secret metadata to the latest chat message
  */
-function addChatSecretData(message: Element, text: string, target: util.RunTarget) {
+function addChatSecretData(message: Element, text: string, target: util.Location) {
   if (message.hasAttribute('secret')) {
     console.log('[Cyberfeeder] Skipping secret data attribute, it already has one');
     return;

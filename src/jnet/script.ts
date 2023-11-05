@@ -3,6 +3,7 @@ import * as sortArchive from './features/sortArchive';
 import * as chatScrollHighlight from './features/chatScrollHighlight';
 import * as handsizeReminder from './features/handsizeReminder';
 import * as chatLog from './features/chatLog';
+import * as secretWatcher from './features/secretPanelWatcher';
 
 enum KnownScripts {
   sortAcrhive = 'Quality-of-life-none-Sort-cards-in-archive',
@@ -10,7 +11,8 @@ enum KnownScripts {
   handsizeReminder = 'Reminders-none-Hand-size-reminder',
   newTurnHighlight = 'Information-none-Highlight-new-turns-in-chat',
   playerActionHighlight = 'Information-none-Highlight-player-actions-in-chat',
-  accessLogHighlight = 'Information-none-Colored-access-log-highlight',
+  highlightAccess = 'Information-Chat-highlight-Accesses-only',
+  highlightAll = 'Information-Chat-highlight-Everything',
   secret = 'Information-none-Remember-secret-information',
 }
 
@@ -47,11 +49,20 @@ export function setScript(toggle: Toggle) {
   if (toggle.id === KnownScripts.newTurnHighlight.valueOf()) {
     toggle.enabled ? chatLog.enable('turnhighlight') : chatLog.disable('turnhighlight');
   }
-  if (toggle.id === KnownScripts.accessLogHighlight.valueOf()) {
+  if (toggle.id === KnownScripts.highlightAccess.valueOf()) {
     toggle.enabled ? chatLog.enable('accesshighlight') : chatLog.disable('accesshighlight');
   }
+  if (toggle.id === KnownScripts.highlightAll.valueOf()) {
+    toggle.enabled ? chatLog.enable('allhighlight') : chatLog.disable('allhighlight');
+  }
   if (toggle.id === KnownScripts.secret.valueOf()) {
-    toggle.enabled ? chatLog.enable('secret') : chatLog.disable('secret');
+    if (toggle.enabled) {
+      chatLog.enable('secret');
+      secretWatcher.enable();
+    } else {
+      chatLog.disable('secret');
+      secretWatcher.disable();
+    }
   }
 }
 
@@ -73,7 +84,9 @@ function disableAll() {
   sortArchive.disable();
   chatLog.disable('turnhighlight');
   chatLog.disable('accesshighlight');
+  chatLog.disable('allhighlight');
   chatLog.disable('secret');
+  secretWatcher.disable();
 }
 
 /**
