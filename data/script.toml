@@ -1,6 +1,24 @@
 version = "4"
 
 [[style]]
+category = "Mandatory"
+series = "Variables"
+name = "Colors"
+default = true
+description = "Some other settings will refer to the shared variables set here."
+css = """
+:root {
+  --turn: #080;
+  --hq: #4062bf;
+  --rnd: #080;
+  --archives: #7a2118;
+  --remote: #666;
+  --stack: #850;
+  --grip: #850;
+}
+"""
+
+[[style]]
 category = "Quality of life"
 series = "none"
 name = "Sort cards in archive"
@@ -85,16 +103,9 @@ css = """
   padding: 0 0.15em;
   margin-right: 0.15em;
   font-size: 1.2em;
-  background-color: orange;
+  background-color: #F80;
+  color: black;
 }
-"""
-
-[[style]]
-category = "Information"
-series = "none"
-name = "Highlight player actions in chat"
-default = true
-css = """
 """
 
 [[style]]
@@ -107,7 +118,7 @@ css = """
 .log .messages > div[secret]::after {
   content: attr(secret);
   display: block;
-  background-color: rgba(255,255,255,0.2);
+  background-color: rgba(0,0,0,0.4);
   text-align: right;
 }
 """
@@ -115,22 +126,60 @@ css = """
 [[style]]
 category = "Information"
 series = "none"
-name = "Colored access log highlight"
+name = "Highlight accesses"
 default = true
 css = """
-.log .messages > .run-hq {
-  background-color: #4062bf;
+.log .messages > .accesshighlight.hq {
+  background-color: var(--hq);
 }
 
-.log .messages > .run-rnd {
-  background-color: green;
+.log .messages > .accesshighlight.rnd {
+  background-color: var(--rnd);
 }
 
-.log .messages > .run-archives {
-  background-color: #7a2118;
+.log .messages > .accesshighlight.archives {
+  background-color: var(--archives);
 }
 
-.log .messages > .run-remote {
-  background-color: grey;
+.log .messages > .accesshighlight.remote {
+  background-color: var(--remote);
+}
+"""
+
+[[style]]
+category = "Information"
+series = "none"
+name = "Highlight other abilities"
+description = "Highlight most operations that reveal information about corp and runner's deck, hand, and discard piles."
+default = true
+css = """
+.log .messages > .otherhighlight.hq,
+.log .messages > .secret.hq {
+  background-color: var(--hq);
+}
+
+.log .messages > .otherhighlight.rnd,
+.log .messages > .secret.rnd {
+  background-color: var(--rnd);
+}
+
+.log .messages > .otherhighlight.archives,
+.log .messages > .secret.archives {
+  background-color: var(--archives);
+}
+
+.log .messages > .otherhighlight.remote,
+.log .messages > .secret.remote {
+  background-color: var(--remote);
+}
+
+.log .messages > .otherhighlight.stack,
+.log .messages > .secret.stack {
+  background-color: var(--stack);
+}
+
+.log .messages > .otherhighlight.grip,
+.log .messages > .secret.grip {
+  background-color: var(--grip);
 }
 """
