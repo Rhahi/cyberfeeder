@@ -5,11 +5,13 @@ const genericButtons = ['Remove Tag', 'Run', 'Draw', 'Gain Credit', 'Done', 'No'
 
 export const lastClicks: string[] = [];
 export const lastSecret: SecretPanelInfo = {
+  age: 0,
   panel: {text: '', buttons: [], location: 'unknown'},
   handled: true,
 };
 
 interface SecretPanelInfo {
+  age: number;
   panel: util.PanelInfo;
   handled: boolean;
 }
@@ -65,12 +67,13 @@ function handleMutation(element: Element, isNew: boolean) {
     if (info) {
       const match = info.text.match(topCardRegex);
       if (match) {
+        info.location = util.toLocation(match[1]);
         lastSecret.panel = info;
-        lastSecret.panel.location = util.toLocation(match[1]);
-        console.log('matched panel');
-        console.log(info);
         if (isNew) {
+          lastSecret.age = 0;
           lastSecret.handled = false;
+        } else {
+          lastSecret.age += 1;
         }
       }
     }
