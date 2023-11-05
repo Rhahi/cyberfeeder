@@ -30,7 +30,7 @@ export function enable(type: Option) {
           return;
         }
         if (type === 'turnhighlight') {
-          turnHighlight(chat, messageDiv);
+          turnHighlight(messageDiv);
           return;
         }
         if (type === 'accesshighlight') {
@@ -69,7 +69,7 @@ export function disable(type: Option) {
   }
 }
 
-function turnHighlight(chat: Element, message: Element) {
+function turnHighlight(message: Element) {
   const text = message.textContent;
   if (text && text.includes('started their turn')) {
     const turn = findTurnInformation(text);
