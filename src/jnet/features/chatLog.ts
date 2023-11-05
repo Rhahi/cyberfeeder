@@ -1,13 +1,13 @@
 import * as util from './util';
 import * as secretLog from './secretLog';
 
-const turnRegex = /turn\s+(\d+)/;
-const accessRegex = /accesses.*(?:from|in)\s+(HQ|R&D|Archives|Server)/;
-const exposeRegex = /exposes.*(HQ|R&D|Archives|Server)/;
+const turnRegex = /turn (\d+)/;
+const accessRegex = /accesses .*(?:from|in) (HQ|R&D|Archives|Server)/;
+const exposeRegex = /exposes .*(HQ|R&D|Archives|Server)/;
 const revealRegex = /^(?!.*install it).*\b(?:uses? .* to reveal|reveals|then reveals?).*(HQ|R&D|Archives|Server|stack)\b/;
 const addRegex = /add .* to (HQ|R&D|Archives|grip|stack)/;
 
-type Option = 'turnhighlight' | 'accesshighlight' | 'allhighlight' | 'secret';
+type Option = 'turnhighlight' | 'accesshighlight' | 'otherhighlight' | 'secret';
 
 export function enable(type: Option) {
   const chat = util.getChat();
@@ -34,11 +34,11 @@ export function enable(type: Option) {
           return;
         }
         if (type === 'accesshighlight') {
-          highlight(messageDiv, accessRegex);
+          highlight(messageDiv, type, accessRegex);
           return;
         }
-        if (type === 'allhighlight') {
-          highlight(messageDiv, accessRegex, exposeRegex, revealRegex, addRegex);
+        if (type === 'otherhighlight') {
+          highlight(messageDiv, type, exposeRegex, revealRegex, addRegex);
           return;
         }
         if (type === 'secret') {
@@ -87,8 +87,8 @@ function findTurnInformation(text: string) {
   return 'unknown';
 }
 
-function highlight(node: Element, ...patterns: RegExp[]) {
-  const text = node.textContent;
+function highlight(message: Element, type: Option, ...patterns: RegExp[]) {
+  const text = message.textContent;
   if (!text) {
     return;
   }
@@ -97,7 +97,8 @@ function highlight(node: Element, ...patterns: RegExp[]) {
     if (match && match.length === 2) {
       const target = util.toLocation(match[1]);
       if (target !== 'unknown') {
-        node.classList.add(target);
+        message.classList.add(target);
+        message.classList.add(type);
         break;
       }
     }
