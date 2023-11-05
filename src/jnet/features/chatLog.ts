@@ -3,8 +3,11 @@ import * as secretLog from './secretLog';
 
 const turnRegex = /turn\s+(\d+)/;
 const accessRegex = /accesses.*(?:from|in)\s+(HQ|R&D|Archives|Server)/;
+const exposeRegex = /exposes.*(HQ|R&D|Archives|Server)/;
+const revealRegex = /^(?!.*install it).*\b(?:uses? .* to reveal|reveals|then reveals?).*(HQ|R&D|Archives|Server|stack)\b/;
+const addRegex = /add .* to (HQ|R&D|Archives|grip|stack)/;
 
-type Option = 'turnhighlight' | 'accesshighlight' | 'actionhighlight' | 'secret';
+type Option = 'turnhighlight' | 'accesshighlight' | 'allhighlight' | 'secret';
 
 export function enable(type: Option) {
   const chat = util.getChat();
@@ -31,7 +34,11 @@ export function enable(type: Option) {
           return;
         }
         if (type === 'accesshighlight') {
-          accessHighlight(messageDiv);
+          highlight(messageDiv, accessRegex);
+          return;
+        }
+        if (type === 'allhighlight') {
+          highlight(messageDiv, accessRegex, exposeRegex, revealRegex, addRegex);
           return;
         }
         if (type === 'secret') {
@@ -80,32 +87,19 @@ function findTurnInformation(text: string) {
   return 'unknown';
 }
 
-function accessHighlight(node: Element) {
+function highlight(node: Element, ...patterns: RegExp[]) {
   const text = node.textContent;
-  if (text && text.includes('accesses')) {
-    const target = findAccessTarget(text);
-    if (target !== 'run-unknown') {
-      node.classList.add(target);
+  if (!text) {
+    return;
+  }
+  for (const pattern of patterns) {
+    const match = text.match(pattern);
+    if (match && match.length === 2) {
+      const target = util.toLocation(match[1]);
+      if (target !== 'unknown') {
+        node.classList.add(target);
+        break;
+      }
     }
   }
-}
-
-function findAccessTarget(text: string): util.RunTarget {
-  const match = text.match(accessRegex);
-  if (match && match.length === 2) {
-    const target = match[1];
-    if (target === 'R&D') {
-      return 'run-rnd';
-    }
-    if (target === 'HQ') {
-      return 'run-hq';
-    }
-    if (target === 'Archives') {
-      return 'run-archives';
-    }
-    if (target === 'Server') {
-      return 'run-remote';
-    }
-  }
-  return 'run-unknown';
 }
