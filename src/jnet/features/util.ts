@@ -50,7 +50,7 @@ export function toLocation(text?: string | null): Location {
   return 'unknown';
 }
 
-export function parseCommandPanel(element?: Element, prefix = '> .panel') {
+export function getCommandPanelInfo(element?: Element, prefix = '> .panel') {
   let panel: Element | null;
   if (!element) {
     panel = getCommandPanel();
