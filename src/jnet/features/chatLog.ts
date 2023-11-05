@@ -55,6 +55,7 @@ export function enable(type: Option) {
     if (chat.getAttribute(type) === 'off') {
       newChatObserver.disconnect();
       toggleFeatureObserver.disconnect();
+      toggleFeatureObserver.takeRecords();
       chat.removeAttribute(type);
     }
   });
