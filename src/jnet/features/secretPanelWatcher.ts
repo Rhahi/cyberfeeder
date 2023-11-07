@@ -6,7 +6,7 @@ const maybeSecretPatterns: MatchType[] = [
   // these text will be excluded from being cached
   /^You accessed (?<card>.*)\.$/,
   /^Add (?<card>.*) to bottom of (?:the )?(?<location>stack)\?$/,
-  /top (?<number> \d)? cards? of (?:the )?(?<location>stack|R&D) (?:is|are|will be) (?<card>.*)$/,
+  /top (?<number>\d )?cards? of (?:the )?(?<location>stack|R&D) (?:is|are|will be) (?<card>.*)$/,
 ];
 export const lastClicks: string[] = [];
 export let lastSecret: util.PanelInfo = {age: -1, text: '', buttons: [], location: 'unknown'};
