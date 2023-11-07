@@ -19,18 +19,17 @@ export function enable() {
   }
   panel.setAttribute('secret', 'on');
   const panelObserver = new MutationObserver(mutations => {
-    let done = false;
     console.log('--- new mutation ---');
     for (const m of mutations) {
       m.addedNodes.forEach(node => {
-        if (!done && node.nodeType === Node.ELEMENT_NODE) {
-          console.log('[addedNode]');
-          done = handleMutation(node as Element, true);
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          // console.log('[addedNode]');
+          handleMutation(node as Element, true);
         }
       });
-      if (!done && m.target.nodeType === Node.ELEMENT_NODE) {
-        console.log('[targetNode]');
-        done = handleMutation(m.target as Element, false);
+      if (m.target.nodeType === Node.ELEMENT_NODE) {
+        // console.log('[targetNode]');
+        handleMutation(m.target as Element, false);
       }
     }
   });
