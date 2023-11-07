@@ -52,7 +52,7 @@ export function disable() {
 }
 
 /** Given current chat message div, get secret information from cached secret of current panel */
-export function fetchSecret(message: Element, ageThreshold = 5) {
+export function fetchSecret(message: Element, ageThreshold = 2) {
   const panel = util.getCommandPanelInfo();
   if (matchSecret(panel)) {
     return panel;
