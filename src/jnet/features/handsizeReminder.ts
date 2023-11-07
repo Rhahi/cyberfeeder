@@ -23,6 +23,7 @@ export function enable() {
         toggleFeatureObserver.disconnect();
         hand.indicator.removeAttribute('cyberfeeder');
         hand.container.removeAttribute('handsize');
+        console.log('[Cyberfeeder] Hand size reminder has been disabled');
       }
     });
     handSizeObserver.observe(hand.indicator, {childList: true, subtree: true, characterData: true});

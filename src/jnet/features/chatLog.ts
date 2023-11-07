@@ -57,6 +57,7 @@ export function enable(type: Option) {
       toggleFeatureObserver.disconnect();
       toggleFeatureObserver.takeRecords();
       chat.removeAttribute(type);
+      console.log(`[Cyberfeeder] ${type} has been disabled`);
     }
   });
   newChatObserver.observe(chat, {childList: true, subtree: true});

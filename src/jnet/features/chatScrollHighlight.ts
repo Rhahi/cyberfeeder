@@ -31,6 +31,7 @@ export function enable() {
       input.removeAttribute('scrollhighlight');
       input.removeAttribute('newchat');
       input.setAttribute('placeholder', 'Say something...');
+      console.log('[Cyberfeeder] Chat scroll highlight has been disabled');
     }
   });
   newChatObserver.observe(chat, {childList: true, subtree: true});

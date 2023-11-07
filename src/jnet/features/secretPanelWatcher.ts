@@ -38,6 +38,7 @@ export function enable() {
       panelObserver.disconnect();
       toggleFeatureObserver.disconnect();
       panel.removeAttribute('secret');
+      console.log('[Cyberfeeder] Secret panel watcher has been disabled');
     }
   });
   panelObserver.observe(panel, {childList: true, subtree: true});
