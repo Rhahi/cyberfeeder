@@ -34,7 +34,7 @@ export function enable() {
     }
   });
   const toggleFeatureObserver = new MutationObserver(() => {
-    if (panel.getAttribute('secret') === 'off') {
+    if (panel.getAttribute('secret') !== 'on') {
       panelObserver.disconnect();
       toggleFeatureObserver.disconnect();
       panel.removeAttribute('secret');

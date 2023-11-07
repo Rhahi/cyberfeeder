@@ -52,7 +52,7 @@ export function enable(type: Option) {
     }
   });
   const toggleFeatureObserver = new MutationObserver(() => {
-    if (chat.getAttribute(type) === 'off') {
+    if (chat.getAttribute(type) !== 'on') {
       newChatObserver.disconnect();
       toggleFeatureObserver.disconnect();
       toggleFeatureObserver.takeRecords();

@@ -18,7 +18,7 @@ export function enable() {
       updateHandsize(hand);
     });
     const toggleFeatureObserver = new MutationObserver(() => {
-      if (hand.indicator.getAttribute('cyberfeeder') === 'off') {
+      if (hand.indicator.getAttribute('cyberfeeder') !== 'on') {
         handSizeObserver.disconnect();
         toggleFeatureObserver.disconnect();
         hand.indicator.removeAttribute('cyberfeeder');

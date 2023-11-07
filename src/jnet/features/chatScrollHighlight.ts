@@ -23,7 +23,7 @@ export function enable() {
     }
   });
   const toggleFeatureObserver = new MutationObserver(() => {
-    if (input.getAttribute('scrollhighlight') === 'off') {
+    if (input.getAttribute('scrollhighlight') !== 'on') {
       newChatObserver.disconnect();
       toggleFeatureObserver.disconnect();
       chat.removeEventListener('scroll', onScroll);
