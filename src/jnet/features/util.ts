@@ -1,11 +1,13 @@
 export type Location = 'rnd' | 'hq' | 'archives' | 'remote' | 'unknown' | 'stack' | 'heap' | 'grip' | 'no-target';
 
 export interface PanelInfo {
+  age: number;
   context?: number;
   card?: string;
   text: string;
   buttons: string[];
   location: Location;
+  match?: RegExpMatchArray;
 }
 
 export function getChat() {
@@ -61,6 +63,7 @@ export function getCommandPanelInfo(element?: Element, prefix = '> .panel') {
     return;
   }
   const info: PanelInfo = {
+    age: getChatAge(),
     card: getPanelCardName(panel, prefix),
     text: getPanelText(panel, prefix),
     buttons: getPanelButtons(panel, prefix),
@@ -94,5 +97,18 @@ function getPanelButtons(panel: Element, prefix = '> .panel') {
     }
   });
   return buttons;
+}
+
+export function getChatAge(message?: Element) {
+  let age: number | undefined;
+  if (message) {
+    age = message.parentNode?.children.length;
+  } else {
+    age = getChat()?.children.length;
+  }
+  if (typeof age === 'number') {
+    return age;
+  }
+  return -1;
 }
 
