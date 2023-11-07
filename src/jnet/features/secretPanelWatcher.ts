@@ -59,7 +59,6 @@ export function fetchSecret(message: Element, ageThreshold = 5) {
   }
   const currentAge = util.getChatAge(message);
   if (currentAge - lastSecret.age > ageThreshold || lastSecret.age > currentAge) {
-    console.log(`rejected by age CUR${currentAge}, PAN${lastSecret.age}`);
     return;
   }
   if (matchSecret(lastSecret)) {
@@ -72,7 +71,7 @@ export function fetchSecret(message: Element, ageThreshold = 5) {
 export function matchSecret(panel: util.PanelInfo | undefined) {
   if (panel && panel.text) {
     for (const pattern of maybeSecretPatterns) {
-      const match = panel.text.match(pattern)
+      const match = panel.text.match(pattern);
       if (match) {
         panel.match = match;
         return true;
