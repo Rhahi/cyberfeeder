@@ -1,8 +1,7 @@
 import * as util from './util';
 
 type MatchType = string | RegExp;
-
-const genericButtons = ['Remove Tag', 'Run', 'Draw', 'Gain Credit', 'Done', 'No'];
+const doNotRecord = ['None', 'Cancel', 'Yes', 'No', 'Done'];
 const maybeSecretPatterns: MatchType[] = [
   // these text will be excluded from being cached
   /^You accessed (?<card>.*)\.$/,
@@ -85,52 +84,74 @@ export function matchSecret(panel: util.PanelInfo | undefined) {
 }
 
 function handleMutation(element: Element, isNew: boolean) {
-  console.log(element);
-  const text = element.textContent;
+  const age = util.getChatAge();
+  let didWatchButtons = false;
 
-  // the panel itself has been added or modified
+  // entire panel has been changed or replaced
   if (element.className === 'panel blue-shade') {
-    const info = util.getCommandPanelInfo(element, '');
-    if (info) {
-      const match = info.text.match(topCardRegex);
-      if (match) {
-        info.location = util.toLocation(match[1]);
-        lastSecret.panel = info;
-        if (isNew) {
-          lastSecret.age = 0;
-          lastSecret.handled = false;
-        } else {
-          lastSecret.age += 1;
-        }
+    const panel = util.getCommandPanelInfo(element, '');
+    if (panel && matchSecret(panel)) {
+      const groups = panel.match?.groups;
+      if (groups) {
+        const location = groups['location'];
+        panel.location = util.toLocation(location);
       }
+      lastSecret = panel;
     }
-    // add button monitoring for subitems
-  }
-
-  // text area is added or changed
-  if (element.tagName.toUpperCase() === 'H4') {
-    // do something
-  }
-
-  // buttons are added or changed
-  if (element.tagName.toUpperCase() === 'BUTTON') {
+    const buttons = element.querySelectorAll(':scope > button');
     if (isNew) {
-      if (text && !genericButtons.includes(text)) {
-        console.log(`register monitor for ${text}`);
-        monitorClick(element);
-      }
+      buttons.forEach(b => {
+        didWatchButtons = true;
+        if (panel?.card) {
+          watchButton(b);
+        }
+      });
     }
   }
-  return false;
+
+  if (isNew && !didWatchButtons) {
+    // assign watcher for all new buttons
+    if (element.tagName.toUpperCase() === 'BUTTON') {
+      watchButton(element);
+    } else {
+      const buttons = element.querySelectorAll(':scope button');
+      buttons.forEach(b => {
+        watchButton(b);
+      });
+    }
+  }
+
+  // update secret's h4 text content
+  if (lastSecret.age === age) {
+    let h4 = element.querySelector(':scope h4');
+    if (element.tagName.toUpperCase() === 'H4') {
+      h4 = element;
+    }
+    if (h4 && h4.textContent && lastSecret.text !== h4.textContent) {
+      lastSecret.text = h4.textContent;
+    }
+  }
 }
 
-function monitorClick(element: Element) {
-  element.addEventListener('click', () => {
+function watchButton(element: Element) {
+  const text = element.textContent;
+  if (!text) {
+    return;
+  }
+  if (doNotRecord.includes(text)) {
+    return;
+  }
+  const tracker = () => {
     if (element.textContent) {
       if (lastClicks.length > 7) {
         lastClicks.shift();
       }
       lastClicks.push(element.textContent);
     }
-  });
+  };
+  element.addEventListener('click', tracker, {once: true});
+  setTimeout(() => {
+    // clean up the event after 2 minutes
+    element.removeEventListener('click', tracker);
+  }, 12000);
 }
