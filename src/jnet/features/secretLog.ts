@@ -1,77 +1,79 @@
 import * as util from './util';
 import * as watcher from './secretPanelWatcher';
 
-const secretPatterns: SecretPattern[] = [
+type MatchType = string | RegExp;
+
+/**
+ * Finding a match in these patterns will prompt chat observer to look for secret information and add it to metadata
+ */
+const secrets: KnownSecrets[] = [
   {
-    matcher: 'unseen card from R&D',
+    patterns: ['unseen card from R&D'],
     dispatch: handleRnDAccess,
   },
   {
-    matcher: 'adds one to the bottom of the stack',
+    patterns: ['adds one to the bottom of the stack'],
     dispatch: handleBottom,
   },
   {
-    matcher: /looks? at the top( \d+)? cards? of/,
+    patterns: [
+      // looking at the top cards of the stack or R&D
+      /looks? at the top( \d+)? cards? of/,
+      /rearrange the top( \d+)? cards? of/,
+      /^(?!.*install it).*\b(?:uses? .* to reveal|reveals|then reveals?).*(HQ|R&D|Archives|Server|stack)\b/,
+    ],
     dispatch: handlePeek,
   },
 ];
 
-interface SecretPattern {
-  matcher: string | RegExp;
-  dispatch: (message: Element, info: util.PanelInfo) => void;
+interface KnownSecrets {
+  patterns: MatchType[];
+  dispatch: (message: Element) => void;
   validate?: string | RegExp;
 }
 
-export function processMessage(chat: Element) {
-  const msg = chat.textContent;
+export function processMessage(message: Element) {
+  const msg = message.textContent;
   if (!msg) {
     return;
   }
-  const panel = util.getCommandPanelInfo();
-  if (!panel) {
-    return;
-  }
-  console.log(msg);
-  console.log(panel);
-  for (const pattern of secretPatterns) {
-    const match = msg.match(pattern.matcher);
-    if (!match) {
-      continue;
-    }
-    pattern.dispatch(chat, panel);
-    break;
-  }
-}
-
-function handleRnDAccess(message: Element, info: util.PanelInfo) {
-  if (info.text === '') {
-    return;
-  }
-  addChatSecretData(message, info.text, 'rnd');
-}
-
-function handleBottom(message: Element, info: util.PanelInfo) {
-  const text = watcher.lastClicks.pop();
-  console.log(`-> Handle Bottom: ${text}`);
-  if (text) {
-    addChatSecretData(message, text, info.location);
-  }
-}
-
-function handlePeek(message: Element, info: util.PanelInfo) {
-  if (!info.text) {
-    console.log('-> handlePeek');
-    console.log(watcher.lastSecret);
-    const panel = watcher.lastSecret.panel;
-    if (!watcher.lastSecret.handled) {
-      if (panel.text) {
-        addChatSecretData(message, panel.text, panel.location);
-        watcher.lastSecret.handled = true;
+  for (const secret of secrets) {
+    for (const pattern of secret.patterns) {
+      const match = msg.match(pattern);
+      if (match) {
+        secret.dispatch(message);
         return;
       }
     }
-  } else {
-    addChatSecretData(message, info.text, info.location);
+  }
+}
+
+/** R&D accesses information can always be fetched from currently visible panel */
+function handleRnDAccess(message: Element) {
+  const panel = util.getCommandPanelInfo();
+  if (panel && watcher.matchSecret(panel)) {
+    addChatSecretData(message, panel.text, 'rnd');
+  }
+}
+
+function handleBottom(message: Element, count = 1) {
+  const selections: string[] = [];
+  while (count > 0) {
+    const text = watcher.lastClicks.pop();
+    if (text) {
+      selections.push(text);
+    }
+    count--;
+  }
+  if (selections.length > 0) {
+    addChatSecretData(message, selections.join(', '), 'unknown');
+  }
+}
+
+function handlePeek(message: Element) {
+  const panel = watcher.fetchSecret(message);
+  if (panel) {
+    addChatSecretData(message, panel.text, panel.location);
   }
 }
 
