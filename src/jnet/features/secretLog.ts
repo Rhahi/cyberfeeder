@@ -85,4 +85,5 @@ function addChatSecretData(message: Element, text: string, target: util.Location
   }
   message.setAttribute('secret', `(Secret: ${text})`);
   message.classList.add(target);
+  message.classList.add('secret');
 }
