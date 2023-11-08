@@ -2,7 +2,7 @@ import * as util from './util';
 import * as secretLog from './secretLog';
 
 const turnRegex = /turn (\d+)/;
-const accessRegex = /accesses .*(?:from|in) (HQ|R&D|Archives|Server)/;
+const accessRegex = /accesses .*(?:from|in) (?:the root of )(HQ|R&D|Archives|Server)/;
 const exposeRegex = /exposes .*(HQ|R&D|Archives|Server)/;
 const revealRegex = /^(?!.*install it).*\b(?:uses? .* to reveal|reveals|then reveals?).*(HQ|R&D|Archives|Server|stack)\b/;
 const addRegex = /add .* to (HQ|R&D|Archives|grip|stack)/;
