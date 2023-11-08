@@ -66,7 +66,7 @@ export function setScript(toggle: Toggle) {
   }
 }
 
-function setupScripts() {
+export function setupScripts() {
   browser.storage.local.get('cachedScriptToggles').then(item => {
     const toggles: {[key: string]: Toggle} | null = item.cachedScriptToggles;
     if (!toggles) {

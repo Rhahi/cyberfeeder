@@ -27,4 +27,8 @@ browser.runtime.onMessage.addListener((message: Message) => {
     }
     return;
   }
+  if (message.action === 'refresh') {
+    script.disableAll();
+    script.setupScripts();
+  }
 });
