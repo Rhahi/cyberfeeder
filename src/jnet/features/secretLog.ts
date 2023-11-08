@@ -12,17 +12,21 @@ const secrets: KnownSecrets[] = [
     dispatch: handleRnDAccess,
   },
   {
-    patterns: ['adds one to the bottom of the stack'],
+    patterns: [
+      // moving cards to bottom of deck
+      'adds one to the bottom of the stack',
+      /add( \d+)? cards? from HQ to the bottom of R&D/,
+    ],
     dispatch: handleBottom,
   },
   {
     patterns: [
       // looking at the top cards of the stack or R&D
       /looks? at the top( \d+)? cards? of/,
-      /rearrange the top( \d+)? cards? of/,
-      /^(?!.*install it).*\b(?:uses? .* to reveal|reveals|then reveals?).*(HQ|R&D|Archives|Server|stack)\b/,
+      /rearranges? the top( \d+)? cards? of/,
+      /^(?!.*install it).*\b(?:uses? .* to reveal|reveals|then reveals?).*(HQ|R&D|Archives|Server|stack|Stack)\b/,
     ],
-    dispatch: handlePeek,
+    dispatch: handleTop,
   },
 ];
 
