@@ -1,5 +1,10 @@
 import * as util from './util';
 
+interface CommandButton {
+  text: string;
+  age: number;
+}
+
 type MatchType = string | RegExp;
 const doNotRecord = ['None', 'Cancel', 'Yes', 'No', 'Done'];
 const maybeSecretPatterns: MatchType[] = [
@@ -8,7 +13,7 @@ const maybeSecretPatterns: MatchType[] = [
   /^Add (?<card>.*) to bottom of (?:the )?(?<location>stack)\?$/,
   /top (?<number>\d )?cards? of (?:the )?(?<location>stack|R&D) (?:is|are|will be) (?<card>.*)$/,
 ];
-export const lastClicks: string[] = [];
+export const lastClicks: CommandButton[] = [];
 export let lastSecret: util.PanelInfo = {age: -1, text: '', buttons: [], location: 'unknown'};
 
 export function enable() {
@@ -58,7 +63,7 @@ export function fetchSecret(message: Element, ageThreshold = 2) {
     return panel;
   }
   const currentAge = util.getChatAge(message);
-  if (currentAge - lastSecret.age > ageThreshold || lastSecret.age > currentAge) {
+  if (!util.withinAgeRange(lastSecret.age, currentAge, ageThreshold)) {
     return;
   }
   if (matchSecret(lastSecret)) {
@@ -144,7 +149,7 @@ function watchButton(element: Element) {
       if (lastClicks.length > 7) {
         lastClicks.shift();
       }
-      lastClicks.push(element.textContent);
+      lastClicks.push({text: element.textContent, age: util.getChatAge()});
     }
   };
   element.addEventListener('click', tracker, {once: true});

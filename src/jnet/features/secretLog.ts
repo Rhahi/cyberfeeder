@@ -59,9 +59,10 @@ function handleRnDAccess(message: Element) {
 function handleBottom(message: Element, count = 1) {
   const selections: string[] = [];
   while (count > 0) {
-    const text = watcher.lastClicks.pop();
-    if (text) {
-      selections.push(text);
+    const button = watcher.lastClicks.pop();
+    const chatAge = util.getChatAge();
+    if (button && util.withinAgeRange(button.age, chatAge, 2)) {
+      selections.push(button.text);
     }
     count--;
   }
