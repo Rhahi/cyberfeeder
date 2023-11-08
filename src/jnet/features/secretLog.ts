@@ -56,7 +56,8 @@ function handleRnDAccess(message: Element) {
   }
 }
 
-function handleBottom(message: Element, count = 1) {
+function handleBottom(message: Element) {
+  let count = 1;
   const selections: string[] = [];
   while (count > 0) {
     const button = watcher.lastClicks.pop();
