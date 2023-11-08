@@ -57,6 +57,11 @@ function handleRnDAccess(message: Element) {
 }
 
 function handleBottom(message: Element) {
+  const panel = watcher.fetchSecret(message);
+  if (panel) {
+    addChatSecretData(message, panel.text, panel.location);
+    return;
+  }
   let count = 1;
   const selections: string[] = [];
   while (count > 0) {
