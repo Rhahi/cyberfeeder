@@ -21,6 +21,7 @@ browser.runtime.onMessage.addListener((message: Message) => {
     if (!message.toggles) {
       return;
     }
+    script.disableAll();
     for (const toggle of message.toggles) {
       script.setScript(toggle);
     }

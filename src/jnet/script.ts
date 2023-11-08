@@ -78,7 +78,7 @@ function setupScripts() {
   });
 }
 
-function disableAll() {
+export function disableAll() {
   handsizeReminder.disable();
   chatScrollHighlight.disable();
   sortArchive.disable();
