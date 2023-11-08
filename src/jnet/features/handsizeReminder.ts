@@ -8,7 +8,6 @@ interface Hand {
 export function enable() {
   const hands = getHands();
   if (hands.length !== 2) {
-    console.warn('[Cyberfeeder] Something went wrong while trying to find player hands');
     return;
   }
   for (const hand of hands) {

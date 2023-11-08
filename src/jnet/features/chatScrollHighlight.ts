@@ -4,7 +4,6 @@ export function enable() {
   const chat = util.getChat();
   const input = util.getChatInputbox();
   if (!chat || !input) {
-    console.warn('[Cyberfeeder] Could not find chat content or input box');
     return;
   }
   input.setAttribute('scrollhighlight', 'on');

@@ -12,7 +12,6 @@ type Option = 'turnhighlight' | 'accesshighlight' | 'otherhighlight' | 'secret';
 export function enable(type: Option) {
   const chat = util.getChat();
   if (!chat) {
-    console.warn('[Cyberfeeder] Could not find chat');
     return;
   }
   chat.setAttribute(type, 'on');
