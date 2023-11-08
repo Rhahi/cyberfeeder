@@ -19,7 +19,6 @@ export function enable() {
   }
   panel.setAttribute('secret', 'on');
   const panelObserver = new MutationObserver(mutations => {
-    console.log('--- new mutation ---');
     for (const m of mutations) {
       m.addedNodes.forEach(node => {
         if (node.nodeType === Node.ELEMENT_NODE) {
