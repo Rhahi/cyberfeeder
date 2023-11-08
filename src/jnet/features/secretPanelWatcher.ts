@@ -9,7 +9,7 @@ type MatchType = string | RegExp;
 const doNotRecord = ['None', 'Cancel', 'Yes', 'No', 'Done'];
 const maybeSecretPatterns: MatchType[] = [
   // these text will be excluded from being cached
-  /^You accessed (?<card>.*)\./,
+  /^You accessed (?<card>.*)\.(?:$| Pay| Trash| Shuffle| Add| Spend)/,
   /^Add (?<card>.*) to bottom of (?:the )?(?<location>stack)\?$/,
   /top (?<number>\d )?cards? of (?:the )?(?<location>stack|R&D) (?:is|are|will be) (?<card>.*)$/,
 ];
