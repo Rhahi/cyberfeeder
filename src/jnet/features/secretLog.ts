@@ -81,7 +81,7 @@ function handleBottom(message: Element) {
   }
 }
 
-function handlePeek(message: Element) {
+function handleTop(message: Element) {
   const panel = watcher.fetchSecret(message);
   if (panel) {
     addChatSecretData(message, panel.text, panel.location);
