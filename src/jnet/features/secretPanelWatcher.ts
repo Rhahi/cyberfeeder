@@ -87,20 +87,16 @@ export function matchSecret(panel: util.PanelInfo | undefined) {
 }
 
 function handleMutation(element: Element, isNew: boolean) {
-  const age = util.getChatAge();
   let didWatchButtons = false;
+  if (element.tagName.toUpperCase() === 'SPAN') {
+    // span changes are link styling, nothing to see here.
+    return;
+  }
 
   // entire panel has been changed or replaced
   if (element.className === 'panel blue-shade') {
     const panel = util.getCommandPanelInfo(element, '');
-    if (panel && matchSecret(panel)) {
-      const groups = panel.match?.groups;
-      if (groups) {
-        const location = groups['location'];
-        panel.location = util.toLocation(location);
-      }
-      lastSecret = panel;
-    }
+    updateSecretFromMutation(panel);
     const buttons = element.querySelectorAll(':scope > button');
     if (isNew) {
       buttons.forEach(b => {
@@ -110,6 +106,12 @@ function handleMutation(element: Element, isNew: boolean) {
         }
       });
     }
+  }
+
+  // update secret's h4 text content
+  else if (element.tagName.toUpperCase() === 'H4' && element.parentElement) {
+    const panel = util.getCommandPanelInfo(element.parentElement, '');
+    updateSecretFromMutation(panel);
   }
 
   if (isNew && !didWatchButtons) {
@@ -123,16 +125,16 @@ function handleMutation(element: Element, isNew: boolean) {
       });
     }
   }
+}
 
-  // update secret's h4 text content
-  if (lastSecret.age === age) {
-    let h4 = element.querySelector(':scope h4');
-    if (element.tagName.toUpperCase() === 'H4') {
-      h4 = element;
+function updateSecretFromMutation(panel: util.PanelInfo | undefined) {
+  if (panel && matchSecret(panel)) {
+    const groups = panel.match?.groups;
+    if (groups) {
+      const location = groups['location'];
+      panel.location = util.toLocation(location);
     }
-    if (h4 && h4.textContent && lastSecret.text !== h4.textContent) {
-      lastSecret.text = h4.textContent;
-    }
+    lastSecret = panel;
   }
 }
 
