@@ -7,7 +7,6 @@
     "lint": "gts lint",
     "clean": "gts clean && rm -rf app/js/*",
     "build": "sh scripts/build.sh",
-    "compile": "tsc",
     "fix": "gts fix",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
@@ -23,9 +22,13 @@
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-typescript": "^11.1.5",
     "@types/firefox-webext-browser": "^111.0.2",
     "@types/node": "20.4.6",
     "gts": "^5.0.1",
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "channel-ts": "^0.1.2"
   }
 }

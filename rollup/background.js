@@ -1,11 +1,12 @@
-const resolve = require('@rollup/plugin-node-resolve').default;
-const commonjs = require('@rollup/plugin-commonjs');
+import typescript from '@rollup/plugin-typescript';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs'
 
-module.exports = {
-  input: './build/src/background/main.js',
+export default {
+  input: './src/background/main.ts',
   output: {
     file: './app/js/background.js',
     format: 'iife',
   },
-  plugins: [resolve(), commonjs()],
+  plugins: [resolve(), commonjs(), typescript({tsconfig: './tsconfig.json'})],
 };

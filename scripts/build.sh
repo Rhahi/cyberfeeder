@@ -4,10 +4,9 @@ set -e
 
 npm run lint
 npm run clean
-npm run compile
 mkdir -p "./app/js"
 for CONFIG_FILE in "./rollup"/*.js; do
-    rollup --config $CONFIG_FILE
+    rollup --config $CONFIG_FILE --bundleConfigAsCjs
 done
 
 # dnf install sass

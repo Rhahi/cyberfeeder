@@ -1,11 +1,12 @@
-const resolve = require('@rollup/plugin-node-resolve').default;
-const commonjs = require('@rollup/plugin-commonjs');
+import typescript from '@rollup/plugin-typescript';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs'
 
-module.exports = {
-  input: './build/src/sidebar/main.js',
+export default {
+  input: './src/sidebar/main.ts',
   output: {
     file: './app/js/sidebar.js',
     format: 'iife',
   },
-  plugins: [resolve(), commonjs()],
+  plugins: [resolve(), commonjs(), typescript({tsconfig: './tsconfig.json'})],
 };
