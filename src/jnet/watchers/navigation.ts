@@ -16,6 +16,16 @@ export interface Navigation {
   mode: string;
   root: Element;
 }
+
+export interface ConditionalObserverConfig {
+  event: Event;
+  type: string;
+  targetMode: 'gameview' | 'cardbrowser' | 'container' | 'page-container';
+  observer: MutationObserver;
+  selector: string;
+  observeOptions: MutationObserverInit;
+}
+
 export const changeMenu = 'change-menu';
 export const changePanel = 'change-panel';
 
@@ -58,27 +68,38 @@ function enableNavigationWatcher() {
   toggleObserver.observe(main, {attributes: true});
 }
 
+export function conditionalObserver(config: ConditionalObserverConfig) {
+  const src = config.event as CustomEvent<Navigation>;
+  if (src.detail.type !== config.type) {
+    return;
+  }
+  if (src.detail.mode === config.targetMode) {
+    // user has navigated in, start a new watch.
+    config.observer.disconnect();
+    const element = document.querySelector(config.selector);
+    if (element) {
+      config.observer.observe(element, config.observeOptions);
+    } else {
+      console.warn(`[Cyberfeeder] expected to find ${config.selector}, found none`);
+    }
+  } else {
+    // user has navigated away, no more control elements.
+    config.observer.disconnect();
+  }
+}
+
 /** Watch and report command panel change event */
 function enablePanelCreationWatcher() {
   const PanelCreationObserver = new MutationObserver(panelCreationHandler);
-  document.addEventListener(changeMenu, (e: Event) => {
-    const src = e as CustomEvent<Navigation>;
-    if (src.detail.type !== changeMenu) {
-      return;
-    }
-    if (src.detail.mode === 'gameview') {
-      // user has navigated in, start a new watch.
-      PanelCreationObserver.disconnect();
-      const pane = document.querySelector('.right-inner-leftpane');
-      if (pane) {
-        PanelCreationObserver.observe(pane, {childList: true});
-      } else {
-        console.warn('[Cyberfeeder] expected to find right-inner-leftpane, found none');
-      }
-    } else {
-      // user has navigated away, no more control elements.
-      PanelCreationObserver.disconnect();
-    }
+  document.addEventListener(changeMenu, event => {
+    conditionalObserver({
+      event,
+      type: changeMenu,
+      targetMode: 'gameview',
+      observer: PanelCreationObserver,
+      selector: '.right-inner-leftpane',
+      observeOptions: {childList: true},
+    });
   });
 }
 
