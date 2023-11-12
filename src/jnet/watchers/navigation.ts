@@ -127,7 +127,6 @@ function announcePanel(node?: Node): boolean {
 
 /** Start by firing an event announing current view */
 export function announce(mainElement?: Element) {
-  console.log('announce');
   const main = mainElement ? mainElement : document.querySelector('#main-content #main > .item');
   if (!main) {
     return;
