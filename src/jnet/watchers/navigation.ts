@@ -16,14 +16,16 @@ export interface Navigation {
   root: Element;
 }
 
+export const eventName = 'watcher-site';
+
 export function watch() {
   const main = document.querySelector('#main-content #main > .item');
-  const name = 'cyberfeeder';
+  const scope = 'cyberfeeder';
   if (!main) {
     console.error('[Cyberfeeder] Cannot find main content, scripts will not work.');
     return;
   }
-  main.setAttribute(name, 'watching');
+  main.setAttribute(scope, 'watching');
   const siteObserver = new MutationObserver(() => {
     let page = 'unknown';
     const firstChild = main.firstChild as Element;
@@ -31,16 +33,16 @@ export function watch() {
       if (firstChild.className) {
         page = firstChild.className;
         const data: Navigation = {mode: page, root: firstChild};
-        const event = new CustomEvent<Navigation>('watcher-site', {detail: data});
+        const event = new CustomEvent<Navigation>(eventName, {detail: data});
         document.dispatchEvent(event);
       }
     }
   });
   const toggleObserver = new MutationObserver(() => {
-    if (main.getAttribute(name) !== 'watching') {
+    if (main.getAttribute(scope) !== 'watching') {
       siteObserver.disconnect();
       toggleObserver.disconnect();
-      main.removeAttribute(name);
+      main.removeAttribute(scope);
       console.info('[Cyberfeeder] Stopped watching navigation');
     }
   });
