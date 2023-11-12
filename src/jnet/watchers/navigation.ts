@@ -26,8 +26,8 @@ export interface ConditionalObserverConfig {
   observeOptions: MutationObserverInit;
 }
 
-export const changeMenu = 'change-menu';
-export const changePanel = 'change-panel';
+export const changeMenuEvent = 'change-menu';
+export const changePanelEvent = 'change-panel';
 
 /** Enable menu navigation watchers. These will start once at startup and will never stop. */
 export function enable() {
@@ -80,10 +80,10 @@ export function conditionalObserver(config: ConditionalObserverConfig) {
 /** Watch and report command panel change event */
 function enablePanelCreationWatcher() {
   const PanelCreationObserver = new MutationObserver(panelCreationHandler);
-  document.addEventListener(changeMenu, event => {
+  document.addEventListener(changeMenuEvent, event => {
     conditionalObserver({
       event,
-      type: changeMenu,
+      type: changeMenuEvent,
       targetMode: 'gameview',
       observer: PanelCreationObserver,
       selector: '.right-inner-leftpane',
@@ -114,11 +114,11 @@ function announcePanel(node?: Node): boolean {
   }
   if (element && element.className === 'button-pane') {
     const data: Navigation = {
-      type: changePanel,
+      type: changePanelEvent,
       mode: 'gameview',
       root: element,
     };
-    const event = new CustomEvent(changePanel, {detail: data});
+    const event = new CustomEvent(changePanelEvent, {detail: data});
     document.dispatchEvent(event);
     return true;
   }
@@ -134,8 +134,8 @@ export function announce(mainElement?: Element) {
   const firstChild = main.firstChild as Element;
   const page = firstChild.className ? firstChild.className : 'unknown';
   if (firstChild && firstChild.nodeType === Node.ELEMENT_NODE) {
-    const data: Navigation = {type: changeMenu, mode: page, root: firstChild};
-    const event = new CustomEvent<Navigation>(changeMenu, {detail: data});
+    const data: Navigation = {type: changeMenuEvent, mode: page, root: firstChild};
+    const event = new CustomEvent<Navigation>(changeMenuEvent, {detail: data});
     document.dispatchEvent(event);
   } else {
     console.warn('[Cyberfeeder] failed to announce current page (invalid content');
