@@ -44,18 +44,7 @@ function enableNavigationWatcher() {
     return;
   }
   main.setAttribute(scope, 'watching');
-  const siteObserver = new MutationObserver(() => {
-    let page = 'unknown';
-    const firstChild = main.firstChild as Element;
-    if (firstChild && firstChild.nodeType === Node.ELEMENT_NODE) {
-      if (firstChild.className) {
-        page = firstChild.className;
-        const data: Navigation = {type: changeMenu, mode: page, root: firstChild};
-        const event = new CustomEvent<Navigation>(changeMenu, {detail: data});
-        document.dispatchEvent(event);
-      }
-    }
-  });
+  const siteObserver = new MutationObserver(() => announce(main));
   const toggleObserver = new MutationObserver(() => {
     if (main.getAttribute(scope) !== 'watching') {
       siteObserver.disconnect();
@@ -101,6 +90,7 @@ function enablePanelCreationWatcher() {
       observeOptions: {childList: true},
     });
   });
+  announcePanel();
 }
 
 /** Check if .right-inner-leftpane got a new .button-pane element. If it did, report it. */
@@ -108,22 +98,47 @@ function panelCreationHandler(mutations: MutationRecord[]) {
   for (const m of mutations) {
     let done = false;
     m.addedNodes.forEach(node => {
-      if (done) {
-        return;
-      }
-      if (node.nodeType === Node.ELEMENT_NODE) {
-        const element = node as Element;
-        if (element.className === 'button-pane') {
-          const data: Navigation = {
-            type: changePanel,
-            mode: 'gameview',
-            root: element,
-          };
-          const event = new CustomEvent(changePanel, {detail: data});
-          document.dispatchEvent(event);
-          done = true;
-        }
+      if (!done) {
+        done = announcePanel(node);
       }
     });
+  }
+}
+
+function announcePanel(node?: Node): boolean {
+  let element: Element | null | undefined;
+  if (!node) {
+    element = document.querySelector('.right-inner-leftpane .button-pane');
+  } else if (node.nodeType === Node.ELEMENT_NODE) {
+    element = node as Element;
+  }
+  if (element && element.className === 'button-pane') {
+    const data: Navigation = {
+      type: changePanel,
+      mode: 'gameview',
+      root: element,
+    };
+    const event = new CustomEvent(changePanel, {detail: data});
+    document.dispatchEvent(event);
+    return true;
+  }
+  return false;
+}
+
+/** Start by firing an event announing current view */
+export function announce(mainElement?: Element) {
+  console.log('announce');
+  const main = mainElement ? mainElement : document.querySelector('#main-content #main > .item');
+  if (!main) {
+    return;
+  }
+  const firstChild = main.firstChild as Element;
+  const page = firstChild.className ? firstChild.className : 'unknown';
+  if (firstChild && firstChild.nodeType === Node.ELEMENT_NODE) {
+    const data: Navigation = {type: changeMenu, mode: page, root: firstChild};
+    const event = new CustomEvent<Navigation>(changeMenu, {detail: data});
+    document.dispatchEvent(event);
+  } else {
+    console.warn('[Cyberfeeder] failed to announce current page (invalid content');
   }
 }
