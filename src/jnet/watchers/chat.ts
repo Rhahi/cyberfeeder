@@ -7,19 +7,24 @@ export interface ChatMessage {
 }
 
 export const newChatEvent = 'new-chat';
+const newChatObserver = new MutationObserver(newChatHandler);
+const announcer = (event: Event) => {
+  navigation.conditionalObserver({
+    event,
+    type: navigation.changeMenuEvent,
+    targetMode: 'gameview',
+    observer: newChatObserver,
+    selector: '.panel > .log > .messages',
+    observeOptions: {childList: true},
+  });
+};
 
 export function enable() {
-  const newChatObserver = new MutationObserver(newChatHandler);
-  document.addEventListener(navigation.changeMenuEvent, event => {
-    navigation.conditionalObserver({
-      event,
-      type: navigation.changeMenuEvent,
-      targetMode: 'gameview',
-      observer: newChatObserver,
-      selector: '.panel > .log > .messages',
-      observeOptions: {childList: true},
-    });
-  });
+  document.addEventListener(navigation.changeMenuEvent, announcer);
+}
+
+export function disable() {
+  document.removeEventListener(navigation.changeMenuEvent, announcer);
 }
 
 function newChatHandler(mutations: MutationRecord[]) {
@@ -44,7 +49,6 @@ function newChatHandler(mutations: MutationRecord[]) {
     data.age = data.age + offset;
     const event = new CustomEvent<ChatMessage>(newChatEvent, {detail: data});
     document.dispatchEvent(event);
-    console.log(data);
     offset += 1;
   }
 }
