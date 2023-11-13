@@ -1,35 +1,32 @@
-import * as base from '../watchers/base';
+import * as archive from '../watchers/archive';
 
 export const archiveEvent = 'new-chat';
 const selector = '.discard-container .panel.popup';
-const archiveObserverOpponent = new MutationObserver(archiveHandler('opponent'));
-const archiveObserverMe = new MutationObserver(archiveHandler('me'));
+const archiveObserverOpponent = new MutationObserver(newCardHandler('opponent'));
+const archiveObserverMe = new MutationObserver(newCardHandler('me'));
 
 interface Card {
   div: Element;
   name: string;
 }
 
-const announcerOpponent = (event: Event) => {
-  base.conditionalObserver({
-    event,
-    type: base.eventName,
-    targetMode: 'gameview',
-    observer: archiveObserverOpponent,
-    selector: '.opponent ' + selector,
-    observeOptions: {childList: true, subtree: true},
-  });
-};
-
-const announcerMe = (event: Event) => {
-  base.conditionalObserver({
-    event,
-    type: base.eventName,
-    targetMode: 'gameview',
-    observer: archiveObserverMe,
-    selector: '.me ' + selector,
-    observeOptions: {childList: true, subtree: true},
-  });
+const newArchiveHandler = (e: Event) => {
+  const event = e as CustomEvent<archive.Archive>;
+  if (event.detail && event.detail.type !== archive.eventName) {
+    return;
+  }
+  if (event.detail.side === 'me') {
+    archiveObserverMe.disconnect();
+    archiveObserverMe.observe(event.detail.element, {childList: true, subtree: true});
+    assignOrders(event.detail.element);
+    return;
+  }
+  if (event.detail.side === 'opponent') {
+    archiveObserverOpponent.disconnect();
+    archiveObserverOpponent.observe(event.detail.element, {childList: true, subtree: true});
+    assignOrders(event.detail.element);
+    return;
+  }
 };
 
 const keyDownWatcher = (ev: KeyboardEvent) => {
@@ -45,20 +42,20 @@ const keyUpWatcher = (ev: KeyboardEvent) => {
 };
 
 export function enable() {
-  document.addEventListener(base.eventName, announcerOpponent);
-  document.addEventListener(base.eventName, announcerMe);
+  document.addEventListener(archive.eventName, newArchiveHandler);
   document.addEventListener('keydown', keyDownWatcher);
   document.addEventListener('keyup', keyUpWatcher);
 }
 
 export function disable() {
-  document.removeEventListener(base.eventName, announcerOpponent);
-  document.removeEventListener(base.eventName, announcerMe);
+  archiveObserverMe.disconnect();
+  archiveObserverOpponent.disconnect();
+  document.removeEventListener(archive.eventName, newArchiveHandler);
   document.removeEventListener('keydown', keyDownWatcher);
   document.removeEventListener('keyup', keyUpWatcher);
 }
 
-function archiveHandler(side: 'me' | 'opponent') {
+function newCardHandler(side: 'me' | 'opponent') {
   const sel = side === 'me' ? '.me ' + selector : '.opponent ' + selector;
   return () => {
     const discard = document.querySelector(sel);
