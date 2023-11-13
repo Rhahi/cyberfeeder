@@ -5,26 +5,31 @@
 import * as base from './base';
 
 export const eventName = 'change-panel';
-
 export interface CommandPanel {
   type: 'change-panel';
   root: Element;
 }
 
+const PanelCreationObserver = new MutationObserver(panelCreationHandler);
+const announcer = (event: Event) => {
+  base.conditionalObserver({
+    event,
+    type: base.eventName,
+    targetMode: 'gameview',
+    observer: PanelCreationObserver,
+    selector: '.right-inner-leftpane',
+    observeOptions: {childList: true},
+  });
+};
+
 /** Watch and report command panel change event */
 export function watch() {
-  const PanelCreationObserver = new MutationObserver(panelCreationHandler);
-  document.addEventListener(base.eventName, event => {
-    base.conditionalObserver({
-      event,
-      type: base.eventName,
-      targetMode: 'gameview',
-      observer: PanelCreationObserver,
-      selector: '.right-inner-leftpane',
-      observeOptions: {childList: true},
-    });
-  });
+  document.addEventListener(base.eventName, announcer);
   announce();
+}
+
+export function stop() {
+  document.removeEventListener(base.eventName, announcer);
 }
 
 /** Check if .right-inner-leftpane got a new .button-pane element. If it did, report it. */
