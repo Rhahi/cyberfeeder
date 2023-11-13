@@ -59,9 +59,9 @@ export function disable() {
 }
 
 function archiveHandler(side: 'me' | 'opponent') {
-  const selector = side === 'me' ? '.me .discard-container .panel.popup' : '.opponent .discard-container .panel.popup';
+  const sel = side === 'me' ? '.me ' + selector : '.opponent ' + selector;
   return () => {
-    const discard = document.querySelector(selector);
+    const discard = document.querySelector(sel);
     if (!discard) {
       console.warn('[Cyberfeeder] Could not find discard pile, archive sorting will not work');
       return;
