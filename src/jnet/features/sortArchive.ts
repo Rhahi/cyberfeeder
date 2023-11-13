@@ -1,5 +1,4 @@
 import * as base from '../watchers/base';
-import * as navigation from '../watchers/base';
 
 export const archiveEvent = 'new-chat';
 const selector = '.discard-container .panel.popup';
@@ -46,15 +45,15 @@ const keyUpWatcher = (ev: KeyboardEvent) => {
 };
 
 export function enable() {
-  document.addEventListener(navigation.eventName, announcerOpponent);
-  document.addEventListener(navigation.eventName, announcerMe);
+  document.addEventListener(base.eventName, announcerOpponent);
+  document.addEventListener(base.eventName, announcerMe);
   document.addEventListener('keydown', keyDownWatcher);
   document.addEventListener('keyup', keyUpWatcher);
 }
 
 export function disable() {
-  document.removeEventListener(navigation.eventName, announcerOpponent);
-  document.removeEventListener(navigation.eventName, announcerMe);
+  document.removeEventListener(base.eventName, announcerOpponent);
+  document.removeEventListener(base.eventName, announcerMe);
   document.removeEventListener('keydown', keyDownWatcher);
   document.removeEventListener('keyup', keyUpWatcher);
 }
