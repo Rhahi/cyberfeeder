@@ -2,9 +2,9 @@ import * as base from '../watchers/base';
 import * as navigation from '../watchers/base';
 
 export const archiveEvent = 'new-chat';
+const selector = '.discard-container .panel.popup';
 const archiveObserverOpponent = new MutationObserver(archiveHandler('opponent'));
 const archiveObserverMe = new MutationObserver(archiveHandler('me'));
-const selector = '.discard-container .panel.popup';
 
 interface Card {
   div: Element;
