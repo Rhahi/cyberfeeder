@@ -1,56 +1,74 @@
+import * as base from '../watchers/base';
+import * as navigation from '../watchers/base';
+
+export const archiveEvent = 'new-chat';
+const archiveObserverOpponent = new MutationObserver(archiveHandler('opponent'));
+const archiveObserverMe = new MutationObserver(archiveHandler('me'));
+const selector = '.discard-container .panel.popup';
+
 interface Card {
   div: Element;
   name: string;
 }
 
-/** Turn on archive sorting
- *
- * This needs to be triggered again if layout changes (i.e., changing observer view)
- */
+const announcerOpponent = (event: Event) => {
+  base.conditionalObserver({
+    event,
+    type: base.eventName,
+    targetMode: 'gameview',
+    observer: archiveObserverOpponent,
+    selector: '.opponent ' + selector,
+    observeOptions: {childList: true, subtree: true},
+  });
+};
+
+const announcerMe = (event: Event) => {
+  base.conditionalObserver({
+    event,
+    type: base.eventName,
+    targetMode: 'gameview',
+    observer: archiveObserverMe,
+    selector: '.me ' + selector,
+    observeOptions: {childList: true, subtree: true},
+  });
+};
+
+const keyDownWatcher = (ev: KeyboardEvent) => {
+  if (ev.shiftKey) {
+    setFlex();
+  }
+};
+
+const keyUpWatcher = (ev: KeyboardEvent) => {
+  if (ev.shiftKey) {
+    unsetFlex();
+  }
+};
+
 export function enable() {
-  const divs = getDiscardPopups();
-  divs.forEach(popup => {
-    // mark enabled
-    popup.setAttribute('cyberfeeder', 'on');
-
-    // initial setup
-    assignOrders(popup);
-    setPopupFlex(popup);
-
-    // watch for content change
-    const cardObserver = new MutationObserver(() => {
-      assignOrders(popup);
-    });
-
-    // watch for archive popup content change
-    const popUpObserver = new MutationObserver(() => {
-      setPopupFlex(popup);
-      if (popup.getAttribute('cyberfeeder') === 'off') {
-        popup.removeAttribute('cyberfeeder');
-        popUpObserver.disconnect();
-        cardObserver.disconnect();
-        unsetPopupFlex(popup);
-      }
-    });
-
-    // start the observers
-    cardObserver.observe(popup, {childList: true, subtree: true});
-    popUpObserver.observe(popup, {attributes: true});
-  });
+  document.addEventListener(navigation.eventName, announcerOpponent);
+  document.addEventListener(navigation.eventName, announcerMe);
+  document.addEventListener('keydown', keyDownWatcher);
+  document.addEventListener('keyup', keyUpWatcher);
 }
 
-/** Turn off archive sorting */
 export function disable() {
-  const divs = getDiscardPopups();
-  divs.forEach(popup => {
-    if (popup.getAttribute('cyberfeeder') === 'on') {
-      popup.setAttribute('cyberfeeder', 'off');
-    }
-  });
+  document.removeEventListener(navigation.eventName, announcerOpponent);
+  document.removeEventListener(navigation.eventName, announcerMe);
+  document.removeEventListener('keydown', keyDownWatcher);
+  document.removeEventListener('keyup', keyUpWatcher);
 }
 
-function getDiscardPopups() {
-  return document.querySelectorAll('.discard-container .panel.popup');
+function archiveHandler(side: 'me' | 'opponent') {
+  const selector = side === 'me' ? '.me .discard-container .panel.popup' : '.opponent .discard-container .panel.popup';
+  return () => {
+    const discard = document.querySelector(selector);
+    if (!discard) {
+      console.warn('[Cyberfeeder] Could not find discard pile, archive sorting will not work');
+      return;
+    }
+    assignOrders(discard);
+  };
 }
 
 function assignOrders(container: Element) {
@@ -79,17 +97,22 @@ function assignOrders(container: Element) {
   }
 }
 
-/** Jnet assigns block when discard popup is activated. Set it to flex. */
-function setPopupFlex(container: Element) {
-  const oldStyle = container.getAttribute('style');
-  if (oldStyle === 'display: block;') {
-    container.setAttribute('style', 'display: flex;');
-  }
+function setFlex() {
+  const containers = document.querySelectorAll(selector);
+  containers.forEach(container => {
+    const oldStyle = container.getAttribute('style');
+    if (oldStyle?.includes('display: block;')) {
+      container.setAttribute('style', 'display: flex; flex-wrap: wrap;');
+    }
+  });
 }
 
-function unsetPopupFlex(container: Element) {
-  const oldStyle = container.getAttribute('style');
-  if (oldStyle?.includes('flex;')) {
-    container.setAttribute('style', 'display: block;');
-  }
+function unsetFlex() {
+  const containers = document.querySelectorAll(selector);
+  containers.forEach(container => {
+    const oldStyle = container.getAttribute('style');
+    if (oldStyle?.includes('flex;')) {
+      container.setAttribute('style', 'display: block;');
+    }
+  });
 }
