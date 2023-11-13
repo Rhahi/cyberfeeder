@@ -26,17 +26,10 @@ export interface ConditionalObserverConfig {
   observeOptions: MutationObserverInit;
 }
 
-export const changeMenuEvent = 'change-menu';
-export const changePanelEvent = 'change-panel';
+export const eventName = 'change-menu';
 
 /** Enable menu navigation watchers. These will start once at startup and will never stop. */
-export function enable() {
-  enableNavigationWatcher();
-  enablePanelCreationWatcher();
-}
-
-/** Watch and report main menu navigation event */
-function enableNavigationWatcher() {
+export function watch() {
   const main = document.querySelector('#main-content #main > .item');
   const scope = 'cyberfeeder';
   if (!main) {
@@ -77,54 +70,6 @@ export function conditionalObserver(config: ConditionalObserverConfig) {
   }
 }
 
-/** Watch and report command panel change event */
-function enablePanelCreationWatcher() {
-  const PanelCreationObserver = new MutationObserver(panelCreationHandler);
-  document.addEventListener(changeMenuEvent, event => {
-    conditionalObserver({
-      event,
-      type: changeMenuEvent,
-      targetMode: 'gameview',
-      observer: PanelCreationObserver,
-      selector: '.right-inner-leftpane',
-      observeOptions: {childList: true},
-    });
-  });
-  announcePanel();
-}
-
-/** Check if .right-inner-leftpane got a new .button-pane element. If it did, report it. */
-function panelCreationHandler(mutations: MutationRecord[]) {
-  for (const m of mutations) {
-    let done = false;
-    m.addedNodes.forEach(node => {
-      if (!done) {
-        done = announcePanel(node);
-      }
-    });
-  }
-}
-
-function announcePanel(node?: Node): boolean {
-  let element: Element | null | undefined;
-  if (!node) {
-    element = document.querySelector('.right-inner-leftpane .button-pane');
-  } else if (node.nodeType === Node.ELEMENT_NODE) {
-    element = node as Element;
-  }
-  if (element && element.className === 'button-pane') {
-    const data: Navigation = {
-      type: changePanelEvent,
-      mode: 'gameview',
-      root: element,
-    };
-    const event = new CustomEvent(changePanelEvent, {detail: data});
-    document.dispatchEvent(event);
-    return true;
-  }
-  return false;
-}
-
 /** Start by firing an event announing current view */
 export function announce(mainElement?: Element) {
   const main = mainElement ? mainElement : document.querySelector('#main-content #main > .item');
@@ -134,8 +79,8 @@ export function announce(mainElement?: Element) {
   const firstChild = main.firstChild as Element;
   const page = firstChild.className ? firstChild.className : 'unknown';
   if (firstChild && firstChild.nodeType === Node.ELEMENT_NODE) {
-    const data: Navigation = {type: changeMenuEvent, mode: page, root: firstChild};
-    const event = new CustomEvent<Navigation>(changeMenuEvent, {detail: data});
+    const data: Navigation = {type: eventName, mode: page, root: firstChild};
+    const event = new CustomEvent<Navigation>(eventName, {detail: data});
     document.dispatchEvent(event);
   } else {
     console.warn('[Cyberfeeder] failed to announce current page (invalid content');
