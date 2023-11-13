@@ -57,6 +57,10 @@ export function watch() {
   toggleObserver.observe(main, {attributes: true});
 }
 
+/** Helper function to setup a conditional observer.
+ *
+ * The observer passed to this function will only activate when the selected view is activate.
+ */
 export function conditionalObserver(config: ConditionalObserverConfig) {
   const src = config.event as CustomEvent<Navigation>;
   if (src.detail.type !== config.type) {
