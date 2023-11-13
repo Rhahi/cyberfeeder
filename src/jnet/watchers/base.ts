@@ -12,7 +12,7 @@
  * The only interesting item is 'gameview' where cyberfeeder features work.
  */
 export interface Navigation {
-  type: 'change-menu' | 'change-panel';
+  type: 'change-menu';
   mode: string;
   root: Element;
 }
