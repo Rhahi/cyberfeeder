@@ -34,13 +34,13 @@ const announcerMe = (event: Event) => {
 };
 
 const keyDownWatcher = (ev: KeyboardEvent) => {
-  if (ev.shiftKey) {
+  if (ev.key === 'Control') {
     setFlex();
   }
 };
 
 const keyUpWatcher = (ev: KeyboardEvent) => {
-  if (ev.shiftKey) {
+  if (ev.key === 'Control') {
     unsetFlex();
   }
 };
