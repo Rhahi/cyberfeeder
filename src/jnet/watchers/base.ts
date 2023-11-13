@@ -26,6 +26,13 @@ export interface ConditionalObserverConfig {
   observeOptions: MutationObserverInit;
 }
 
+export interface ConditionalExecuterConfig {
+  event: Event;
+  type: string;
+  targetMode: 'gameview' | 'cardbrowser' | 'container' | 'page-container';
+  callback: (enable: boolean) => void;
+}
+
 export const eventName = 'change-menu';
 
 /** Enable menu navigation watchers. These will start once at startup and will never stop. */
@@ -68,6 +75,14 @@ export function conditionalObserver(config: ConditionalObserverConfig) {
     // user has navigated away, no more control elements.
     config.observer.disconnect();
   }
+}
+
+export function conditionalExecuter(config: ConditionalExecuterConfig) {
+  const src = config.event as CustomEvent<Navigation>;
+  if (src.detail.type !== config.type) {
+    return;
+  }
+  config.callback(src.detail.mode === config.targetMode);
 }
 
 /** Start by firing an event announing current view */
