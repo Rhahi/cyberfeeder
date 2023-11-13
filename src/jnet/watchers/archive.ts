@@ -33,12 +33,16 @@ function viewChangeHandler(mutations: MutationRecord[]) {
     m.addedNodes.forEach(node => {
       if (node.nodeType === Node.ELEMENT_NODE) {
         const element = node as Element;
+        const archive = element.querySelector(':scope .discard-container .panel.popup');
+        if (!archive) {
+          return;
+        }
         if (element.classList.contains('me')) {
-          me = element;
+          me = archive;
           return;
         }
         if (element.classList.contains('opponent')) {
-          opponent = element;
+          opponent = archive;
           return;
         }
       }
