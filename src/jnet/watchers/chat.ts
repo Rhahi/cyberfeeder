@@ -1,4 +1,6 @@
-import * as navigation from './navigation';
+import * as base from './base';
+
+export const eventName = 'new-chat';
 
 export interface ChatMessage {
   system: boolean;
@@ -6,12 +8,11 @@ export interface ChatMessage {
   age: number;
 }
 
-export const newChatEvent = 'new-chat';
 const newChatObserver = new MutationObserver(newChatHandler);
 const announcer = (event: Event) => {
-  navigation.conditionalObserver({
+  base.conditionalObserver({
     event,
-    type: navigation.changeMenuEvent,
+    type: base.eventName,
     targetMode: 'gameview',
     observer: newChatObserver,
     selector: '.panel > .log > .messages',
@@ -19,12 +20,12 @@ const announcer = (event: Event) => {
   });
 };
 
-export function enable() {
-  document.addEventListener(navigation.changeMenuEvent, announcer);
+export function watch() {
+  document.addEventListener(base.eventName, announcer);
 }
 
-export function disable() {
-  document.removeEventListener(navigation.changeMenuEvent, announcer);
+export function stop() {
+  document.removeEventListener(base.eventName, announcer);
 }
 
 function newChatHandler(mutations: MutationRecord[]) {
@@ -47,7 +48,7 @@ function newChatHandler(mutations: MutationRecord[]) {
   let offset = 1 - messages.length;
   for (const data of messages) {
     data.age = data.age + offset;
-    const event = new CustomEvent<ChatMessage>(newChatEvent, {detail: data});
+    const event = new CustomEvent<ChatMessage>(eventName, {detail: data});
     document.dispatchEvent(event);
     offset += 1;
   }
