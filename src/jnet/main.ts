@@ -18,17 +18,9 @@ browser.runtime.onMessage.addListener((message: Message) => {
   }
   if (message.action === 'script') {
     css.applyStyle(message.id, message.css);
-    if (!message.toggles) {
-      return;
-    }
-    script.disableAll();
-    for (const toggle of message.toggles) {
-      script.setScript(toggle);
+    if (message.toggles) {
+      script.setupScripts(message.toggles);
     }
     return;
-  }
-  if (message.action === 'refresh') {
-    script.disableAll();
-    script.setupScripts();
   }
 });
