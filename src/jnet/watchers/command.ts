@@ -11,7 +11,7 @@ export interface CommandPanel {
 }
 
 const PanelCreationObserver = new MutationObserver(panelCreationHandler);
-const announcer = (event: Event) => {
+const sideWatcher = (event: Event) => {
   base.conditionalObserver({
     event,
     type: base.eventName,
@@ -37,11 +37,11 @@ const announcer = (event: Event) => {
 
 /** Watch and report command panel change event */
 export function watch() {
-  document.addEventListener(base.eventName, announcer);
+  document.addEventListener(base.eventName, sideWatcher);
 }
 
 export function stop() {
-  document.removeEventListener(base.eventName, announcer);
+  document.removeEventListener(base.eventName, sideWatcher);
 }
 
 /** Check if .right-inner-leftpane got a new .button-pane element. If it did, report it. */
