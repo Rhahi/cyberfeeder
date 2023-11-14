@@ -17,7 +17,6 @@ export function rebuildStyle(prefix: string) {
  */
 export async function buildSidebar(type: TabType) {
   const {bundledStyles, userStyles} = await data.getStyles(type);
-  console.log(bundledStyles);
   let toggles;
   if (type === 'style') {
     toggles = await data.getStyleToggles();
