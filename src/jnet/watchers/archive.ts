@@ -84,12 +84,12 @@ function init() {
   const me = document.querySelector('.me ' + selector);
   const opponent = document.querySelector('.opponent ' + selector);
   if (me) {
-    const data: Archive = {type: 'change-archive', side: 'me', element: me};
+    const data: Archive = {type: eventName, side: 'me', element: me};
     const event = new CustomEvent<Archive>(eventName, {detail: data});
     document.dispatchEvent(event);
   }
   if (opponent) {
-    const data: Archive = {type: 'change-archive', side: 'opponent', element: opponent};
+    const data: Archive = {type: eventName, side: 'opponent', element: opponent};
     const event = new CustomEvent<Archive>(eventName, {detail: data});
     document.dispatchEvent(event);
   }
