@@ -3,9 +3,11 @@ import * as base from './base';
 export const eventName = 'new-chat';
 
 export interface ChatMessage {
+  type: 'new-chat';
   system: boolean;
   text: string;
   age: number;
+  element: Element;
 }
 
 const newChatObserver = new MutationObserver(newChatHandler);
@@ -40,7 +42,7 @@ function newChatHandler(mutations: MutationRecord[]) {
       const text = div.textContent;
       const age = div.parentNode?.children.length;
       if (text && age) {
-        const data: ChatMessage = {system, text, age: age};
+        const data: ChatMessage = {type: 'new-chat', system, text, age: age, element: div};
         messages.push(data);
       }
     });
