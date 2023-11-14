@@ -40,22 +40,19 @@ async function readJson(name: string): Promise<StyleData> {
 export async function initializeLocalStorage() {
   const prevStyleVersion = await browser.storage.local.get('version').then(item => item.version);
   const prevScriptVersion = await browser.storage.local.get('scriptVersion').then(item => item.scriptVersion);
+  let didOverride = false;
   if (prevStyleVersion === 'override' || prevScriptVersion === 'override') {
     await browser.storage.local.clear();
+    didOverride = true;
     console.info('Overriding stored styles with development override.');
   }
-  await initializeLocalStorageStyle(prevStyleVersion);
-  await initializeLocalStorageScript(prevScriptVersion);
+  await initializeLocalStorageStyle(prevStyleVersion, didOverride);
+  await initializeLocalStorageScript(prevScriptVersion, didOverride);
 }
 
-async function initializeLocalStorageStyle(prevVersion: string) {
+async function initializeLocalStorageStyle(prevVersion: string, didOverride: boolean) {
   const data = await readJson('style');
-  if (!prevVersion || prevVersion === 'override') {
-    console.info('Initialize bundled style');
-    await saveBundledStyle(data);
-    return;
-  }
-  if (data.version === prevVersion) {
+  if (data.version === prevVersion && !didOverride) {
     console.info('Bundled style OK');
     return;
   }
@@ -63,14 +60,9 @@ async function initializeLocalStorageStyle(prevVersion: string) {
   await saveBundledStyle(data);
 }
 
-async function initializeLocalStorageScript(prevVersion: string) {
+async function initializeLocalStorageScript(prevVersion: string, didOverride: boolean) {
   const data = await readJson('script');
-  if (!prevVersion || prevVersion === 'override') {
-    console.info('Initialize bundled script style');
-    await saveBundledScript(data);
-    return;
-  }
-  if (data.version === prevVersion) {
+  if (data.version === prevVersion && !didOverride) {
     console.info('Bundled script style OK');
     return;
   }
