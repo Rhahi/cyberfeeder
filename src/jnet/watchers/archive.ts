@@ -15,7 +15,7 @@ export interface Archive {
   element: Element;
 }
 
-const archiveWatcher = (event: Event) => {
+const sideWatcher = (event: Event) => {
   base.conditionalObserver({
     event,
     type: base.eventName,
@@ -72,11 +72,11 @@ function viewChangeHandler(mutations: MutationRecord[]) {
 }
 
 export function watch() {
-  document.addEventListener(base.eventName, archiveWatcher);
+  document.addEventListener(base.eventName, sideWatcher);
 }
 
 export function stop() {
-  document.removeEventListener(base.eventName, archiveWatcher);
+  document.removeEventListener(base.eventName, sideWatcher);
 }
 
 /** A one time event that will prompt new archives */
