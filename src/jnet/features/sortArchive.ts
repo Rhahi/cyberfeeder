@@ -1,6 +1,5 @@
 import * as archive from '../watchers/archive';
 
-export const archiveEvent = 'new-chat';
 const selector = '.discard-container .panel.popup';
 const archiveObserverOpponent = new MutationObserver(newCardHandler('opponent'));
 const archiveObserverMe = new MutationObserver(newCardHandler('me'));
