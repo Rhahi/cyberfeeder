@@ -20,12 +20,21 @@ const announcer = (event: Event) => {
     selector: '.right-inner-leftpane',
     observeOptions: {childList: true},
   });
+  base.conditionalExecuter({
+    event,
+    type: base.eventName,
+    targetMode: 'gameview',
+    callback: enable => {
+      if (enable) {
+        announce();
+      }
+    },
+  });
 };
 
 /** Watch and report command panel change event */
 export function watch() {
   document.addEventListener(base.eventName, announcer);
-  announce();
 }
 
 export function stop() {
