@@ -11,7 +11,7 @@ export interface ChatMessage {
 }
 
 const newChatObserver = new MutationObserver(newChatHandler);
-const announcer = (event: Event) => {
+const menuWatcher = (event: Event) => {
   base.conditionalObserver({
     event,
     type: base.eventName,
@@ -23,11 +23,11 @@ const announcer = (event: Event) => {
 };
 
 export function watch() {
-  document.addEventListener(base.eventName, announcer);
+  document.addEventListener(base.eventName, menuWatcher);
 }
 
 export function stop() {
-  document.removeEventListener(base.eventName, announcer);
+  document.removeEventListener(base.eventName, menuWatcher);
 }
 
 function newChatHandler(mutations: MutationRecord[]) {
