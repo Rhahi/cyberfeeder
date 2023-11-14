@@ -12,7 +12,7 @@ interface Card {
 
 const newArchiveHandler = (e: Event) => {
   const event = e as CustomEvent<archive.Archive>;
-  if (event.detail && event.detail.type !== archive.eventName) {
+  if (!event.detail || event.detail.type !== archive.eventName) {
     return;
   }
   if (event.detail.side === 'me') {
