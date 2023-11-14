@@ -1,49 +1,73 @@
-import * as util from './util';
+/**
+ * A. subscribe to navigation event
+ * B. when we are on gameboard, activate highlight feature, otherwise, turn it off.
+ *
+ * 1. Subscribe to new chat messages
+ * 2. Whenever there is a new chat message, check scroll position and scroll if necessary.
+ */
 
-export function enable() {
+import * as util from './util';
+import * as watcher from '../watchers';
+
+const onScroll = () => {
+  const chat = util.getChat();
+  const input = util.getChatInputbox();
+  if (chat && input && isFullyDown(chat)) {
+    input.setAttribute('newchat', 'no');
+    input.setAttribute('placeholder', 'Say something...');
+  }
+};
+
+const newBoxHandler = (event: Event) => {
+  watcher.base.conditionalExecuter({
+    event,
+    type: watcher.base.eventName,
+    targetMode: 'gameview',
+    callback: enable => {
+      const chat = util.getChat();
+      if (!chat) {
+        return;
+      }
+      if (enable) {
+        chat.addEventListener('scroll', onScroll);
+      } else {
+        chat.removeEventListener('scroll', onScroll);
+      }
+    },
+  });
+};
+
+const newChatHandler = () => {
   const chat = util.getChat();
   const input = util.getChatInputbox();
   if (!chat || !input) {
     return;
   }
-  input.setAttribute('scrollhighlight', 'on');
-  const onScroll = () => {
-    if (isFullyDown(chat)) {
-      input.setAttribute('newchat', 'no');
-      input.setAttribute('placeholder', 'Say something...');
-    }
-  };
-  chat.addEventListener('scroll', onScroll);
+  if (!isFullyDown(chat)) {
+    input.setAttribute('newchat', 'yes');
+    input.setAttribute('placeholder', 'Scroll down for new messages');
+  }
+};
 
-  const newChatObserver = new MutationObserver(() => {
-    if (!isFullyDown(chat)) {
-      input.setAttribute('newchat', 'yes');
-      input.setAttribute('placeholder', 'Scroll down for new messages');
-    }
-  });
-  const toggleFeatureObserver = new MutationObserver(() => {
-    if (input.getAttribute('scrollhighlight') !== 'on') {
-      newChatObserver.disconnect();
-      toggleFeatureObserver.disconnect();
-      chat.removeEventListener('scroll', onScroll);
+export function enable() {
+  document.addEventListener(watcher.base.eventName, newBoxHandler);
+  document.addEventListener(watcher.chat.eventName, newChatHandler);
+}
 
-      input.removeAttribute('scrollhighlight');
-      input.removeAttribute('newchat');
-      input.setAttribute('placeholder', 'Say something...');
-      console.log('[Cyberfeeder] Chat scroll highlight has been disabled');
-    }
-  });
-  newChatObserver.observe(chat, {childList: true, subtree: true});
-  toggleFeatureObserver.observe(input, {attributes: true});
+export function disable() {
+  document.removeEventListener(watcher.base.eventName, newBoxHandler);
+  document.removeEventListener(watcher.chat.eventName, newChatHandler);
+  const chat = util.getChat();
+  const input = util.getChatInputbox();
+  if (chat) {
+    chat.removeEventListener('scroll', onScroll);
+  }
+  if (input) {
+    input.removeAttribute('newchat');
+    input.setAttribute('placeholder', 'Say something...');
+  }
 }
 
 function isFullyDown(element: Element) {
   return element.scrollHeight - element.clientHeight - element.scrollTop < 2;
-}
-
-export function disable() {
-  const element = util.getChatInputbox();
-  if (element?.getAttribute('scrollhighlight') === 'on') {
-    element.setAttribute('scrollhighlight', 'off');
-  }
 }
