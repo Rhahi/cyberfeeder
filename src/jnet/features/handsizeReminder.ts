@@ -1,47 +1,50 @@
+/**
+ * 1. Receive new hand container
+ * 2. Start watching its indicator. On change, apply hand size reminder
+ */
+
+import {hand} from '../watchers';
+
 const regex = /\(\d+\/(\d+)\)/;
+const indicatorObserverOpponent = new MutationObserver(indicatorHandler);
+const indicatorObserverMe = new MutationObserver(indicatorHandler);
 
-interface Hand {
-  container: Element;
-  indicator: Element;
-}
-
-export function enable() {
-  const hands = getHands();
-  if (hands.length !== 2) {
+const newHandHandler = (e: Event) => {
+  const event = e as CustomEvent<hand.Hand>;
+  if (!event.detail || event.detail.type !== hand.eventName) {
     return;
   }
-  for (const hand of hands) {
-    updateHandsize(hand);
-    hand.indicator.setAttribute('cyberfeeder', 'on');
-    const handSizeObserver = new MutationObserver(() => {
-      updateHandsize(hand);
-    });
-    const toggleFeatureObserver = new MutationObserver(() => {
-      if (hand.indicator.getAttribute('cyberfeeder') !== 'on') {
-        handSizeObserver.disconnect();
-        toggleFeatureObserver.disconnect();
-        hand.indicator.removeAttribute('cyberfeeder');
-        hand.container.removeAttribute('handsize');
-        console.log('[Cyberfeeder] Hand size reminder has been disabled');
-      }
-    });
-    handSizeObserver.observe(hand.indicator, {childList: true, subtree: true, characterData: true});
-    toggleFeatureObserver.observe(hand.indicator, {attributes: true});
+  const container = event.detail.element;
+  const indicator = container.querySelector(':scope > .header');
+  if (!indicator) {
+    return;
   }
+  if (event.detail.side === 'me') {
+    indicatorObserverMe.disconnect();
+    indicatorObserverMe.observe(indicator, {subtree: true, characterData: true});
+    return;
+  }
+  if (event.detail.side === 'opponent') {
+    indicatorObserverOpponent.disconnect();
+    indicatorObserverOpponent.observe(indicator, {subtree: true, characterData: true});
+    return;
+  }
+};
+
+export function enable() {
+  document.addEventListener(hand.eventName, newHandHandler);
+  hand.init();
 }
 
 export function disable() {
-  for (const hand of getHands()) {
-    hand.indicator.setAttribute('cyberfeeder', 'off');
-  }
+  document.removeEventListener(hand.eventName, newHandHandler);
 }
 
-function updateHandsize(hand: Hand) {
-  const handsize = getHandsizeNumber(hand.indicator.textContent);
+function updateHandsize(container: Element, handsize: number) {
   if (handsize < 5 && handsize >= 0) {
-    hand.container.setAttribute('handsize', handsize.toString());
+    container.setAttribute('handsize', handsize.toString());
   } else {
-    hand.container.removeAttribute('handsize');
+    container.removeAttribute('handsize');
   }
 }
 
@@ -60,14 +63,16 @@ function getHandsizeNumber(text: string | null) {
   return 5;
 }
 
-function getHands() {
-  const hands: Hand[] = [];
-  const containers = document.querySelectorAll('.hand-container .panel.hand');
-  containers.forEach(container => {
-    const indicator = container.querySelector(':scope > .header');
-    if (indicator) {
-      hands.push({container, indicator});
+function indicatorHandler(mutations: MutationRecord[]) {
+  for (const m of mutations) {
+    if (m.target.nodeType === Node.TEXT_NODE) {
+      const text = m.target.textContent;
+      const indicator = m.target.parentElement;
+      const container = indicator?.parentElement;
+      if (indicator && container) {
+        const handsize = getHandsizeNumber(text);
+        updateHandsize(container, handsize);
+      }
     }
-  });
-  return hands;
+  }
 }
