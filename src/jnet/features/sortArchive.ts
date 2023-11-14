@@ -17,14 +17,14 @@ const newArchiveHandler = (e: Event) => {
   }
   if (event.detail.side === 'me') {
     archiveObserverMe.disconnect();
-    archiveObserverMe.observe(event.detail.element, {childList: true, subtree: true});
     assignOrders(event.detail.element);
+    archiveObserverMe.observe(event.detail.element, {childList: true, subtree: true});
     return;
   }
   if (event.detail.side === 'opponent') {
     archiveObserverOpponent.disconnect();
-    archiveObserverOpponent.observe(event.detail.element, {childList: true, subtree: true});
     assignOrders(event.detail.element);
+    archiveObserverOpponent.observe(event.detail.element, {childList: true, subtree: true});
     return;
   }
 };
