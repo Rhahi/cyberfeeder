@@ -105,3 +105,38 @@ export function announce(mainElement?: Element) {
     console.warn('[Cyberfeeder] failed to announce current page (invalid content');
   }
 }
+
+export function viewChangeHandler(type: string, selector: string, mutations: MutationRecord[]) {
+  let me: Element | undefined;
+  let opponent: Element | undefined;
+
+  for (const m of mutations) {
+    m.addedNodes.forEach(node => {
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        const element = node as Element;
+        const targetElement = element.querySelector(selector);
+        if (!targetElement) {
+          return;
+        }
+        if (element.classList.contains('me')) {
+          me = targetElement;
+          return;
+        }
+        if (element.classList.contains('opponent')) {
+          opponent = targetElement;
+          return;
+        }
+      }
+    });
+  }
+  if (me) {
+    const data: unknown = {type, side: 'me', element: me};
+    const event = new CustomEvent<unknown>(eventName, {detail: data});
+    document.dispatchEvent(event);
+  }
+  if (opponent) {
+    const data: unknown = {type, side: 'opponent', element: opponent};
+    const event = new CustomEvent<unknown>(eventName, {detail: data});
+    document.dispatchEvent(event);
+  }
+}

@@ -6,8 +6,8 @@
 import * as base from './base';
 
 export const eventName = 'change-archive';
-const viewChangeObserver = new MutationObserver(viewChangeHandler);
 const selector = '.discard-container .panel.popup';
+const viewChangeObserver = new MutationObserver(m => base.viewChangeHandler(eventName, selector, m));
 
 export interface Archive {
   type: 'change-archive';
@@ -35,41 +35,6 @@ const sideWatcher = (event: Event) => {
     },
   });
 };
-
-function viewChangeHandler(mutations: MutationRecord[]) {
-  let me: Element | undefined;
-  let opponent: Element | undefined;
-
-  for (const m of mutations) {
-    m.addedNodes.forEach(node => {
-      if (node.nodeType === Node.ELEMENT_NODE) {
-        const element = node as Element;
-        const archive = element.querySelector(selector);
-        if (!archive) {
-          return;
-        }
-        if (element.classList.contains('me')) {
-          me = archive;
-          return;
-        }
-        if (element.classList.contains('opponent')) {
-          opponent = archive;
-          return;
-        }
-      }
-    });
-  }
-  if (me) {
-    const data: Archive = {type: 'change-archive', side: 'me', element: me};
-    const event = new CustomEvent<Archive>(eventName, {detail: data});
-    document.dispatchEvent(event);
-  }
-  if (opponent) {
-    const data: Archive = {type: 'change-archive', side: 'opponent', element: opponent};
-    const event = new CustomEvent<Archive>(eventName, {detail: data});
-    document.dispatchEvent(event);
-  }
-}
 
 export function watch() {
   document.addEventListener(base.eventName, sideWatcher);
