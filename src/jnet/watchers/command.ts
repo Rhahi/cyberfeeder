@@ -26,7 +26,10 @@ const announcer = (event: Event) => {
     targetMode: 'gameview',
     callback: enable => {
       if (enable) {
-        announce();
+        const element = document.querySelector('.right-inner-leftpane .button-pane');
+        if (element) {
+          announce(element);
+        }
       }
     },
   });
@@ -47,20 +50,17 @@ function panelCreationHandler(mutations: MutationRecord[]) {
     let done = false;
     m.addedNodes.forEach(node => {
       if (!done) {
-        done = announce(node);
+        if (node.nodeType === Node.ELEMENT_NODE) {
+          const element = node as Element;
+          done = announce(element);
+        }
       }
     });
   }
 }
 
-function announce(node?: Node): boolean {
-  let element: Element | null | undefined;
-  if (!node) {
-    element = document.querySelector('.right-inner-leftpane .button-pane');
-  } else if (node.nodeType === Node.ELEMENT_NODE) {
-    element = node as Element;
-  }
-  if (element && element.className === 'button-pane') {
+function announce(element: Element): boolean {
+  if (element.className === 'button-pane') {
     const data: CommandPanel = {
       type: eventName,
       root: element,
