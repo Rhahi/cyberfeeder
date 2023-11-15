@@ -27,17 +27,6 @@ css = """
 [[style]]
 category = "Layout"
 series = "Font size"
-name = "Increase font size (everything)"
-default = false
-css = """
-html {
-  font-size: 20px;
-}
-"""
-
-[[style]]
-category = "Layout"
-series = "Font size"
 name = "Increase font size (click and credits)"
 default = false
 css = """
