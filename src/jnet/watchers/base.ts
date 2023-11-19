@@ -105,6 +105,9 @@ export function createNavigationEvent() {
   }
   return;
 }
+
+/** Start by firing an event announing current view */
+export function announce(main: Element) {
   const firstChild = main.firstChild as Element;
   const page = firstChild.className ? firstChild.className : 'unknown';
   if (firstChild && firstChild.nodeType === Node.ELEMENT_NODE) {
