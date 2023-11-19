@@ -21,12 +21,11 @@ css = """
 [[style]]
 category = "Quality of life"
 series = "none"
-name = "Sort cards in archive"
-default = false
-description = "Known issue: in replay mode, you need to cycle this option to apply sorting when changing views"
+name = "Sort archive when pressing Control (deprecated)"
+default = true
+description = "This feature will be added in jinteki.net in the future and may be removed."
 css = """
 .discard-container .panel.popup {
-  /* display: flex does not work here, since it gets overwritten by scripts */
   padding-top: 2rem;
   flex-wrap: wrap;
 }
