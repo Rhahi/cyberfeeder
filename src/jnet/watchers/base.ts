@@ -24,6 +24,7 @@ export interface ConditionalObserverConfig {
   observer: MutationObserver;
   selector: string;
   observeOptions: MutationObserverInit;
+  init?: (selector: string) => void;
 }
 
 export interface ConditionalExecuterConfig {
@@ -67,6 +68,7 @@ export function conditionalObserver(config: ConditionalObserverConfig) {
     return;
   }
   if (src.detail.mode === config.targetMode) {
+    if (config.init) config.init(config.selector);
     // user has navigated in, start a new watch.
     config.observer.disconnect();
     const element = document.querySelector(config.selector);
