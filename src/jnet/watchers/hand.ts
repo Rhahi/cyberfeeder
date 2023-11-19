@@ -36,16 +36,25 @@ export function stop() {
 }
 
 function init() {
+  const {meEvent, opponentEvent} = getEvent();
+  if (meEvent) document.dispatchEvent(meEvent);
+  if (opponentEvent) document.dispatchEvent(opponentEvent);
+}
+
+export function getEvent() {
   const me = document.querySelector('.me ' + selector);
   const opponent = document.querySelector('.opponent ' + selector);
+  let meEvent: CustomEvent<Hand> | undefined;
+  let opponentEvent: CustomEvent<Hand> | undefined;
   if (me) {
     const data: Hand = {type: eventName, side: 'me', element: me};
     const event = new CustomEvent<Hand>(eventName, {detail: data});
-    document.dispatchEvent(event);
+    meEvent = event;
   }
   if (opponent) {
     const data: Hand = {type: eventName, side: 'opponent', element: opponent};
     const event = new CustomEvent<Hand>(eventName, {detail: data});
-    document.dispatchEvent(event);
+    opponentEvent = event;
   }
+  return {meEvent, opponentEvent};
 }
