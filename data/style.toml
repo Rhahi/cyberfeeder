@@ -534,7 +534,7 @@ css = """
 [[style]]
 category = "Layout"
 series = "none"
-name = "Make cards under right-pane visible"
+name = "Make cards under right-pane visible (for Original layout)"
 description = "Has no effect when using CSS grid layouts. This does not make them interactable, as they are still below the right pane layout. You need to zoom out to click them."
 default = false
 css = """
