@@ -139,14 +139,24 @@ export function viewChangeHandler(type: string, selector: string, mutations: Mut
       }
     });
   }
+  const {meEvent, opponentEvent} = createViewChageEvents(type, me, opponent);
+  if (meEvent) document.dispatchEvent(meEvent);
+  if (opponentEvent) document.dispatchEvent(opponentEvent);
+}
+
+/** Create a view change with target reporting new .me and .opponent divs without actually firing them */
+export function createViewChageEvents(type: string, me?: Element | null, opponent?: Element | null) {
+  let meEvent: CustomEvent<unknown> | undefined;
+  let opponentEvent: CustomEvent<unknown> | undefined;
   if (me) {
     const data: unknown = {type, side: 'me', element: me};
     const event = new CustomEvent<unknown>(eventName, {detail: data});
-    document.dispatchEvent(event);
+    meEvent = event;
   }
   if (opponent) {
     const data: unknown = {type, side: 'opponent', element: opponent};
     const event = new CustomEvent<unknown>(eventName, {detail: data});
-    document.dispatchEvent(event);
+    opponentEvent = event;
   }
+  return {meEvent, opponentEvent};
 }
