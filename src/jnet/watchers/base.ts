@@ -158,12 +158,12 @@ export function createViewChageEvents(type: string, me?: Element | null, opponen
   let opponentEvent: CustomEvent<unknown> | undefined;
   if (me) {
     const data: unknown = {type, side: 'me', element: me};
-    const event = new CustomEvent<unknown>(eventName, {detail: data});
+    const event = new CustomEvent<unknown>(type, {detail: data});
     meEvent = event;
   }
   if (opponent) {
     const data: unknown = {type, side: 'opponent', element: opponent};
-    const event = new CustomEvent<unknown>(eventName, {detail: data});
+    const event = new CustomEvent<unknown>(type, {detail: data});
     opponentEvent = event;
   }
   return {meEvent, opponentEvent};
