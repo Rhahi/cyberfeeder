@@ -31,22 +31,25 @@ export function getChatInputbox() {
 }
 
 export function toLocation(text?: string | null): Location {
-  if (text === 'R&D') {
+  if (text) {
+    text = text.toLowerCase();
+  }
+  if (text === 'r&d') {
     return 'rnd';
   }
-  if (text === 'Archives') {
+  if (text === 'archives') {
     return 'archives';
   }
-  if (text === 'HQ') {
+  if (text === 'hq') {
     return 'hq';
   }
-  if (text === 'Server') {
+  if (text === 'server') {
     return 'remote';
   }
-  if (text === 'Stack' || text === 'stack') {
+  if (text === 'stack') {
     return 'stack';
   }
-  if (text === 'Heap') {
+  if (text === 'heap') {
     return 'heap';
   }
   return 'unknown';
