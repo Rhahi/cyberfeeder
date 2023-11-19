@@ -145,6 +145,7 @@ css = """
 .right-pane {
   grid-column: 3;
   grid-row: 1;
+  background-color: rgba(0,0,0,0.2);
 }
 """
 
