@@ -123,7 +123,7 @@ css = ""
 category = "Layout"
 series = "CSS grid"
 name = "Horizontal CSS-grid layout"
-description = "Use CSS grid to rebuild UI layout. Makes the layout more robust across screen sizes."
+description = "Use CSS grid to rebuild UI layout. Makes the layout more robust across screen sizes. When using this mode, also enable flex-based hand size to fix scroll bar appearing in main."
 default = true
 css = """
 .gameboard {
