@@ -23,21 +23,14 @@ const sideWatcher = (event: Event) => {
     observer: viewChangeObserver,
     selector: '.gameview .centralpane',
     observeOptions: {childList: true},
-  });
-  base.conditionalExecuter({
-    event,
-    type: base.eventName,
-    targetMode: 'gameview',
-    callback: enable => {
-      if (enable) {
-        init();
-      }
-    },
+    init: init,
   });
 };
 
 export function watch() {
   document.addEventListener(base.eventName, sideWatcher);
+  const localEvent = base.createNavigationEvent();
+  if (localEvent) sideWatcher(localEvent);
 }
 
 export function stop() {

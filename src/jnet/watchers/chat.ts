@@ -24,6 +24,8 @@ const menuWatcher = (event: Event) => {
 
 export function watch() {
   document.addEventListener(base.eventName, menuWatcher);
+  const localEvent = base.createNavigationEvent();
+  if (localEvent) menuWatcher(localEvent);
 }
 
 export function stop() {

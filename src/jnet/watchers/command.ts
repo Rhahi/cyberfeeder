@@ -19,18 +19,9 @@ const sideWatcher = (event: Event) => {
     observer: PanelCreationObserver,
     selector: '.right-inner-leftpane',
     observeOptions: {childList: true},
-  });
-  base.conditionalExecuter({
-    event,
-    type: base.eventName,
-    targetMode: 'gameview',
-    callback: enable => {
-      if (enable) {
-        const element = document.querySelector('.right-inner-leftpane .button-pane');
-        if (element) {
-          announce(element);
-        }
-      }
+    init: () => {
+      const element = document.querySelector('.right-inner-leftpane .button-pane');
+      if (element) announce(element);
     },
   });
 };
@@ -38,6 +29,8 @@ const sideWatcher = (event: Event) => {
 /** Watch and report command panel change event */
 export function watch() {
   document.addEventListener(base.eventName, sideWatcher);
+  const localEvent = base.createNavigationEvent();
+  if (localEvent) sideWatcher(localEvent);
 }
 
 export function stop() {

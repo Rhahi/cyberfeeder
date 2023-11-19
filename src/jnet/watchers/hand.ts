@@ -18,19 +18,17 @@ const sideWatcher = (event: Event) => {
     observer: viewChangeObserver,
     selector: '.gameview .centralpane',
     observeOptions: {childList: true},
-  });
-  base.conditionalExecuter({
-    event,
-    type: base.eventName,
-    targetMode: 'gameview',
-    callback: enable => {
-      if (enable) init();
-    },
+    init: init,
   });
 };
 
 export function watch() {
   document.addEventListener(base.eventName, sideWatcher);
+  const me = document.querySelector('.me ' + selector);
+  const opponent = document.querySelector('.opponent ' + selector);
+  const {meEvent, opponentEvent} = base.createViewChageEvents(eventName, me, opponent);
+  if (meEvent) sideWatcher(meEvent);
+  if (opponentEvent) sideWatcher(opponentEvent);
 }
 
 export function stop() {
