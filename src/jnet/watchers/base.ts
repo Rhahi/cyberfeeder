@@ -60,7 +60,12 @@ export function watch() {
 
 /** Helper function to setup a conditional observer.
  *
- * The observer passed to this function will only activate when the selected view is activate.
+ * The observer passed to this function will only activate when the view is selected.
+ *
+ * This will start an observer but will not fire anything until a new view change has been made.
+ * To create an initial notification, create a navigation event and "fire" it locally.
+ *
+ * init() config variable can be used for such initialization task.
  */
 export function conditionalObserver(config: ConditionalObserverConfig) {
   const src = config.event as CustomEvent<Navigation>;
