@@ -106,6 +106,7 @@ category = "Layout"
 series = "none"
 name = "Hide replay controls"
 default = false
+description = "The control buttons will disappear. Use arrow keys to control replay"
 css = """
 .bottompane {
   display: none;
