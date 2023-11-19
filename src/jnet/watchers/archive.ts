@@ -35,6 +35,7 @@ export function watch() {
 
 export function stop() {
   document.removeEventListener(base.eventName, sideWatcher);
+  viewChangeObserver.disconnect();
 }
 
 /** A one time event that will prompt new archives */

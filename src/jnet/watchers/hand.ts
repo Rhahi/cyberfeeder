@@ -33,6 +33,7 @@ export function watch() {
 
 export function stop() {
   document.removeEventListener(base.eventName, sideWatcher);
+  viewChangeObserver.disconnect();
 }
 
 function init() {

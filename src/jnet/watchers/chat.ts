@@ -30,6 +30,7 @@ export function watch() {
 
 export function stop() {
   document.removeEventListener(base.eventName, menuWatcher);
+  newChatObserver.disconnect();
 }
 
 function newChatHandler(mutations: MutationRecord[]) {

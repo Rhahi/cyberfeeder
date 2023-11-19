@@ -35,6 +35,7 @@ export function watch() {
 
 export function stop() {
   document.removeEventListener(base.eventName, sideWatcher);
+  PanelCreationObserver.disconnect();
 }
 
 /** Check if .right-inner-leftpane got a new .button-pane element. If it did, report it. */
