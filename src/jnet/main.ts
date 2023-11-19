@@ -18,6 +18,7 @@ browser.runtime.onMessage.addListener((message: Message) => {
   }
   if (message.action === 'script') {
     css.applyStyle(message.id, message.css);
+    script.disableAll();
     if (message.toggles) {
       script.setupScripts(message.toggles);
     }

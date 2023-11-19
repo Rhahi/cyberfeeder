@@ -47,9 +47,11 @@ function setupScriptsFromCache() {
   });
 }
 
-function disableAll() {
+export function disableAll() {
   watcher.archive.stop();
   watcher.chat.stop();
+  watcher.hand.stop();
+  features.annotateChat.disable();
 }
 
 export function setupScripts(toggles: Toggle[]) {
