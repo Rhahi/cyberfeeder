@@ -6,8 +6,8 @@
 import {hand} from '../watchers';
 
 const regex = /\(\d+\/(\d+)\)/;
-const indicatorObserverOpponent = new MutationObserver(indicatorHandler);
-const indicatorObserverMe = new MutationObserver(indicatorHandler);
+const indicatorObserverOpponent = new MutationObserver(mutationHandler);
+const indicatorObserverMe = new MutationObserver(mutationHandler);
 
 const newHandHandler = (e: Event) => {
   const event = e as CustomEvent<hand.Hand>;
@@ -21,11 +21,13 @@ const newHandHandler = (e: Event) => {
   }
   if (event.detail.side === 'me') {
     indicatorObserverMe.disconnect();
+    indicatorHandler(indicator, container);
     indicatorObserverMe.observe(indicator, {subtree: true, characterData: true});
     return;
   }
   if (event.detail.side === 'opponent') {
     indicatorObserverOpponent.disconnect();
+    indicatorHandler(indicator, container);
     indicatorObserverOpponent.observe(indicator, {subtree: true, characterData: true});
     return;
   }
@@ -33,11 +35,15 @@ const newHandHandler = (e: Event) => {
 
 export function enable() {
   document.addEventListener(hand.eventName, newHandHandler);
-  hand.init();
+  const {meEvent, opponentEvent} = hand.getEvent();
+  if (meEvent) newHandHandler(meEvent);
+  if (opponentEvent) newHandHandler(opponentEvent);
 }
 
 export function disable() {
   document.removeEventListener(hand.eventName, newHandHandler);
+  indicatorObserverMe.disconnect();
+  indicatorObserverOpponent.disconnect();
 }
 
 function updateHandsize(container: Element, handsize: number) {
@@ -63,16 +69,23 @@ function getHandsizeNumber(text: string | null) {
   return 5;
 }
 
-function indicatorHandler(mutations: MutationRecord[]) {
+function mutationHandler(mutations: MutationRecord[]) {
   for (const m of mutations) {
     if (m.target.nodeType === Node.TEXT_NODE) {
-      const text = m.target.textContent;
-      const indicator = m.target.parentElement;
-      const container = indicator?.parentElement;
-      if (indicator && container) {
-        const handsize = getHandsizeNumber(text);
-        updateHandsize(container, handsize);
-      }
+      indicatorHandler(m.target);
     }
+  }
+}
+
+function indicatorHandler(node: Node, container?: Element | null) {
+  if (!node) return;
+  const text = node.textContent;
+  if (!container) {
+    const indicator = node.parentElement;
+    container = indicator?.parentElement;
+  }
+  if (container) {
+    const handsize = getHandsizeNumber(text);
+    updateHandsize(container, handsize);
   }
 }
