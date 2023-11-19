@@ -91,12 +91,20 @@ export function conditionalExecuter(config: ConditionalExecuterConfig) {
   config.callback(src.detail.mode === config.targetMode);
 }
 
-/** Start by firing an event announing current view */
-export function announce(mainElement?: Element) {
-  const main = mainElement ? mainElement : document.querySelector('#main-content #main > .item');
-  if (!main) {
-    return;
+/** Create a navigation event without actually firing it globally, so that it can be passed on. */
+export function createNavigationEvent() {
+  const main = document.querySelector('#main-content #main > .item');
+  if (main) {
+    const firstChild = main.firstChild as Element;
+    const page = firstChild.className ? firstChild.className : 'unknown';
+    if (firstChild && firstChild.nodeType === Node.ELEMENT_NODE) {
+      const data: Navigation = {type: eventName, mode: page, root: firstChild};
+      const event = new CustomEvent<Navigation>(eventName, {detail: data});
+      return event;
+    }
   }
+  return;
+}
   const firstChild = main.firstChild as Element;
   const page = firstChild.className ? firstChild.className : 'unknown';
   if (firstChild && firstChild.nodeType === Node.ELEMENT_NODE) {
