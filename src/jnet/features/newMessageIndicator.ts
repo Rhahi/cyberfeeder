@@ -11,7 +11,7 @@ import * as watcher from '../watchers';
 
 const onScroll = () => {
   const chat = util.getChat();
-  const input = util.getChatInputbox();
+  const input = getChatInputbox();
   if (chat && input && isFullyDown(chat)) {
     input.setAttribute('newchat', 'no');
     input.setAttribute('placeholder', 'Say something...');
@@ -39,7 +39,7 @@ const newBoxHandler = (event: Event) => {
 
 const newChatHandler = () => {
   const chat = util.getChat();
-  const input = util.getChatInputbox();
+  const input = getChatInputbox();
   if (!chat || !input) {
     return;
   }
@@ -58,7 +58,7 @@ export function disable() {
   document.removeEventListener(watcher.base.eventName, newBoxHandler);
   document.removeEventListener(watcher.chat.eventName, newChatHandler);
   const chat = util.getChat();
-  const input = util.getChatInputbox();
+  const input = getChatInputbox();
   if (chat) {
     chat.removeEventListener('scroll', onScroll);
   }
@@ -68,6 +68,10 @@ export function disable() {
   }
 }
 
-function isFullyDown(element: Element) {
-  return element.scrollHeight - element.clientHeight - element.scrollTop < 2;
+function isFullyDown(element: Element, tolerance = 2) {
+  return Math.abs(element.scrollHeight - element.clientHeight - element.scrollTop) <= tolerance;
+}
+
+function getChatInputbox() {
+  return document.getElementById('log-input');
 }
