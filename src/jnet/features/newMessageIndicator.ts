@@ -18,7 +18,7 @@ const onScroll = () => {
   }
 };
 
-const newBoxHandler = (event: Event) => {
+const menuWatcher = (event: Event) => {
   watcher.base.conditionalExecuter({
     event,
     type: watcher.base.eventName,
@@ -50,12 +50,14 @@ const newChatHandler = () => {
 };
 
 export function enable() {
-  document.addEventListener(watcher.base.eventName, newBoxHandler);
+  document.addEventListener(watcher.base.eventName, menuWatcher);
   document.addEventListener(watcher.chat.eventName, newChatHandler);
+  const localEvent = watcher.base.createNavigationEvent();
+  if (localEvent) menuWatcher(localEvent);
 }
 
 export function disable() {
-  document.removeEventListener(watcher.base.eventName, newBoxHandler);
+  document.removeEventListener(watcher.base.eventName, menuWatcher);
   document.removeEventListener(watcher.chat.eventName, newChatHandler);
   const chat = util.getChat();
   const input = getChatInputbox();
