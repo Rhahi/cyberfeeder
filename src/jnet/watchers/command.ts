@@ -88,7 +88,6 @@ function announcePanel(element: Element): boolean {
 
 /** Turn on/off observer when a new panel has been created or on user navigation */
 const newPanelHandler = (e: Event) => {
-  console.log('newpanel');
   const event = e as CustomEvent<ChangePanel>;
   if (!event.detail || event.detail.type !== changePanelEvent) {
     return;
@@ -181,7 +180,6 @@ function handleMutation(element: Element) {
   }
 
   // general update
-  console.log('general');
   const card = element.querySelector(':scope > div:first-child > span.fake-link')?.textContent;
   const text = element.querySelector(':scope h4')?.textContent;
   if (card) data.card = card;
