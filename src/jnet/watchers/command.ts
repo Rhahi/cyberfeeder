@@ -99,8 +99,8 @@ const newPanelHandler = (e: Event) => {
 /** When panel information has changed, fire an event notifying this. */
 const PanelObserver = new MutationObserver(m => {
   const data = parsePanel(m);
-  if (data) {
-    const event = new CustomEvent<CommandPanelContent>(changePanelEvent, {
+  if (data.buttons || data.card || data.text) {
+    const event = new CustomEvent<CommandPanelContent>(contentEvent, {
       detail: {type: 'content-command-panel', ...data},
     });
     document.dispatchEvent(event);
