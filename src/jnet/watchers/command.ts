@@ -101,7 +101,7 @@ const PanelObserver = new MutationObserver(m => {
   const data = parsePanel(m);
   if (data.buttons || data.card || data.text) {
     const event = new CustomEvent<CommandPanelContent>(contentEvent, {
-      detail: {type: 'content-command-panel', ...data},
+      detail: {type: contentEvent, ...data},
     });
     document.dispatchEvent(event);
   }
