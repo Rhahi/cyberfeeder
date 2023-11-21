@@ -89,9 +89,8 @@ function announcePanel(element: Element): boolean {
 /** Turn on/off observer when a new panel has been created or on user navigation */
 const newPanelHandler = (e: Event) => {
   const event = e as CustomEvent<ChangePanel>;
-  if (!event.detail || event.detail.type !== changePanelEvent) {
-    return;
-  }
+  if (!event.detail || event.detail.type !== changePanelEvent) return;
+
   PanelObserver.disconnect();
   const panel = event.detail.root;
   PanelObserver.observe(panel, {childList: true, subtree: true, characterData: true});
@@ -112,7 +111,7 @@ const PanelObserver = new MutationObserver(m => {
 function parsePanel(mutations: MutationRecord[]): PanelContent {
   const data: PanelContent = {};
   const dataButtons: string[] = [];
-  console.log(mutations);
+
   for (const m of mutations) {
     m.addedNodes.forEach(node => {
       if (node.nodeType === Node.ELEMENT_NODE) {
