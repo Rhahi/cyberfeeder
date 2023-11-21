@@ -29,14 +29,14 @@ interface ChangePanel {
 }
 
 export function watch() {
-  document.addEventListener(contentEvent, newPanelHandler);
+  document.addEventListener(changePanelEvent, newPanelHandler);
   document.addEventListener(base.eventName, sideWatcher);
   const localEvent = base.createNavigationEvent();
   if (localEvent) sideWatcher(localEvent);
 }
 
 export function stop() {
-  document.removeEventListener(contentEvent, newPanelHandler);
+  document.removeEventListener(changePanelEvent, newPanelHandler);
   document.removeEventListener(base.eventName, sideWatcher);
   PanelCreationObserver.disconnect();
   PanelObserver.disconnect();
