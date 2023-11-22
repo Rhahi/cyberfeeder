@@ -56,27 +56,66 @@ export function disableAll() {
   watcher.archive.stop();
   watcher.chat.stop();
   watcher.hand.stop();
+  watcher.command.stop();
   features.annotateChat.disable();
+  features.secret.disable();
 }
 
 export function setupScripts(toggles: Toggle[]) {
-  disableAll();
   let shouldWatchArchive = false;
   let shouldWatchChat = false;
+  let shouldWatchHand = false;
+  let shouldAnnotateChat = false;
+  let shouldWatchCommand = false;
 
   for (const toggle of toggles) {
     if (toggle.id === KnownScripts.sortAcrhive) {
-      shouldWatchArchive = true;
-      toggle.enabled ? features.sortArchive.enable() : features.sortArchive.disable();
+      if (toggle.enabled) {
+        shouldWatchArchive = true;
+        features.sortArchive.enable();
+      } else {
+        features.sortArchive.disable();
+      }
       continue;
     }
     if (toggle.id === KnownScripts.newMessageIndicator) {
-      shouldWatchChat = true;
-      toggle.enabled ? features.chatScrollHighlight.enable() : features.chatScrollHighlight.disable();
+      if (toggle.enabled) {
+        features.newMessageIndicator.enable();
+        shouldWatchChat = true;
+      } else {
+        features.newMessageIndicator.disable();
+      }
       continue;
     }
+    if (toggle.id === KnownScripts.handsizeReminder) {
+      if (toggle.enabled) {
+        shouldWatchHand = true;
+        features.handsizeReminder.enable();
+      } else {
+        features.handsizeReminder.disable();
+      }
+      continue;
+    }
+    if (toggle.id === KnownScripts.highlightAccess) {
+      if (toggle.enabled) {
+        shouldWatchChat = true;
+        shouldAnnotateChat = true;
+      }
+      continue;
+    }
+    if (toggle.id === KnownScripts.secret) {
+      if (toggle.enabled) {
+        shouldWatchChat = true;
+        shouldWatchCommand = true;
+        features.secret.enable();
+      } else {
+        features.secret.disable();
+      }
+    }
   }
-
   if (shouldWatchArchive) watcher.archive.watch();
   if (shouldWatchChat) watcher.chat.watch();
+  if (shouldWatchHand) watcher.hand.watch();
+  if (shouldWatchCommand) watcher.command.watch();
+  shouldAnnotateChat ? features.annotateChat.enable() : features.annotateChat.disable();
 }
