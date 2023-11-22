@@ -23,7 +23,12 @@ export function onLoad() {
   applyCssFromCache();
   watcher.base.watch();
   setupScriptsFromCache();
-  watcher.base.announce();
+  const event = watcher.base.createNavigationEvent();
+  if (event) {
+    document.dispatchEvent(event);
+  } else {
+    console.error('[Cyberfeeder] could not initialize script event');
+  }
 }
 
 function applyCssFromCache() {
