@@ -157,10 +157,10 @@ function annotate(element: Element, result: ChatSecret) {
 async function handleRnDAccess(m: chat.ChatMessage, match: RegExpMatchArray) {
   const chan = watchPanel(2, Secret.access, m.age, 5);
   try {
-    const maybeSecret = await chan.receive();
+    const secret = await chan.receive();
     let location: util.Location = 'unknown';
     if (match.groups) location = util.toLocation(match.groups['location']);
-    annotate(m.element, {target: location, text: maybeSecret.text});
+    annotate(m.element, {target: location, text: secret.text});
   } finally {
     chan.close();
   }
