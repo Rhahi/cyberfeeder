@@ -33,7 +33,7 @@ const chatPatterns: ChatPattern[] = [
     patterns: [
       /looks? at the top( \d+)? cards? of/,
       /rearranges? the top( \d+)? cards? of/,
-      /^(?!.*install it).*\b(?:uses? .* to reveal|reveals|then reveals?).*(HQ|R&D|Archives|Server|stack|Stack)\b/,
+      // /^(?!.*install it).*\b(?:uses? .* to reveal|reveals|then reveals?).*(HQ|R&D|Archives|Server|stack|Stack)\b/,
     ],
     dispatch: handleTop,
   },
