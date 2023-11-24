@@ -149,26 +149,14 @@ export function disable() {
 function annotate(element: Element, result: ChatSecret) {
   if (element.hasAttribute('secret')) return;
 
+  const shouldScroll = element.parentElement ? isFullyDown(element.parentElement) : false;
   element.setAttribute('secret', result.text);
   element.classList.add('secret');
   if (result.target !== 'unknown') element.classList.add(result.target);
-}
-
-async function handleRnDAccess(m: chat.ChatMessage, match: RegExpMatchArray) {
-  const chan = watchPanel(2, Secret.access, m.age, 5);
-  try {
-    const secret = await chan.receive();
-    let location: util.Location = 'unknown';
-    if (match.groups) location = util.toLocation(match.groups['location']);
-    annotate(m.element, {target: location, text: secret.text});
-  } finally {
-    chan.close();
+  if (shouldScroll && element.parentElement) {
+    element.parentElement.scrollTop = element.parentElement.scrollHeight;
   }
 }
-
-async function handleBottom() {}
-
-async function handleTop() {}
 
 function withinAgeRange(panelAge: number, chatAge: number, threshold: number) {
   return Math.abs(chatAge - panelAge) <= threshold;
