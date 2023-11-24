@@ -94,15 +94,14 @@ css = """
 [[style]]
 category = "Information"
 series = "none"
-name = "Highlight new turns in chat"
+name = "Highlight new turns"
 default = true
 css = """
 .log .messages > .system[turn]::before {
-  content: attr(turn);
   padding: 0 0.15em;
-  margin-right: 0.15em;
-  font-size: 1.2em;
-  background-color: #F80;
+  content: attr(turn);
+  margin-right: 0.2em;
+  background-color: var(--turn);
   color: black;
 }
 """
