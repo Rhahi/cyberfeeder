@@ -70,7 +70,7 @@ export function disable() {
   }
 }
 
-function isFullyDown(element: Element, tolerance = 2) {
+export function isFullyDown(element: Element, tolerance = 2) {
   return Math.abs(element.scrollHeight - element.clientHeight - element.scrollTop) <= tolerance;
 }
 

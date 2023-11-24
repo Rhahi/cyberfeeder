@@ -1,4 +1,5 @@
 import {chat} from '../watchers';
+import {isFullyDown} from './newMessageIndicator';
 import * as util from './util';
 
 const turnRegex = /turn (\d+)/;
@@ -76,11 +77,15 @@ function iconize(icon: Element, text: string) {
 /** annotate start of turn trigger. Returns true if it was indeed a start of turn trigger. */
 function annotateTurn(detail: chat.ChatMessage) {
   if (detail.text.includes('started their turn')) {
+    const shouldScroll = detail.element.parentElement ? isFullyDown(detail.element.parentElement) : false;
     const match = detail.text.match(turnRegex);
     if (match && match.length === 2) {
       const turn = match[1];
       detail.element.setAttribute('turn', `Turn ${turn}`);
       setFontAwesomeIcon(detail.element, {action: 'turn'});
+      if (shouldScroll && detail.element.parentElement) {
+        detail.element.parentElement.scrollTop = detail.element.parentElement.scrollHeight;
+      }
     }
     return true;
   }
@@ -91,6 +96,7 @@ function annotateTurn(detail: chat.ChatMessage) {
 function annotateGeneric(type: string, regex: RegExp | string, detail: chat.ChatMessage) {
   const match = detail.text.match(regex);
   if (!match) return;
+  const shouldScroll = detail.element.parentElement ? isFullyDown(detail.element.parentElement) : false;
   detail.element.classList.add(type);
   if (match.groups) {
     match.groups['shouldnotfail'];
@@ -98,6 +104,9 @@ function annotateGeneric(type: string, regex: RegExp | string, detail: chat.Chat
     if (location !== 'unknown') {
       detail.element.setAttribute('location', location);
       setFontAwesomeIcon(detail.element, {action: type, location});
+    }
+    if (shouldScroll && detail.element.parentElement) {
+      detail.element.parentElement.scrollTop = detail.element.parentElement.scrollHeight;
     }
   }
 }
