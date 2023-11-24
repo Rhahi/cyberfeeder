@@ -66,5 +66,10 @@
       "js/background.js"
     ],
     "persistent": false
-  }
+  },
+  "web_accessible_resources": [
+    "webfonts/fa-solid-900.woff2",
+    "css/fontawesome.min.css",
+    "css/solid.min.css"
+  ]
 }

@@ -1,8 +1,10 @@
 import * as css from './css';
 import * as script from './script';
+import * as fontawesome from './fontawesome';
 
 css.onLoad();
 script.onLoad();
+fontawesome.onLoad();
 
 interface Message {
   id: string;

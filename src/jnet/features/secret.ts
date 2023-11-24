@@ -1,4 +1,5 @@
 import {chat, command} from '../watchers';
+import {addFontAwesomeIcon} from './annotateChat';
 import * as util from './util';
 import {SimpleChannel} from 'channel-ts';
 
@@ -152,6 +153,7 @@ function annotate(element: Element, result: ChatSecret) {
   const shouldScroll = element.parentElement ? isFullyDown(element.parentElement) : false;
   element.setAttribute('secret', result.text);
   element.classList.add('secret');
+  addFontAwesomeIcon(element, 'secret');
   if (result.target !== 'unknown') element.classList.add(result.target);
   if (shouldScroll && element.parentElement) {
     element.parentElement.scrollTop = element.parentElement.scrollHeight;

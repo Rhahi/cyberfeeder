@@ -8,13 +8,20 @@ default = true
 description = "Some other settings will refer to the shared variables set here."
 css = """
 :root {
-  --turn: #080;
+  --turn-icon: white;
   --hq: #4062bf;
+  --hq-icon: #3884e8;
   --rnd: #080;
+  --rnd-icon: #0A0;
   --archives: #7a2118;
+  --archives-icon: #CC2118;
   --remote: #666;
+  --remote-icon: #444;
   --stack: #850;
+  --stack-icon: #850;
   --grip: #850;
+  --grip-icon: #850;
+  --access-icon: gold;
 }
 """
 
@@ -147,37 +154,40 @@ css = """
 [[style]]
 category = "Information"
 series = "none"
-name = "Highlight other abilities"
+name = "Annotate locations with icons"
 description = "Highlight most operations that reveal information about corp and runner's deck, hand, and discard piles."
 default = true
 css = """
-.log .messages > .otherhighlight.hq,
-.log .messages > .secret.hq {
-  background-color: var(--hq);
+.log .messages > div > .cyberfeeder-icon {
+  display: inline-block !important;
+  margin-right: 0.2em;
 }
 
-.log .messages > .otherhighlight.rnd,
-.log .messages > .secret.rnd {
-  background-color: var(--rnd);
+.icon-hq {
+  color: var(--hq-icon);
 }
 
-.log .messages > .otherhighlight.archives,
-.log .messages > .secret.archives {
-  background-color: var(--archives);
+.icon-rnd {
+  color: var(--rnd-icon);
 }
 
-.log .messages > .otherhighlight.remote,
-.log .messages > .secret.remote {
-  background-color: var(--remote);
+.icon-archives {
+  color: var(--archives-icon);
 }
 
-.log .messages > .otherhighlight.stack,
-.log .messages > .secret.stack {
-  background-color: var(--stack);
+.icon-remote {
+  color: var(--remote-icon);
 }
 
-.log .messages > .otherhighlight.grip,
-.log .messages > .secret.grip {
-  background-color: var(--grip);
+.icon-stack {
+  color: var(--stack-icon);
+}
+
+.icon-grip {
+  color: var(--grip-icon);
+}
+
+.icon-access {
+  color: var(--access-icon);
 }
 """
