@@ -7,9 +7,7 @@ enum KnownScripts {
   newMessageIndicator = 'Reminders-none-New-message-indicator',
   handsizeReminder = 'Reminders-none-Hand-size-reminder',
   newTurnHighlight = 'Information-none-Highlight-new-turns-in-chat',
-  playerActionHighlight = 'Information-none-Highlight-player-actions-in-chat',
-  highlightAccess = 'Information-none-Highlight-accesses',
-  highlightOther = 'Information-none-Highlight-other-abilities',
+  annotateChat = 'Information-none-Annotate-locations-with-icons',
   secret = 'Information-none-Remember-secret-information',
 }
 
@@ -65,7 +63,6 @@ export function setupScripts(toggles: Toggle[]) {
   let shouldWatchArchive = false;
   let shouldWatchChat = false;
   let shouldWatchHand = false;
-  let shouldAnnotateChat = false;
   let shouldWatchCommand = false;
 
   for (const toggle of toggles) {
@@ -96,12 +93,13 @@ export function setupScripts(toggles: Toggle[]) {
       }
       continue;
     }
-    if (toggle.id === KnownScripts.highlightAccess) {
+    if (toggle.id === KnownScripts.annotateChat) {
       if (toggle.enabled) {
         shouldWatchChat = true;
-        shouldAnnotateChat = true;
+        features.annotateChat.enable();
+      } else {
+        features.annotateChat.disable();
       }
-      continue;
     }
     if (toggle.id === KnownScripts.secret) {
       if (toggle.enabled) {
@@ -117,5 +115,4 @@ export function setupScripts(toggles: Toggle[]) {
   if (shouldWatchChat) watcher.chat.watch();
   if (shouldWatchHand) watcher.hand.watch();
   if (shouldWatchCommand) watcher.command.watch();
-  shouldAnnotateChat ? features.annotateChat.enable() : features.annotateChat.disable();
 }
