@@ -1,7 +1,8 @@
-import {chat, command} from '../watchers';
-import {addFontAwesomeIcon} from './annotateChat';
-import * as util from './util';
 import {SimpleChannel} from 'channel-ts';
+import {chat, command} from '../watchers';
+import {isFullyDown} from './newMessageIndicator';
+import {addIcons} from './annotateChat';
+import * as util from './util';
 
 type MatchType = string | RegExp;
 const eventName = 'secret-command-panel';
@@ -17,7 +18,7 @@ const chatPatterns: ChatPattern[] = [
   {
     type: Secret.access,
     patterns: [/unseen card from (?<location>R&D)/],
-    dispatch: handleRnDAccess,
+    dispatch: (age: number) => watchPanel(2, Secret.access, age, 5),
   },
   {
     type: Secret.bottom,
@@ -81,7 +82,7 @@ interface PanelClick {
 interface ChatPattern {
   type: Secret;
   patterns: MatchType[];
-  dispatch: (m: chat.ChatMessage, match: RegExpMatchArray) => Promise<void>;
+  dispatch: (age: number) => SimpleChannel<PanelSecret>;
 }
 
 interface PanelPattern {
@@ -90,7 +91,7 @@ interface PanelPattern {
 }
 
 /** Watch chat, find messages that should contain secret, to look further into it. */
-const secretHandler = (e: Event) => {
+const secretHandler = async (e: Event) => {
   const event = e as CustomEvent<chat.ChatMessage>;
   if (!event.detail || event.detail.type !== chat.eventName) return;
   if (!event.detail.system) return;
@@ -98,7 +99,17 @@ const secretHandler = (e: Event) => {
   for (const s of chatPatterns) {
     for (const pattern of s.patterns) {
       const match = event.detail.text.match(pattern);
-      if (match) s.dispatch(event.detail, match).catch();
+      if (!match) continue;
+      const chan = s.dispatch(event.detail.age);
+      try {
+        const secret = await chan.receive();
+        let location: util.Location = 'unknown';
+        if (match.groups) location = util.toLocation(match.groups['location']);
+        annotate(event.detail.element, {target: location, text: secret.text});
+      } finally {
+        chan.close();
+      }
+      break;
     }
   }
 };
@@ -179,7 +190,6 @@ function watchPanel(
   let count = 0;
   const handler = (e: Event) => {
     const event = e as CustomEvent<PanelSecretEvent>;
-    console.log(event.detail);
     if (!event.detail || event.detail.type !== eventName) return;
 
     count++;
