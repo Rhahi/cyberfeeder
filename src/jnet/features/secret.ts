@@ -170,7 +170,7 @@ function annotate(element: Element, result: ChatSecret) {
   const shouldScroll = element.parentElement ? isFullyDown(element.parentElement) : false;
   element.setAttribute('secret', result.text);
   element.classList.add('secret');
-  addFontAwesomeIcon(element, 'secret');
+  addIcons(element, {action: 'secret'});
   if (result.target !== 'unknown') element.classList.add(result.target);
   if (shouldScroll && element.parentElement) {
     element.parentElement.scrollTop = element.parentElement.scrollHeight;
