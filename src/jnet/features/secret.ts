@@ -11,6 +11,7 @@ enum Secret {
   invalid,
   access,
   bottom,
+  bottomClick,
   order,
 }
 
@@ -19,6 +20,11 @@ const chatPatterns: ChatPattern[] = [
     type: Secret.access,
     patterns: [/unseen card from (?<location>R&D)/],
     dispatch: (age: number) => watchPanel(2, Secret.access, age, 5),
+  },
+  {
+    type: Secret.bottomClick,
+    patterns: [/looks at the top 2 cards of the stack and adds one to the bottom of the (?<location>stack)./], // blueberry diesel
+    dispatch: (age: number) => watchClick(3, Secret.bottomClick, age, 2),
   },
   {
     type: Secret.bottom,
@@ -200,6 +206,35 @@ function watchPanel(
     }
   };
   document.addEventListener(eventName, handler);
+  return chan;
+}
+
+function watchClick(num: number, category: Secret, chatAge: number, ageThreshold: number) {
+  const chan = new SimpleChannel<PanelSecret>();
+  let count = 0;
+
+  const click = command.lastClicks.length > 0 ? command.lastClicks[command.lastClicks.length - 1] : undefined;
+  if (click && withinAgeRange(click.age, chatAge, ageThreshold)) {
+    const data = {category, age: chatAge, text: `Choice: ${click.text}`};
+    chan.send(data);
+    return chan;
+  }
+
+  const handler = (e: Event) => {
+    const event = e as CustomEvent<command.CommandPanelClick>;
+    if (!event.detail || event.detail.type !== command.clickEvent) return;
+
+    count++;
+    if (withinAgeRange(event.detail.age, chatAge, ageThreshold)) {
+      const data: PanelSecret = {category, age: chatAge, text: `Choice: ${event.detail.text}`};
+      chan.send(data);
+    }
+    if (count >= num) {
+      document.removeEventListener(command.clickEvent, handler);
+      chan.close();
+    }
+  };
+  document.addEventListener(command.clickEvent, handler);
   return chan;
 }
 
