@@ -131,29 +131,6 @@ css = """
 [[style]]
 category = "Information"
 series = "none"
-name = "Highlight accesses"
-default = true
-css = """
-.log .messages > .accesshighlight.hq {
-  background-color: var(--hq);
-}
-
-.log .messages > .accesshighlight.rnd {
-  background-color: var(--rnd);
-}
-
-.log .messages > .accesshighlight.archives {
-  background-color: var(--archives);
-}
-
-.log .messages > .accesshighlight.remote {
-  background-color: var(--remote);
-}
-"""
-
-[[style]]
-category = "Information"
-series = "none"
 name = "Annotate locations with icons"
 description = "Highlight most operations that reveal information about corp and runner's deck, hand, and discard piles."
 default = true
