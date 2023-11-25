@@ -163,6 +163,10 @@ css = """
   margin-right: 0.2em;
 }
 
+.cyberfeeder-icon > i {
+  margin-right: 0.15em;
+}
+
 .icon-hq {
   color: var(--hq-icon);
 }
