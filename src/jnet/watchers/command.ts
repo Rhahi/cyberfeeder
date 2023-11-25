@@ -2,6 +2,7 @@
  *
  * This happens when switching replay views, and when a game starts. */
 
+import {getChatAge} from '../features/util';
 import * as base from './base';
 
 export interface CommandPanelContent extends PanelContent {
@@ -10,8 +11,11 @@ export interface CommandPanelContent extends PanelContent {
 
 export interface CommandPanelClick {
   type: 'click-command-panel';
+  age: number;
   text: string;
 }
+
+export const lastClicks: CommandPanelClick[] = [];
 
 export interface PanelContent {
   card?: string;
@@ -142,6 +146,7 @@ function parsePanel(mutations: MutationRecord[]): PanelContent {
 function handleMutation(element: Element) {
   const data: PanelContent = {};
   const buttons: string[] = [];
+  const age = getChatAge();
   if (element.tagName.toUpperCase() === 'SPAN') return data;
 
   // entire panel has been changed or replaced
@@ -152,7 +157,7 @@ function handleMutation(element: Element) {
     if (card) data.card = card;
     if (text) data.text = text;
     buttonsRaw.forEach(b => {
-      const buttonText = watchButton(b);
+      const buttonText = watchButton(b, age);
       if (buttonText) buttons.push(buttonText);
     });
     if (buttons.length > 0) data.buttons = buttons;
@@ -173,7 +178,7 @@ function handleMutation(element: Element) {
 
   // assign watcher for all new buttons
   if (element.tagName.toUpperCase() === 'BUTTON') {
-    const buttonText = watchButton(element);
+    const buttonText = watchButton(element, age);
     if (buttonText) buttons.push(buttonText);
     return data;
   }
@@ -185,7 +190,7 @@ function handleMutation(element: Element) {
   if (text) data.text = text;
   const buttonElements = element.querySelectorAll(':scope button');
   buttonElements.forEach(b => {
-    const buttonText = watchButton(b);
+    const buttonText = watchButton(b, age);
     if (buttonText) buttons.push(buttonText);
   });
   if (buttons.length > 0) data.buttons = buttons;
@@ -193,14 +198,16 @@ function handleMutation(element: Element) {
 }
 
 /** Watch click event of panel buttons, to track player choices */
-function watchButton(element: Element) {
+function watchButton(element: Element, age: number) {
   if (element.hasAttribute('cyberfeeder')) return;
   element.setAttribute('cyberfeeder', 'watched');
   const tracker = () => {
     if (element.textContent) {
-      const data: CommandPanelClick = {type: clickEvent, text: element.textContent};
+      const data: CommandPanelClick = {type: clickEvent, text: element.textContent, age};
       const event = new CustomEvent<CommandPanelClick>(clickEvent, {detail: data});
       document.dispatchEvent(event);
+      while (lastClicks.length > 7) lastClicks.shift();
+      lastClicks.push(data);
     }
     element.removeEventListener('click', tracker);
     element.removeAttribute('cyberfeeder');
