@@ -198,7 +198,7 @@ function useCurrentPanel(pat: PanelPattern) {
 /** Process X more panel messages to appear and resolve the secret or exit. */
 function watchPanel(
   //
-  num: number,
+  maxCount: number,
   category: Secret,
   chatAge: number,
   ageThreshold?: number,
@@ -212,11 +212,12 @@ function watchPanel(
     const event = e as CustomEvent<PanelSecretEvent>;
     if (!event.detail || event.detail.type !== eventName) return;
 
-    count++;
-    validateSend(chan, event.detail, category, chatAge, ageThreshold, validate);
-    if (count > num) {
+    if (count >= maxCount) {
       document.removeEventListener(eventName, handler);
       chan.close();
+    } else {
+      count++;
+      validateSend(chan, event.detail, category, chatAge, ageThreshold, validate);
     }
   };
   document.addEventListener(eventName, handler);
