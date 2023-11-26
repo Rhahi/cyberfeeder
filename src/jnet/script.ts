@@ -55,6 +55,7 @@ export function disableAll() {
   watcher.chat.stop();
   watcher.hand.stop();
   watcher.command.stop();
+  watcher.ril.stop();
   features.annotateChat.disable();
   features.secret.disable();
 }
@@ -64,6 +65,7 @@ export function setupScripts(toggles: Toggle[]) {
   let shouldWatchChat = false;
   let shouldWatchHand = false;
   let shouldWatchCommand = false;
+  let shouldWatchRIL = false;
 
   for (const toggle of toggles) {
     if (toggle.id === KnownScripts.sortAcrhive) {
@@ -105,6 +107,7 @@ export function setupScripts(toggles: Toggle[]) {
       if (toggle.enabled) {
         shouldWatchChat = true;
         shouldWatchCommand = true;
+        shouldWatchRIL = true;
         features.secret.enable();
       } else {
         features.secret.disable();
@@ -115,4 +118,5 @@ export function setupScripts(toggles: Toggle[]) {
   if (shouldWatchChat) watcher.chat.watch();
   if (shouldWatchHand) watcher.hand.watch();
   if (shouldWatchCommand) watcher.command.watch();
+  if (shouldWatchRIL) watcher.ril.watch();
 }
