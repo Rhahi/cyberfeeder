@@ -179,6 +179,13 @@ function annotate(element: Element, result: ChatSecret) {
   }
 }
 
+function withinAgeRange(panelAge: number, chatAge: number, threshold: number, direction?: 'future' | 'past') {
+  const inRange = Math.abs(chatAge - panelAge) <= threshold;
+  if (direction === 'future') return panelAge >= chatAge && inRange;
+  if (direction === 'past') return panelAge <= chatAge && inRange;
+  return inRange;
+}
+
 function useCurrentPanel(pat: PanelPattern) {
   const chan = new SimpleChannel<PanelSecret>();
   const panel = command.getPanel();
