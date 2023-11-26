@@ -1,11 +1,9 @@
 /**
- * A. activate when in play mode
- * B. reactivate when switching perspective.
- * 0. watch .right-inner-leftpane > divs
- * 1. watch .right-inner-leftpane > div:first-child > divs
- * 2. identify if this is a set-aside zone
- * 3. assign click tracker for each card
- * 4. record clicks and cache them.
+ * 1. Detect navigation event
+ * 2. Detect observer mode changes.
+ * 3. Detect creation of a new area
+ * 4. Setup click tracker for each card in the new card, and new cards entering this area.
+ * 5. Self destruct click tracker after 2 minutes.
  */
 import * as base from './base';
 type ContainerType = 'rfg' | 'set-aside' | 'play-area' | 'unknown';
@@ -91,8 +89,6 @@ function findPanelContainer(element?: Element) {
   return;
 }
 
-/** It is possible that .right-inner-leftpane > div:first-child has been newly created.
- * Fire an event so that it can be rewatched. */
 function announceWrapper(element: Element): boolean {
   if (element.parentElement?.className !== 'right-inner-leftpane') return false;
   const data: NewWrapper = {
