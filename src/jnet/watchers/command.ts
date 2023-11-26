@@ -225,3 +225,15 @@ function watchButton(element: Element, age: number) {
   }, 120000);
   return element.textContent;
 }
+
+export function getPanel() {
+  const info: PanelContent = {};
+  const element = document.querySelector('.right-inner-leftpane .button-pane .panel.blue-shade');
+  if (element) {
+    const card = element.querySelector(':scope > div:first-child > span.fake-link')?.textContent;
+    if (card) info.card = card;
+    const text = element.querySelector(':scope > h4')?.textContent;
+    if (text) info.text = text;
+  }
+  return info;
+}
