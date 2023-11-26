@@ -99,7 +99,6 @@ function annotateGeneric(type: string, regex: RegExp | string, detail: chat.Chat
   const shouldScroll = detail.element.parentElement ? isFullyDown(detail.element.parentElement) : false;
   detail.element.classList.add(type);
   if (match.groups) {
-    match.groups['shouldnotfail'];
     const location = util.toLocation(match.groups['location']);
     if (location !== 'unknown') {
       detail.element.setAttribute('location', location);
