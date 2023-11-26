@@ -1,7 +1,7 @@
 import {SimpleChannel} from 'channel-ts';
 import {chat, command} from '../watchers';
+import * as annotateChat from './annotateChat';
 import {isFullyDown} from './newMessageIndicator';
-import {addIcons} from './annotateChat';
 import * as util from './util';
 
 type MatchType = string | RegExp;
@@ -172,7 +172,7 @@ function annotate(element: Element, result: ChatSecret) {
   const shouldScroll = element.parentElement ? isFullyDown(element.parentElement) : false;
   element.setAttribute('secret', result.text);
   element.classList.add('secret');
-  addIcons(element, {action: 'secret'});
+  annotateChat.addIcons(element, {secret: annotateChat.createIcon('secret')});
   if (result.target !== 'unknown') element.classList.add(result.target);
   if (shouldScroll && element.parentElement) {
     element.parentElement.scrollTop = element.parentElement.scrollHeight;
