@@ -147,7 +147,6 @@ function handleMutation(element: Element) {
   const data: PanelContent = {};
   const buttons: string[] = [];
   const age = getChatAge();
-  if (element.tagName.toUpperCase() === 'SPAN') return data;
 
   // entire panel has been changed or replaced
   if (element.className === 'panel blue-shade') {
@@ -172,7 +171,13 @@ function handleMutation(element: Element) {
 
   // update secret's h4 text content
   if (element.tagName.toUpperCase() === 'H4' && element.parentElement) {
-    if (element.textContent) data.text = element.textContent;
+    const text = element.textContent;
+    if (text) data.text = text;
+    return data;
+  } else if (element.tagName.toUpperCase() === 'SPAN' && element.parentElement?.tagName.toUpperCase() === 'H4') {
+    // if link name of h4 text has changed, handle it by going up one level
+    const text = element.parentElement.textContent;
+    if (text) data.text = text;
     return data;
   }
 
@@ -185,7 +190,7 @@ function handleMutation(element: Element) {
 
   // general update
   const card = element.querySelector(':scope > div:first-child > span.fake-link')?.textContent;
-  const text = element.querySelector(':scope h4')?.textContent;
+  const text = element.parentElement?.querySelector(':scope h4')?.textContent;
   if (card) data.card = card;
   if (text) data.text = text;
   const buttonElements = element.querySelectorAll(':scope button');
