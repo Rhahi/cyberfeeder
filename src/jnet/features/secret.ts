@@ -19,7 +19,7 @@ const chatPatterns: ChatPattern[] = [
   {
     type: Secret.access,
     patterns: [/unseen card from (?<location>R&D)/],
-    dispatch: (age: number) => watchPanel(2, Secret.access, age, 5),
+    dispatch: () => useCurrentPanel(panelPatterns[0]),
   },
   {
     type: Secret.bottomClick,
@@ -112,6 +112,8 @@ const secretHandler = async (e: Event) => {
         let location: util.Location = 'unknown';
         if (match.groups) location = util.toLocation(match.groups['location']);
         annotate(event.detail.element, {target: location, text: secret.text});
+      } catch {
+        // do nothing
       } finally {
         chan.close();
       }
@@ -177,8 +179,20 @@ function annotate(element: Element, result: ChatSecret) {
   }
 }
 
-function withinAgeRange(panelAge: number, chatAge: number, threshold: number) {
-  return Math.abs(chatAge - panelAge) <= threshold;
+function useCurrentPanel(pat: PanelPattern) {
+  const chan = new SimpleChannel<PanelSecret>();
+  const panel = command.getPanel();
+  if (panel.text) {
+    for (const p of pat.patterns) {
+      const match = panel.text.match(p);
+      if (match) {
+        chan.send({age: util.getChatAge(), category: pat.type, text: panel.text});
+        return chan;
+      }
+    }
+  }
+  chan.close();
+  return chan;
 }
 
 /** Process X more panel messages to appear and resolve the secret or exit. */
