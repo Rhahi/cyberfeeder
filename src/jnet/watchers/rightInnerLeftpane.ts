@@ -181,14 +181,12 @@ const newAsideHandler = (e: Event) => {
 
 function watchCard(element: Element) {
   if (element.hasAttribute('cyberfeeder')) return;
-  console.log('watch-card', element);
   element.setAttribute('cyberfeeder', 'watched');
   const tracker = () => {
     if (element.textContent) {
       const data: SetAside = {type: setAsideEvent, card: element.textContent};
       const event = new CustomEvent<SetAside>(setAsideEvent, {detail: data});
       document.dispatchEvent(event);
-      console.log('click-card', data);
     }
     element.removeEventListener('click', tracker);
     element.removeAttribute('cyberfeeder');
