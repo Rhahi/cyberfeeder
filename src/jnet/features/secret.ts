@@ -1,4 +1,4 @@
-import {SimpleChannel} from 'channel-ts';
+import {ChannelState, SimpleChannel} from 'channel-ts';
 import {chat, command, ril} from '../watchers';
 import * as annotateChat from './annotateChat';
 import {isFullyDown} from './newMessageIndicator';
@@ -243,7 +243,41 @@ function watchPanel(
   return chan;
 }
 
-function watchClick(num: number, category: Secret, chatAge: number, ageThreshold: number) {
+function watchStartOver(category: Secret) {
+  const chan = new SimpleChannel<PanelSecret>();
+  const clicks = new SimpleChannel<command.CommandPanelClick>();
+
+  const clickHandler = (e: Event) => {
+    const event = e as CustomEvent<command.CommandPanelClick>;
+    if (!event.detail || event.detail.type !== command.clickEvent) return;
+    clicks.send(event.detail);
+  };
+  // when receiving a secret, wait for user to click "Done".
+  // If they click "start over", keep watching.
+  // otherwise, stop listening at all.
+  const handler = async (e: Event) => {
+    const event = e as CustomEvent<PanelSecretEvent>;
+    if (!event.detail || event.detail.type !== eventName) return;
+    if (event.detail.category !== category) return;
+
+    while (clicks.state !== ChannelState.close) {
+      const buttonClick = await clicks.receive();
+      const buttonText = buttonClick.text.toLowerCase();
+      if (buttonText === 'done') {
+        chan.send({category, age: event.detail.age, text: event.detail.text});
+        chan.close();
+        document.removeEventListener(command.clickEvent, clickHandler);
+        document.removeEventListener(eventName, handler);
+        break;
+      }
+      // on start over, the current panel will be destroyed, so we should go to the next handler instance.
+      if (buttonText === 'start over') break;
+    }
+  };
+  document.addEventListener(command.clickEvent, clickHandler);
+  document.addEventListener(eventName, handler);
+  return chan;
+}
   const chan = new SimpleChannel<PanelSecret>();
   let count = 0;
 
