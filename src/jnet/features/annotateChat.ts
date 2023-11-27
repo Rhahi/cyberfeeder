@@ -110,7 +110,7 @@ function annotateTurn(annotation: Annotation, detail: chat.ChatMessage) {
 }
 
 /** Generic annotation based on regex search */
-function annotateGeneric(annotation: Annotation, type: string, regex: MatchType[], detail: chat.ChatMessage) {
+function annotateGeneric(annotation: Annotation, type: string, regex: MatchType[], detail: chat.ChatMessage, final = false) {
   if (annotation.done) return;
 
   let match: RegExpMatchArray | null = null;
@@ -122,6 +122,7 @@ function annotateGeneric(annotation: Annotation, type: string, regex: MatchType[
     }
   }
   if (!match) return;
+  if (final) annotation.done = true;
   detail.element.classList.add(type);
   if (match.groups) {
     const location = util.toLocation(match.groups['location']);
