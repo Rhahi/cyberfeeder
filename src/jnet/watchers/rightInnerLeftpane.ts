@@ -5,6 +5,7 @@
  * 4. Setup click tracker for each card in the new card, and new cards entering this area.
  * 5. Self destruct click tracker after 2 minutes.
  */
+import {getChatAge} from '../features/util';
 import * as base from './base';
 type ContainerType = 'rfg' | 'set-aside' | 'play-area' | 'unknown';
 
@@ -23,6 +24,13 @@ interface NewWrapper {
   type: 'new-RIL-wrapper';
   root: Element;
 }
+
+interface Aside {
+  card: string;
+  age: number;
+}
+
+export const lastAside: Aside[] = [];
 
 export const setAsideEvent = 'select-set-aside'; // fire when user clicks on aside cards
 export const newAreaEvent = 'new-RIL-area'; // fire when a new RIL container is added
@@ -187,6 +195,8 @@ function watchCard(element: Element) {
       const data: SetAside = {type: setAsideEvent, card: element.textContent};
       const event = new CustomEvent<SetAside>(setAsideEvent, {detail: data});
       document.dispatchEvent(event);
+      while (lastAside.length > 7) lastAside.shift();
+      lastAside.push({card: element.textContent, age: getChatAge()});
     }
     element.removeEventListener('click', tracker);
     element.removeAttribute('cyberfeeder');
