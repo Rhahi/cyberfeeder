@@ -12,7 +12,7 @@ const revealRegex = [
   /^(?!.*install it).*\b(?:uses? .* to reveal|reveals|then reveals?).*(?<location>HQ|R&D|Archives|Server|stack)\b/,
   /reveals? that they drew/,
 ];
-const addRegex = [/add .* to (?<location>HQ|R&D|Archives|grip|stack)/];
+const addRegex = [/add .* to (?:the )?(?<location>HQ|R&D|Archives|grip|Grip|Stack|stack)/];
 const bottomRegex = [/adds? .* to (?:the )?bottom of (?:the )?(?<location>stack|R&D)/];
 const discardRegex = [
   /discards? .* from (?:their )?(?<source>Grip|grip|HQ)/, // discard at the end of the turn
