@@ -18,6 +18,7 @@ export interface CommandPanelClick {
 export const lastClicks: CommandPanelClick[] = [];
 
 export interface PanelContent {
+  age?: number;
   card?: string;
   text?: string;
   buttons?: string[];
@@ -144,9 +145,9 @@ function parsePanel(mutations: MutationRecord[]): PanelContent {
 
 /** Core case-by-case extraction of panel mutation */
 function handleMutation(element: Element) {
-  const data: PanelContent = {};
   const buttons: string[] = [];
   const age = getChatAge();
+  const data: PanelContent = {age};
 
   // entire panel has been changed or replaced
   if (element.className === 'panel blue-shade') {
@@ -227,7 +228,7 @@ function watchButton(element: Element, age: number) {
 }
 
 export function getPanel() {
-  const info: PanelContent = {};
+  const info: PanelContent = {age: getChatAge()};
   const element = document.querySelector('.right-inner-leftpane .button-pane .panel.blue-shade');
   if (element) {
     const card = element.querySelector(':scope > div:first-child > span.fake-link')?.textContent;
