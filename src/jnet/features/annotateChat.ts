@@ -14,6 +14,10 @@ const revealRegex = [
 ];
 const addRegex = [/add .* to (?<location>HQ|R&D|Archives|grip|stack)/];
 const bottomRegex = [/adds? .* to (?:the )?bottom of (?:the )?(?<location>stack|R&D)/];
+const discardRegex = [
+  /discards? .* from (?:their )?(?<source>Grip|grip|HQ)/, // discard at the end of the turn
+  /(?:trashes|trash) .* due to (?:meat|net|core) damage/, // take damage
+];
 const flatlineRegex = ['is flatlined'];
 const arrangeRegex = [/rearranges? (?:the )?top .* of (?:the )?(?<location>R&D)/];
 
