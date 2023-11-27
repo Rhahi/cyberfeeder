@@ -20,6 +20,8 @@ const discardRegex = [
 ];
 const flatlineRegex = ['is flatlined'];
 const arrangeRegex = [/rearranges? (?:the )?top .* of (?:the )?(?<location>R&D)/];
+const lookRegex = [/look at the top(?: \d+)? cards? of (?:the )?(?<location>R&D)/]; // Epiphany
+const shuffleRegex = [/shuffle .* into (?:the )?(?<location>R&D|Stack|stack)/]; // Oracle Thinktank, Marilyn
 
 interface Annotation {
   done?: boolean;
@@ -50,6 +52,8 @@ const annotate = (e: Event) => {
   annotateGeneric(annotation, 'cf-discard', discardRegex, event.detail);
   annotateGeneric(annotation, 'cf-flatline', flatlineRegex, event.detail);
   annotateGeneric(annotation, 'cf-arrange', arrangeRegex, event.detail);
+  annotateGeneric(annotation, 'cf-look', lookRegex, event.detail);
+  annotateGeneric(annotation, 'cf-shuffle', shuffleRegex, event.detail);
   const didAddIcons = addIcons(event.detail.element, annotation);
   if (didAddIcons && shouldScroll && event.detail.element.parentElement) {
     event.detail.element.parentElement.scrollTop = event.detail.element.parentElement.scrollHeight;
@@ -84,6 +88,8 @@ export function createIcon(text: string) {
   else if (text === 'cf-discard') icon.classList.add('fa-solid', 'fa-dumpster', 'icon-discard');
   else if (text === 'cf-flatline') icon.classList.add('fa-solid', 'fa-skull', 'icon-flatline');
   else if (text === 'cf-arrange') icon.classList.add('fa-solid', 'fa-arrow-up-short-wide', 'icon-arrange');
+  else if (text === 'cf-look') icon.classList.add('fa-solid', 'fa-list', 'icon-look');
+  else if (text === 'cf-shuffle') icon.classList.add('fa-solid', 'fa-shuffle', 'icon-shuffle');
   else icon.classList.add('fa-solid', 'fa-question', 'icon-unknown');
   return icon;
 }
