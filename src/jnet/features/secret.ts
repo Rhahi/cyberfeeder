@@ -76,6 +76,7 @@ const secretPanelClicks: PanelClick[] = [];
 
 interface ChatSecret {
   target: util.Location; // which location the information belongs to
+  age: number;
   text: string; // the secret text that will be shown to the user
 }
 
@@ -120,7 +121,7 @@ const secretHandler = async (e: Event) => {
         const secret = await chan.receive();
         let location: util.Location = 'unknown';
         if (match.groups) location = util.toLocation(match.groups['location']);
-        annotate(event.detail.element, {target: location, text: secret.text});
+        annotate(event.detail.element, {target: location, age: event.detail.age, text: secret.text});
       } catch {
         // do nothing
       } finally {
@@ -182,6 +183,8 @@ function annotate(element: Element, result: ChatSecret) {
   element.setAttribute('secret', result.text);
   element.classList.add('secret');
   annotateChat.addIcons(element, {secret: annotateChat.createIcon('secret')});
+  const age = element.getAttribute('age');
+  element.setAttribute('age', `${age}+${result.age}`);
   if (result.target !== 'unknown') element.classList.add(result.target);
   if (shouldScroll && element.parentElement) {
     element.parentElement.scrollTop = element.parentElement.scrollHeight;
@@ -269,13 +272,13 @@ function watchClick(num: number, category: Secret, chatAge: number, ageThreshold
   return chan;
 }
 
-function watchAsideOne(category: Secret, age: number, ageLimit: number): SimpleChannel<PanelSecret> {
+function watchAsideClick(category: Secret, age: number, ageLimit: number): SimpleChannel<PanelSecret> {
   const chan = new SimpleChannel<PanelSecret>();
   if (ril.lastAside.length > 0) {
     console.log('watchAside');
     const aside = ril.lastAside[ril.lastAside.length - 1];
     if (withinAgeRange(aside.age, age, ageLimit)) {
-      const data: PanelSecret = {category, age, text: aside.card};
+      const data: PanelSecret = {category, age, text: `Choice: ${aside.card}`};
       chan.send(data);
     }
   }
