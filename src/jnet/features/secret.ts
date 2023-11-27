@@ -1,5 +1,5 @@
 import {SimpleChannel} from 'channel-ts';
-import {chat, command} from '../watchers';
+import {chat, command, ril} from '../watchers';
 import * as annotateChat from './annotateChat';
 import {isFullyDown} from './newMessageIndicator';
 import * as util from './util';
@@ -12,6 +12,7 @@ enum Secret {
   access,
   bottom,
   bottomClick,
+  bottomAside,
   order,
 }
 
@@ -25,6 +26,14 @@ const chatPatterns: ChatPattern[] = [
     type: Secret.bottomClick,
     patterns: [/looks at the top 2 cards of the stack and adds one to the bottom of the (?<location>stack)./], // blueberry diesel
     dispatch: (age: number) => watchClick(3, Secret.bottomClick, age, 2),
+  },
+  {
+    type: Secret.bottomAside,
+    patterns: [
+      //
+      /adds? .* card drawn to the bottom of (?:the )?(?<location>R&D|stack)/,
+    ],
+    dispatch: age => watchAsideOne(Secret.bottomAside, age, 2),
   },
   {
     type: Secret.bottom,
@@ -257,6 +266,20 @@ function watchClick(num: number, category: Secret, chatAge: number, ageThreshold
     }
   };
   document.addEventListener(command.clickEvent, handler);
+  return chan;
+}
+
+function watchAsideOne(category: Secret, age: number, ageLimit: number): SimpleChannel<PanelSecret> {
+  const chan = new SimpleChannel<PanelSecret>();
+  if (ril.lastAside.length > 0) {
+    console.log('watchAside');
+    const aside = ril.lastAside[ril.lastAside.length - 1];
+    if (withinAgeRange(aside.age, age, ageLimit)) {
+      const data: PanelSecret = {category, age, text: aside.card};
+      chan.send(data);
+    }
+  }
+  chan.close();
   return chan;
 }
 
