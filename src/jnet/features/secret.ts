@@ -11,8 +11,6 @@ enum Secret {
   invalid,
   access,
   bottom,
-  bottomClick,
-  bottomAside,
   order,
 }
 
@@ -23,35 +21,48 @@ const chatPatterns: ChatPattern[] = [
     dispatch: () => useCurrentPanel(panelPatterns[0]),
   },
   {
-    type: Secret.bottomClick,
-    patterns: [/looks at the top 2 cards of the stack and adds one to the bottom of the (?<location>stack)./], // blueberry diesel
-    dispatch: (age: number) => watchClick(3, Secret.bottomClick, age, 2),
-  },
-  {
-    type: Secret.bottomAside,
+    type: Secret.bottom,
     patterns: [
-      //
-      /adds? .* card drawn to the bottom of (?:the )?(?<location>R&D|stack)/,
+      /looks at the top 2 cards of the stack and adds one to the bottom of the (?<location>stack)./, // Blueberry Diesel
     ],
-    dispatch: age => watchAsideOne(Secret.bottomAside, age, 2),
+    dispatch: age => watchPanelClick(3, Secret.bottom, age, 2),
   },
   {
     type: Secret.bottom,
     patterns: [
-      //
-      'adds one to the bottom of the stack',
-      /add( \d+)? cards? from HQ to the bottom of R&D/,
+      /adds? .* card drawn to the bottom of (?:the )?(?<location>R&D|stack)/, // DBS
     ],
-    dispatch: handleBottom,
+    dispatch: age => watchAsideClick(Secret.bottom, age, 2),
+  },
+  {
+    type: Secret.bottom,
+    patterns: [
+      /adds?(?: \d+)? cards? from (?<source>HQ) to the bottom of (?<location>R&D)/, // Reeducation
+    ],
+    dispatch: age => watchPanel(1, Secret.order, age),
+  },
+  {
+    type: Secret.bottom,
+    patterns: [
+      // click on play area to bottom selected cards
+      'adds one to the bottom of the stack',
+    ],
+    dispatch: age => watchPanel(3, Secret.bottom, age),
+  },
+  {
+    type: Secret.order,
+    patterns: [
+      /rearranges? the top( \d+)? cards? of (?:the )?(?<location>R&D)/, // Anansi, Sadaka, Federal fundraising
+    ],
+    dispatch: () => watchStartOver(Secret.order),
   },
   {
     type: Secret.order,
     patterns: [
       /looks? at the top( \d+)? cards? of/,
-      /rearranges? the top( \d+)? cards? of/,
       // /^(?!.*install it).*\b(?:uses? .* to reveal|reveals|then reveals?).*(HQ|R&D|Archives|Server|stack|Stack)\b/,
     ],
-    dispatch: handleTop,
+    dispatch: (age: number) => watchPanel(1, Secret.order, age, 3),
   },
 ];
 
@@ -278,6 +289,8 @@ function watchStartOver(category: Secret) {
   document.addEventListener(eventName, handler);
   return chan;
 }
+
+function watchPanelClick(num: number, category: Secret, chatAge: number, ageThreshold: number) {
   const chan = new SimpleChannel<PanelSecret>();
   let count = 0;
 
