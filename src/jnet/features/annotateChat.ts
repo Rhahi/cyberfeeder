@@ -85,7 +85,7 @@ export function createIcon(text: string) {
 }
 
 export function addIcons(chatDiv: Element, annotation: Annotation) {
-  if (!annotation.action && !annotation.source && !annotation.location) return false;
+  if (!annotation.action && !annotation.source && !annotation.location && !annotation.secret) return false;
 
   let container = chatDiv.querySelector(':scope .cyberfeeder-icon');
   if (!container) {
