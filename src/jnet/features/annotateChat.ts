@@ -14,7 +14,7 @@ const revealRegex = [
 ];
 const addRegex = [/add .* to (?<location>HQ|R&D|Archives|grip|stack)/];
 const bottomRegex = [/adds? .* to (?:the )?bottom of (?:the )?(?<location>stack|R&D)/];
-const discardRegex = [/discards? .* from (?:their )(?<source>Grip|grip|HQ)/];
+const flatlineRegex = ['is flatlined'];
 
 interface Annotation {
   done?: boolean;
@@ -43,6 +43,7 @@ const annotate = (e: Event) => {
   annotateGeneric(annotation, 'cf-bottom', bottomRegex, event.detail);
   annotateGeneric(annotation, 'cf-add', addRegex, event.detail);
   annotateGeneric(annotation, 'cf-discard', discardRegex, event.detail);
+  annotateGeneric(annotation, 'cf-flatline', flatlineRegex, event.detail);
   const didAddIcons = addIcons(event.detail.element, annotation);
   if (didAddIcons && shouldScroll && event.detail.element.parentElement) {
     event.detail.element.parentElement.scrollTop = event.detail.element.parentElement.scrollHeight;
@@ -75,6 +76,7 @@ export function createIcon(text: string) {
   else if (text === 'cf-expose') icon.classList.add('fa-solid', 'fa-eye', 'icon-expose');
   else if (text === 'cf-bottom') icon.classList.add('fa-solid', 'fa-download', 'icon-bottom');
   else if (text === 'cf-discard') icon.classList.add('fa-solid', 'fa-dumpster', 'icon-discard');
+  else if (text === 'cf-flatline') icon.classList.add('fa-solid', 'fa-skull', 'icon-flatline');
   else icon.classList.add('fa-solid', 'fa-question', 'icon-unknown');
   return icon;
 }
