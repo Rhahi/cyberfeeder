@@ -54,6 +54,7 @@ function newChatHandler(mutations: MutationRecord[]) {
   for (const data of messages) {
     data.age = data.age + offset;
     const event = new CustomEvent<ChatMessage>(eventName, {detail: data});
+    data.element.setAttribute('age', `${data.age}`);
     document.dispatchEvent(event);
     offset += 1;
   }
