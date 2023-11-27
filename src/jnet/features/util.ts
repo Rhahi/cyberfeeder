@@ -30,6 +30,9 @@ export function toLocation(text?: string | null): Location {
   if (text === 'heap') {
     return 'heap';
   }
+  if (text === 'grip') {
+    return 'grip';
+  }
   return 'unknown';
 }
 
