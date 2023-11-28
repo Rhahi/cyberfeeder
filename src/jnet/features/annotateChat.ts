@@ -5,15 +5,26 @@ import * as util from './util';
 type MatchType = string | RegExp;
 
 const turnRegex = /turn (\d+)/;
-const accessRegex = [/accesses .*(?:from|in) (?:the root of )?(?<location>HQ|R&D|Archives|Server)/];
+const accessRegex = [
+  /accesses .*(?:from|in) (?:the root of )?(?<location>HQ|R&D|Archives|Server)/, // normal runs
+  /accesses .* from set-aside cards/, // deep dive
+];
 const exposeRegex = [/exposes .*(?<location>HQ|R&D|Archives|Server)/];
 const revealRegex = [
-  //
+  /reveal .* from the top of the (?<source>stack), move it to the (?<location>grip)/, // Concerto
   /^(?!.*install it).*\b(?:uses? .* to reveal|reveals|then reveals?).*(?<location>HQ|R&D|Archives|Server|stack)\b/,
   /reveals? that they drew/,
+  /Aeneas Informant .* and reveal (?<card>.*)\.$/, // Aeneas Informant
 ];
-const addRegex = [/add .* to (?:the )?(?<location>HQ|R&D|Archives|grip|Grip|Stack|stack)/];
-const bottomRegex = [/adds? .* to (?:the )?bottom of (?:the )?(?<location>stack|R&D)/];
+const addRegex = [
+  /add .* to (?:the )?(?:top of the )?(?<location>HQ|R&D|Archives|grip|Grip|Stack|stack)/, // generic
+];
+const bottomRegex = [
+  /adds? .* to (?:the )?bottom of (?:the )?(?<location>R&D)/, // DBS
+  /adds? .* card on (?:the )?top of (?:the )?(?<location>stack) to the bottom/, // Class Act
+  /add the top card of the (?<location>stack) to the bottom/, // Paragon
+  /adds? one to the bottom of the (?<location>stack)/, // Blueberry diesel
+];
 const discardRegex = [
   /discards? .* from (?:their )?(?<source>Grip|grip|HQ)/, // discard at the end of the turn
   /(?:trashes|trash) .* due to (?:meat|net|core) damage/, // take damage
@@ -21,7 +32,10 @@ const discardRegex = [
 const flatlineRegex = ['is flatlined'];
 const arrangeRegex = [/rearranges? (?:the )?top .* of (?:the )?(?<location>R&D)/];
 const lookRegex = [/look at the top(?: \d+)? cards? of (?:the )?(?<location>R&D)/]; // Epiphany
-const shuffleRegex = [/shuffle .* into (?:the )?(?<location>R&D|Stack|stack)/]; // Oracle Thinktank, Marilyn
+const shuffleRegex = [
+  /shuffle .* into (?:the )?(?<location>R&D|Stack|stack)/, // Oracle Thinktank, Marilyn
+  /shuffle (?:the )?(?<location>stack)/,
+];
 
 interface Annotation {
   done?: boolean;
