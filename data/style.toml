@@ -726,7 +726,7 @@ default = true
 css = """
 .ice > .card-frame > .card .cardname {
   position: absolute;
-  background: linear-gradient(180deg, rgba(20,20,20,0.85) 0%, rgba(20,20,20,0.6) 50%, rgba(20,20,20,0) 100%);
+  background: linear-gradient(270deg, rgba(20,20,20,0.85) 0%, rgba(20,20,20,0.6) 50%, rgba(20,20,20,0) 100%);
   text-shadow: 0 0 3px black;
   white-space: nowrap;
   text-overflow: clip;
