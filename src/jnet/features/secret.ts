@@ -72,6 +72,13 @@ const chatPatterns: ChatPattern[] = [
     ],
     dispatch: (age: number) => watchPanel(1, Secret.order, age, 3),
   },
+  {
+    type: Secret.look,
+    patterns: [
+      /look at the top(?: \d+)? cards? of (?:the )?(?<location>R&D|stack|Stack)/, // Architect deployment test
+    ],
+    dispatch: age => watchPanel(1, Secret.order, age, 1),
+  },
 ];
 
 const panelPatterns: PanelPattern[] = [
@@ -85,6 +92,10 @@ const panelPatterns: PanelPattern[] = [
   },
   {
     type: Secret.order,
+    patterns: [/(?:top|bottom) (?<number>\d )?cards? of (?:the )?(?<location>stack|R&D) (?:is|are|will be) (?<card>.*)$/],
+  },
+  {
+    type: Secret.look,
     patterns: [/(?:top|bottom) (?<number>\d )?cards? of (?:the )?(?<location>stack|R&D) (?:is|are|will be) (?<card>.*)$/],
   },
 ];
