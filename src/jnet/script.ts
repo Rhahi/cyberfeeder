@@ -3,7 +3,7 @@ import * as features from './features';
 import * as watcher from './watchers';
 
 enum KnownScripts {
-  sortAcrhive = 'Quality-of-life-none-Sort-archive-when-pressing-Control-(deprecated)',
+  sortAcrhive = 'Quality-of-life-none-Sort-archive-when-pressing-Control-key',
   newMessageIndicator = 'Reminders-none-New-message-indicator',
   handsizeReminder = 'Reminders-none-Hand-size-reminder',
   newTurnHighlight = 'Information-none-Highlight-new-turns-in-chat',
