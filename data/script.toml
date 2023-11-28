@@ -97,8 +97,8 @@ css = """
 category = "Information"
 series = "none"
 name = "Remember secret information"
-default = true
-description = "Experimental. This information is not disclosed to your opponent and doesn't stay in replay log."
+default = false
+description = "Experimental. This information is not disclosed to your opponent. The information is volatile, and will disappear if you move out of 'Play' mode."
 css = """
 .log .messages > div[secret]::after {
   content: attr(secret);
@@ -113,7 +113,7 @@ category = "Information"
 series = "none"
 name = "Annotate locations with icons"
 description = "Highlight most operations that reveal information about corp and runner's deck, hand, and discard piles."
-default = true
+default = false
 css = """
 .log .messages > div > .cyberfeeder-icon {
   display: inline-block !important;
