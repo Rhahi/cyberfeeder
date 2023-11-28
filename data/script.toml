@@ -101,21 +101,6 @@ css = """
 [[style]]
 category = "Information"
 series = "none"
-name = "Highlight new turns"
-default = true
-css = """
-.log .messages > .system[turn]::before {
-  padding: 0 0.15em;
-  content: attr(turn);
-  margin-right: 0.2em;
-  background-color: var(--turn);
-  color: black;
-}
-"""
-
-[[style]]
-category = "Information"
-series = "none"
 name = "Remember secret information"
 default = true
 description = "Experimental. This information is not disclosed to your opponent and doesn't stay in replay log."
@@ -142,6 +127,10 @@ css = """
 
 .cyberfeeder-icon > i {
   margin-right: 0.15em;
+}
+
+.icon-turn {
+  color: var(--turn-icon);
 }
 
 .icon-hq {
