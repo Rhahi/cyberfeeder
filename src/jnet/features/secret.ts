@@ -60,14 +60,14 @@ const chatPatterns: ChatPattern[] = [
   {
     type: Secret.order,
     patterns: [
-      /rearranges? the top( \d+)? cards? of (?:the )?(?<location>R&D)/, // Anansi, Sadaka, Federal fundraising
+      /rearranges? the top(?: \d+)? cards? of (?:the )?(?<location>R&D)/, // Anansi, Sadaka, Federal fundraising
     ],
     dispatch: () => watchStartOver(Secret.order),
   },
   {
     type: Secret.order,
     patterns: [
-      /looks? at the top( \d+)? cards? of/,
+      /looks? at the top(?: \d+)? cards? of/,
       // /^(?!.*install it).*\b(?:uses? .* to reveal|reveals|then reveals?).*(HQ|R&D|Archives|Server|stack|Stack)\b/,
     ],
     dispatch: (age: number) => watchPanel(1, Secret.order, age, 3),
