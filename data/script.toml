@@ -8,19 +8,14 @@ default = true
 description = "Some other settings will refer to the shared variables set here."
 css = """
 :root {
-  --turn-icon: white;
-  --hq: #4062bf;
+  --turn-icon: #F80;
   --hq-icon: #3884e8;
-  --rnd: #080;
   --rnd-icon: #0A0;
-  --archives: #7a2118;
   --archives-icon: #CC2118;
-  --remote: #666;
-  --remote-icon: #444;
-  --stack: #850;
-  --stack-icon: #850;
-  --grip: #850;
-  --grip-icon: #850;
+  --remote-icon: #AAA;
+  --stack-icon: #8A2;
+  --grip-icon: #437bbc;
+  --heap-icon: #bd4942;
   --access-icon: gold;
 }
 """
