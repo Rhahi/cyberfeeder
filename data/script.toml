@@ -23,9 +23,9 @@ css = """
 [[style]]
 category = "Quality of life"
 series = "none"
-name = "Sort archive when pressing Control (deprecated)"
-default = true
-description = "This feature will be added in jinteki.net in the future and may be removed."
+name = "Sort archive when pressing Control key"
+default = false
+description = "This feature will be added in jinteki.net in the future and it may be removed."
 css = """
 .discard-container .panel.popup {
   padding-top: 2rem;
