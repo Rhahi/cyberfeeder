@@ -12,6 +12,7 @@ enum Secret {
   access,
   bottom,
   order,
+  look,
 }
 
 const chatPatterns: ChatPattern[] = [
