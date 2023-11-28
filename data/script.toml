@@ -160,3 +160,17 @@ css = """
   color: var(--access-icon);
 }
 """
+
+[[style]]
+category = "Debug"
+series = "none"
+name = "Enable debug mode"
+description = "There is no reason to use this feature in normal gameplay."
+default = false
+css = """
+.log .messages > div::before {
+  content: attr(age);
+  margin-right: 0.15em;
+  background-color: black;
+}
+"""
