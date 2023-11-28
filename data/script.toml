@@ -152,6 +152,10 @@ css = """
   color: var(--grip-icon);
 }
 
+.icon-heap {
+  color: var(--heap-icon);
+}
+
 .icon-access {
   color: var(--access-icon);
 }
