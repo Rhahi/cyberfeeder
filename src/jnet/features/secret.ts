@@ -330,7 +330,6 @@ function watchPanelClick(num: number, category: Secret, chatAge: number, ageThre
 function watchAsideClick(category: Secret, age: number, ageLimit: number): SimpleChannel<PanelSecret> {
   const chan = new SimpleChannel<PanelSecret>();
   if (ril.lastAside.length > 0) {
-    console.log('watchAside');
     const aside = ril.lastAside[ril.lastAside.length - 1];
     if (withinAgeRange(aside.age, age, ageLimit)) {
       const data: PanelSecret = {category, age, text: `Choice: ${aside.card}`};
