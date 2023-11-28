@@ -9,6 +9,7 @@ enum KnownScripts {
   newTurnHighlight = 'Information-none-Highlight-new-turns-in-chat',
   annotateChat = 'Information-none-Annotate-locations-with-icons',
   secret = 'Information-none-Remember-secret-information',
+  zindex = 'Quality-of-life-none-Lower-centrals-when-pressing-Ctrl',
 }
 
 export interface Toggle {
@@ -111,6 +112,13 @@ export function setupScripts(toggles: Toggle[]) {
         features.secret.enable();
       } else {
         features.secret.disable();
+      }
+    }
+    if (toggle.id === KnownScripts.zindex) {
+      if (toggle.enabled) {
+        features.zindex.enable();
+      } else {
+        features.zindex.disable();
       }
     }
   }

@@ -39,6 +39,15 @@ css = """
 """
 
 [[style]]
+category = "Quality of life"
+series = "none"
+name = "Lower centrals when pressing Ctrl"
+default = false
+description = "Sometimes upgrades can cover up each other, preventing you from clicking on them. This will help fix that problem."
+css = """
+"""
+
+[[style]]
 category = "Reminders"
 series = "none"
 name = "Hand size reminder"
