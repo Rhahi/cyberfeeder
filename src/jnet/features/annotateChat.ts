@@ -48,12 +48,12 @@ const annotate = (e: Event) => {
   annotateGeneric(annotation, 'cf-expose', exposeRegex, event.detail);
   annotateGeneric(annotation, 'cf-reveal', revealRegex, event.detail);
   annotateGeneric(annotation, 'cf-bottom', bottomRegex, event.detail);
-  annotateGeneric(annotation, 'cf-add', addRegex, event.detail);
   annotateGeneric(annotation, 'cf-discard', discardRegex, event.detail);
   annotateGeneric(annotation, 'cf-flatline', flatlineRegex, event.detail);
   annotateGeneric(annotation, 'cf-arrange', arrangeRegex, event.detail);
   annotateGeneric(annotation, 'cf-look', lookRegex, event.detail);
   annotateGeneric(annotation, 'cf-shuffle', shuffleRegex, event.detail);
+  annotateGeneric(annotation, 'cf-add', addRegex, event.detail);
   const didAddIcons = addIcons(event.detail.element, annotation);
   if (didAddIcons && shouldScroll && event.detail.element.parentElement) {
     event.detail.element.parentElement.scrollTop = event.detail.element.parentElement.scrollHeight;
