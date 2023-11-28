@@ -2,7 +2,7 @@ version = "4"
 
 [[style]]
 category = "Mandatory"
-series = "Variables"
+series = "CSS Variables"
 name = "Colors"
 default = true
 description = "Some other settings will refer to the shared variables set here."
