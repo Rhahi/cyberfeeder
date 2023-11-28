@@ -40,7 +40,7 @@ category = "Layout"
 series = "none"
 name = "Top navbar fix"
 default = true
-description= "Make top navbar narrower, and not spill over when zoomed in."
+description= "Make the top navbar narrower, and it will not spill over when zoomed in."
 css = """
 #main-content {
   display: flex;
@@ -106,7 +106,7 @@ category = "Layout"
 series = "none"
 name = "Hide replay controls"
 default = false
-description = "The control buttons will disappear. Use arrow keys to control replay"
+description = "The replay control panel will disappear. Use arrow keys to control replay"
 css = """
 .bottompane {
   display: none;
@@ -124,7 +124,7 @@ css = ""
 category = "Layout"
 series = "CSS grid"
 name = "Horizontal CSS-grid layout"
-description = "Use CSS grid to rebuild UI layout. Makes the layout more robust across screen sizes. When using this mode, also enable flex-based hand size to fix scroll bar appearing in main."
+description = """Use CSS grid to rebuild UI layout. Makes the layout more robust across screen sizes. This mode enforces cards to 'make cards under right-pane visible' option."""
 default = true
 css = """
 .gameboard {
@@ -153,7 +153,7 @@ css = """
 category = "Layout"
 series = "CSS grid"
 name = "Vertical CSS-grid layout (experimental)"
-description = "Move chat over to the bottom of the screen. Makes no sense on wide monitors. Enable 'Fix chat menu layout' to use this layout properly."
+description = "Move chat over to the bottom of the screen. Makes no sense on wide monitors. Enable 'Fix chat menu layout' to use this layout properly. Do not use it with 'change right pane width'."
 default = false
 css = """
 :root {
@@ -363,8 +363,8 @@ css = """
 [[style]]
 category = "Layout"
 series = "CSS grid"
-name = "Alternative layout (experimental)"
-description = "An alternative layout inspired from in-person gameplay"
+name = "Alternative layout"
+description = "An alternative layout that makes it easier to zoom in, unless corp builds high servers."
 default = false
 css = """
 .gameboard {
@@ -944,6 +944,7 @@ category = "Labelling"
 series = "none"
 name = "Smaller ICE strengh indicator"
 default = false
+description = "Reduce the box size of the ice strength indicator. Does not make the actual text smaller."
 css = """
 .ice > .card-frame > .card .strength {
   width: unset;
@@ -972,6 +973,7 @@ css = """
 category = "Labelling"
 series = "none"
 name = "Smaller icebreaker strengh indicator"
+description = "Reduce the box size of the icebreaker strength indicator. Does not make the actual text smaller."
 default = false
 css = """
 .runner-board .card .strength {
