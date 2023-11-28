@@ -31,8 +31,16 @@ const chatPatterns: ChatPattern[] = [
     type: Secret.bottom,
     patterns: [
       /adds? .* card drawn to the bottom of (?:the )?(?<location>R&D|stack)/, // DBS
+      /add the .* card on the top of the (?<location>stack) to the bottom/,
     ],
     dispatch: age => watchAsideClick(Secret.bottom, age, 2),
+  },
+  {
+    type: Secret.bottom,
+    patterns: [
+      /adds? the top card of (?:the )?(?<source>stack) to the bottom/, // Paragon
+    ],
+    dispatch: age => watchPanel(1, Secret.bottom, age),
   },
   {
     type: Secret.bottom,
