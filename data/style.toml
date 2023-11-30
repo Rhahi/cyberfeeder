@@ -778,6 +778,7 @@ name = "Runner cards label"
 default = true
 css = """
 .runner-board > div:not(.runner-centrals) .card .cardname,
+.runner-board > .runner-centrals .discard-container .popup .card .cardname,
 .run-card .card .cardname {
   position: absolute;
   background: linear-gradient(180deg, rgba(20,20,20,0.85) 0%, rgba(20,20,20,0.7) 65%, rgba(20,20,20,0) 100%);
@@ -792,11 +793,13 @@ css = """
 }
 
 .runner-board > div:not(.runner-centrals) .card:hover .cardname,
+.runner-board > .runner-centrals .discard-container .popup .card:hover .cardname,
 .run-card .card:hover .cardname {
   z-index: 11;
 }
 
 .runner-board > div:not(.runner-centrals) .card .cardname:hover,
+.runner-board > .runner-centrals .discard-container .popup .card .cardname:hover,
 .run-card .card .cardname:hover {
   white-space: unset;
   text-overflow: unset;
