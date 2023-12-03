@@ -1,4 +1,4 @@
-version = "10"
+version = "11"
 
 [[style]]
 category = "Mandatory"
@@ -758,6 +758,7 @@ css = """
 .opponent .ice > .card-frame > .card .cardname {
   writing-mode: sideways-lr;
   text-align: right;
+  background: linear-gradient(90deg, rgba(20,20,20,0.85) 0%, rgba(20,20,20,0.6) 50%, rgba(20,20,20,0) 100%);
   border-top-left-radius: var(--card-border-radius);
   border-bottom-left-radius: var(--card-border-radius);
 }
