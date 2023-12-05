@@ -1153,3 +1153,25 @@ css = """
   animation: age 10.0s forwards !important;
 }
 """
+
+[[style]]
+category = "Misc"
+series = "none"
+name = "Hide opponent hand content"
+default = false
+description = "Useful in replay if you don't want to reveal opponent's hand"
+css = """
+.opponent .hand-container .hand[data-server="Grip"] .card-wrapper .card {
+  background-image: url(/img/nsg-runner.png);
+  background-size: cover;
+}
+
+.opponent .hand-container .hand[data-server="HQ"] .card-wrapper .card {
+  background-image: url(/img/nsg-corp.png);
+  background-size: cover;
+}
+
+.opponent .hand-container .hand .card > div > img {
+  visibility: hidden;
+}
+"""
