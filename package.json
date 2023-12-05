@@ -11,7 +11,7 @@
     "prepare": "npm run compile",
     "pretest": "npm run compile",
     "posttest": "npm run lint",
-    "package": "mkdir -p ./build && zip -r ./build/extension.zip ./app/*",
+    "package": "mkdir -p ./build && pushd app && zip -r ../build/extension.zip ./* && popd",
     "postversion": "sh scripts/version.sh"
   },
   "author": "Rhahi",
