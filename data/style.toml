@@ -1,4 +1,4 @@
-version = "12"
+version = "13"
 
 [[style]]
 category = "Mandatory"
@@ -1161,6 +1161,11 @@ name = "Hide opponent hand content"
 default = false
 description = "Useful in replay if you don't want to reveal opponent's hand"
 css = """
+.opponent .hand-container .hand[data-server="Grip"] .card-wrapper .card .cardname,
+.opponent .hand-container .hand[data-server="HQ"] .card-wrapper .card .cardname {
+  visibility: hidden;
+}
+
 .opponent .hand-container .hand[data-server="Grip"] .card-wrapper .card {
   background-image: url(/img/nsg-runner.png);
   background-size: cover;
