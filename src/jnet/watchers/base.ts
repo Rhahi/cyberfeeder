@@ -21,7 +21,7 @@ export interface ConditionalObserverConfig {
   event: Event;
   type: string;
   targetMode: 'gameview' | 'cardbrowser' | 'container' | 'page-container';
-  observer: MutationObserver;
+  observer: MutationObserver | ResizeObserver;
   selector: string;
   observeOptions: MutationObserverInit;
   init?: (selector: string) => void;

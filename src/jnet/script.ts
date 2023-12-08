@@ -10,6 +10,7 @@ enum KnownScripts {
   annotateChat = 'Information-none-Annotate-locations-with-icons',
   secret = 'Information-none-Remember-secret-information',
   zindex = 'Quality-of-life-none-Lower-centrals-when-pressing-Ctrl',
+  autoscroll = 'Quality-of-life-none-Fix-chat-auto-scroll',
 }
 
 export interface Toggle {
@@ -59,6 +60,7 @@ export function disableAll() {
   watcher.ril.stop();
   features.annotateChat.disable();
   features.secret.disable();
+  features.autoscroll.disable();
 }
 
 export function setupScripts(toggles: Toggle[]) {
@@ -119,6 +121,13 @@ export function setupScripts(toggles: Toggle[]) {
         features.zindex.enable();
       } else {
         features.zindex.disable();
+      }
+    }
+    if (toggle.id === KnownScripts.autoscroll) {
+      if (toggle.enabled) {
+        features.autoscroll.enable();
+      } else {
+        features.autoscroll.disable();
       }
     }
   }
