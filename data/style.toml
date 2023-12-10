@@ -1,4 +1,4 @@
-version = "14"
+version = "15"
 
 [[style]]
 category = "Mandatory"
@@ -651,6 +651,11 @@ css = """
 .gameboard .start-game .start-hand img.start-card {
   width: 11vw !important;
   height: auto !important;
+}
+
+.start-hand > div:first-child {
+  display: flex;
+  flex-wrap: nowrap;
 }
 
 .start-hand .start-card-frame {
