@@ -42,7 +42,7 @@ function newChatHandler(mutations: MutationRecord[]) {
       }
       const div = node as Element;
       const system = div.classList.contains('system');
-      const text = div.textContent;
+      const text = getText(div);
       const age = div.parentNode?.children.length;
       if (text && age) {
         const data: ChatMessage = {type: 'new-chat', system, text, age: age, element: div};
@@ -58,4 +58,26 @@ function newChatHandler(mutations: MutationRecord[]) {
     document.dispatchEvent(event);
     offset += 1;
   }
+}
+
+/** parse icons into plain text */
+function getText(div: Element): string | null {
+  if (!div.textContent) return null;
+  let text = '';
+  div.childNodes.forEach(node => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      text += node.textContent;
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      const element = node as Element;
+      if (element.classList.contains('anr-icon')) {
+        const label = element.getAttribute('aria-label');
+        text += `[${label}]`;
+      } else {
+        text += node.textContent;
+      }
+    } else {
+      text += node.textContent;
+    }
+  });
+  return text;
 }
