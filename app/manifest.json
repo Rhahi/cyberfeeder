@@ -13,7 +13,9 @@
   "content_scripts": [
     {
       "matches": [
-        "*://*.jinteki.net/*"
+        "https://*.jinteki.net/*",
+        "https://*.reteki.fun/*",
+        "http://jinteki.local/*"
       ],
       "js": [
         "js/jnet.js"
@@ -48,7 +50,9 @@
     },
     "default_title": "Cyberfeeder",
     "show_matches": [
-      "https://*.jinteki.net/*"
+      "https://*.jinteki.net/*",
+      "https://*.reteki.fun/*",
+      "http://jinteki.local/*"
     ]
   },
   "browser_action": {
