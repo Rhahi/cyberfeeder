@@ -1,6 +1,7 @@
 import {applyStyle} from './css';
 import * as features from './features';
 import * as watcher from './watchers';
+import * as debug from './debug';
 
 enum KnownScripts {
   sortAcrhive = 'Quality-of-life-none-Sort-archive-when-pressing-Control-key',
@@ -11,6 +12,7 @@ enum KnownScripts {
   secret = 'Information-none-Remember-secret-information',
   zindex = 'Quality-of-life-none-Lower-centrals-when-pressing-Ctrl',
   autoscroll = 'Quality-of-life-none-Fix-chat-auto-scroll',
+  debug = 'Debug-none-Enable-debug-mode',
 }
 
 export interface Toggle {
@@ -128,6 +130,15 @@ export function setupScripts(toggles: Toggle[]) {
         features.autoscroll.enable();
       } else {
         features.autoscroll.disable();
+      }
+    }
+    if (toggle.id === KnownScripts.debug) {
+      if (toggle.enabled) {
+        debug.enable();
+        debug.log('Debug mode enabled');
+      } else {
+        debug.log('Debug mode disabled');
+        debug.disable();
       }
     }
   }
