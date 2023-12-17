@@ -1,4 +1,4 @@
-version = "15"
+version = "16"
 
 [[style]]
 category = "Mandatory"
@@ -624,6 +624,11 @@ name = "Dynamic mulligan and win screen"
 description = "Will work across all zoom levels"
 default = false
 css = """
+:root {
+  --mulligan-card-width: 10vw;
+  --mulligan-ident-width: 15vw;
+}
+
 .win.centered {
   position: absolute;
   width: unset;
@@ -640,7 +645,7 @@ css = """
 }
 
 .start-game .ident img {
-  width: 15vw !important;
+  width: var(--mulligan-ident-width) !important;
   height: auto !important;
 }
 
@@ -649,7 +654,7 @@ css = """
 }
 
 .gameboard .start-game .start-hand img.start-card {
-  width: 11vw !important;
+  width: var(--mulligan-card-width) !important;
   height: auto !important;
 }
 
@@ -659,8 +664,8 @@ css = """
 }
 
 .start-hand .start-card-frame {
-  width: 11vw !important;
-  height: calc(11vw * 1.414) !important;
+  width: var(--mulligan-card-width) !important;
+  height: calc(var(--mulligan-card-width) * 1.414) !important;
 }
 
 .win.centered .mulligan button {
