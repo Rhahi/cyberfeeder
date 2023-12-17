@@ -17,6 +17,7 @@ css = """
   --grip-icon: #437bbc;
   --heap-icon: #bd4942;
   --access-icon: gold;
+  --action-icon: #F80;
 }
 """
 
@@ -183,6 +184,10 @@ css = """
 
 .icon-access {
   color: var(--access-icon);
+}
+
+.icon-action {
+  color: var(--action-icon);
 }
 """
 

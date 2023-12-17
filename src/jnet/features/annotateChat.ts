@@ -5,6 +5,7 @@ import * as util from './util';
 type MatchType = string | RegExp;
 
 const turnRegex = /turn (\d+)/;
+const clickRegex = /.* spends \[click\]/;
 const accessRegex = [
   /accesses .*(?:from|in) (?:the root of )?(?<location>HQ|R&D|Archives|Server)/, // normal runs
   /accesses .* from set-aside cards/, // deep dive
@@ -38,7 +39,9 @@ const shuffleRegex = [
 ];
 
 interface Annotation {
+  hasIcon: boolean;
   done?: boolean;
+  click?: Element;
   action?: Element;
   source?: Element;
   location?: Element;
@@ -56,8 +59,9 @@ const annotate = (e: Event) => {
   }
 
   const shouldScroll = event.detail.element.parentElement ? isFullyDown(event.detail.element.parentElement) : false;
-  const annotation: Annotation = {done: false};
+  const annotation: Annotation = {hasIcon: false, done: false};
   annotateTurn(annotation, event.detail);
+  annotateClick(annotation, event.detail);
   annotateGeneric(annotation, 'cf-access', accessRegex, event.detail);
   annotateGeneric(annotation, 'cf-expose', exposeRegex, event.detail);
   annotateGeneric(annotation, 'cf-reveal', revealRegex, event.detail);
@@ -104,12 +108,13 @@ export function createIcon(text: string) {
   else if (text === 'cf-arrange') icon.classList.add('fa-solid', 'fa-arrow-up-short-wide', 'icon-arrange');
   else if (text === 'cf-look') icon.classList.add('fa-solid', 'fa-list', 'icon-look');
   else if (text === 'cf-shuffle') icon.classList.add('fa-solid', 'fa-shuffle', 'icon-shuffle');
+  else if (text === 'cf-click') icon.classList.add('fa-regular', 'fa-clock', 'icon-action');
   else icon.classList.add('fa-solid', 'fa-question', 'icon-unknown');
   return icon;
 }
 
 export function addIcons(chatDiv: Element, annotation: Annotation) {
-  if (!annotation.action && !annotation.source && !annotation.location && !annotation.secret) return false;
+  if (!annotation.hasIcon) return false;
 
   let container = chatDiv.querySelector(':scope .cyberfeeder-icon');
   if (!container) {
@@ -118,6 +123,7 @@ export function addIcons(chatDiv: Element, annotation: Annotation) {
   }
   container.classList.add('cyberfeeder-icon');
   container.setAttribute('style', 'display: none;');
+  if (annotation.click) container.appendChild(annotation.click);
   if (annotation.action) container.appendChild(annotation.action);
   if (annotation.source) {
     container.appendChild(annotation.source);
@@ -135,6 +141,17 @@ function annotateTurn(annotation: Annotation, detail: chat.ChatMessage) {
   if (match) {
     annotation.done = true;
     annotation.action = createIcon('cf-turn');
+    annotation.hasIcon = true;
+  }
+}
+
+function annotateClick(annotation: Annotation, detail: chat.ChatMessage) {
+  if (annotation.done) return;
+  const match = detail.text.match(clickRegex);
+  if (match) {
+    const icon = createIcon('cf-click');
+    annotation.click = icon;
+    annotation.hasIcon = true;
   }
 }
 
@@ -157,8 +174,14 @@ function annotateGeneric(annotation: Annotation, type: string, regex: MatchType[
     const location = util.toLocation(match.groups['location']);
     if (location !== 'unknown') {
       detail.element.setAttribute('location', location);
-      if (!annotation.location) annotation.location = createIcon(location);
+      if (!annotation.location) {
+        annotation.location = createIcon(location);
+        annotation.hasIcon = true;
+      }
     }
   }
-  if (!annotation.action) annotation.action = createIcon(type);
+  if (!annotation.action) {
+    annotation.action = createIcon(type);
+    annotation.hasIcon = true;
+  }
 }

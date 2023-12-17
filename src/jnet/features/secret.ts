@@ -213,7 +213,7 @@ function annotate(element: Element, result: ChatSecret) {
   const shouldScroll = element.parentElement ? isFullyDown(element.parentElement) : false;
   element.setAttribute('secret', result.text);
   element.classList.add('secret');
-  annotateChat.addIcons(element, {secret: annotateChat.createIcon('secret')});
+  annotateChat.addIcons(element, {hasIcon: true, secret: annotateChat.createIcon('secret')});
   const age = element.getAttribute('age');
   element.setAttribute('age', `${age}+${result.age}`);
   if (result.target !== 'unknown') element.classList.add(result.target);
