@@ -1,4 +1,4 @@
-version = "6"
+version = "7"
 
 [[style]]
 category = "Mandatory"
@@ -35,6 +35,13 @@ css = """
 .discard-container .panel.popup > div:first-child {
   position: absolute;
   top: 0;
+}
+
+.discard-container .panel.popup[cyberfeeder] > div:first-child::after {
+  content: 'Sorted';
+  border: 0.1em solid white;
+  padding: 0 0.2em;
+  border-radius: 0.1em;
 }
 """
 

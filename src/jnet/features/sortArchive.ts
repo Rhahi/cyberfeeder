@@ -98,6 +98,7 @@ function setFlex() {
     const oldStyle = container.getAttribute('style');
     if (oldStyle?.includes('display: block;')) {
       container.setAttribute('style', 'display: flex; flex-wrap: wrap;');
+      container.setAttribute('cyberfeeder', 'sorted');
     }
   });
 }
@@ -108,6 +109,7 @@ function unsetFlex() {
     const oldStyle = container.getAttribute('style');
     if (oldStyle?.includes('flex;')) {
       container.setAttribute('style', 'display: block;');
+      container.removeAttribute('cyberfeeder');
     }
   });
 }
