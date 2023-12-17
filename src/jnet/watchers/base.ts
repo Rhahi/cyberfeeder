@@ -1,6 +1,7 @@
 /**
  * Watch for user navigation event and fire and event containing the root of the new element.
  */
+import * as debug from '../debug';
 
 /**
  * Known items:
@@ -25,6 +26,7 @@ export interface ConditionalObserverConfig {
   selector: string;
   observeOptions: MutationObserverInit;
   init?: (selector: string) => void;
+  name?: string;
 }
 
 export interface ConditionalExecuterConfig {
@@ -79,12 +81,14 @@ export function conditionalObserver(config: ConditionalObserverConfig) {
     const element = document.querySelector(config.selector);
     if (element) {
       config.observer.observe(element, config.observeOptions);
+      debug.log('observe', config.name, element);
     } else {
       console.warn(`[Cyberfeeder] expected to find ${config.selector}, found none`);
     }
   } else {
     // user has navigated away, no more control elements.
     config.observer.disconnect();
+    debug.log('disconnect', config.name);
   }
 }
 
