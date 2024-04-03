@@ -37,6 +37,8 @@ const shuffleRegex = [
   /shuffle .* into (?:the )?(?<location>R&D|Stack|stack)/, // Oracle Thinktank, Marilyn
   /shuffle (?:the )?(?<location>stack)/,
 ];
+const mulliganKeepRegex = [/keeps their hand/];
+const mulliganPassRegex = [/takes a mulligan/];
 
 interface Annotation {
   hasIcon: boolean;
@@ -62,6 +64,8 @@ const annotate = (e: Event) => {
   const annotation: Annotation = {hasIcon: false, done: false};
   annotateTurn(annotation, event.detail);
   annotateClick(annotation, event.detail);
+  annotateGeneric(annotation, 'cf-mulligan-keep', mulliganKeepRegex, event.detail);
+  annotateGeneric(annotation, 'cf-mulligan-mull', mulliganPassRegex, event.detail);
   annotateGeneric(annotation, 'cf-access', accessRegex, event.detail);
   annotateGeneric(annotation, 'cf-expose', exposeRegex, event.detail);
   annotateGeneric(annotation, 'cf-reveal', revealRegex, event.detail);
@@ -109,6 +113,8 @@ export function createIcon(text: string) {
   else if (text === 'cf-look') icon.classList.add('fa-solid', 'fa-list', 'icon-look');
   else if (text === 'cf-shuffle') icon.classList.add('fa-solid', 'fa-shuffle', 'icon-shuffle');
   else if (text === 'cf-click') icon.classList.add('fa-regular', 'fa-clock', 'icon-action');
+  else if (text === 'cf-mulligan-keep') icon.classList.add('fa-regular', 'fa-thumbs-up', 'icon-mulligan-keep');
+  else if (text === 'cf-mulligan-mull') icon.classList.add('fa-regular', 'fa-thumbs-down', 'icon-mulligan-mull');
   else icon.classList.add('fa-solid', 'fa-question', 'icon-unknown');
   return icon;
 }

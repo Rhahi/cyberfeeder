@@ -18,6 +18,8 @@ css = """
   --heap-icon: #bd4942;
   --access-icon: gold;
   --action-icon: #F80;
+  --mulligan-keep-icon: white;
+  --mulligan-mull-icon: red;
 }
 """
 
@@ -188,6 +190,14 @@ css = """
 
 .icon-action {
   color: var(--action-icon);
+}
+
+.icon-mulligan-keep {
+  color: var(--mulligan-keep-icon);
+}
+
+.icon-mulligan-mull {
+  color: var(--mulligan-mull-icon);
 }
 """
 
