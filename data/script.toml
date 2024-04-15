@@ -1,4 +1,4 @@
-version = "7"
+version = "8"
 
 [[style]]
 category = "Mandatory"
@@ -198,6 +198,56 @@ css = """
 
 .icon-mulligan-mull {
   color: var(--mulligan-mull-icon);
+}
+"""
+
+[[style]]
+category = "Animation"
+series = "none"
+name = "Animate cards in hand (unsafe)"
+default = false
+description = """
+Use at your own risk.
+Animate cards leaving hand (play, trash, etc).
+This manipulates DOM and may break the UI.
+If the UI is broken, navigate out of the Play mode (to deck builder, for examle) and enter Play again."""
+css = """
+@keyframes animate-up {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+    transform-style: preserve-3d;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-80px);
+  }
+}
+
+@keyframes animate-down {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+    transform-style: preserve-3d;
+  }
+  to {
+    opacity: 0;
+    transform: translateY(80px);
+  }
+}
+
+.animate-up {
+  animation-duration: 0.2s;
+  animation-name: animate-up;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
+}
+
+.animate-down {
+  animation-duration: 0.2s;
+  animation-name: animate-down;
+  animation-timing-function: ease-in;
+  animation-fill-mode: forwards;
 }
 """
 

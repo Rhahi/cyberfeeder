@@ -13,6 +13,7 @@ enum KnownScripts {
   zindex = 'Quality-of-life-none-Lower-centrals-when-pressing-Ctrl',
   autoscroll = 'Quality-of-life-none-Fix-chat-auto-scroll',
   debug = 'Debug-none-Enable-debug-mode',
+  animateHand = 'Animation-none-Animate-cards-in-hand-(unsafe)',
 }
 
 export interface Toggle {
@@ -139,6 +140,14 @@ export function setupScripts(toggles: Toggle[]) {
       } else {
         debug.log('Debug mode disabled');
         debug.disable();
+      }
+    }
+    if (toggle.id === KnownScripts.animateHand) {
+      if (toggle.enabled) {
+        shouldWatchHand = true;
+        features.animate.enableHand();
+      } else {
+        features.animate.disableHand();
       }
     }
   }

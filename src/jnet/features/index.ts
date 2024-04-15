@@ -5,3 +5,4 @@ export * as annotateChat from './annotateChat';
 export * as secret from './secret';
 export * as zindex from './zindex';
 export * as autoscroll from './autoscroll';
+export * as animate from './animate';
