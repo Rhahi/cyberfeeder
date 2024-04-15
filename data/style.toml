@@ -1,4 +1,4 @@
-version = "16"
+version = "17"
 
 [[style]]
 category = "Mandatory"
@@ -1249,6 +1249,66 @@ css = """
 }
 
 .opponent .hand-container .hand .card > div > img {
+  visibility: hidden;
+}
+"""
+
+[[style]]
+category = "Misc"
+series = "none"
+name = "Redact player names"
+default = false
+description = "Useful in replay if you don't want to reveal player names"
+css = """
+// hide log entry names
+.log .messages .runner-username, .log .messages .corp-username {
+  line-height: 1em;
+  font-size: 0.001em;
+  font-size: 0;
+}
+
+.log .messages .runner-username::after {
+  font-size: 0.75rem;
+  content: "The Runner";
+}
+
+.log .messages .corp-username::after {
+  font-size: 0.75rem;
+  content: "The Corp";
+}
+
+// hide chat message names
+.log .messages .message .avatar {
+  visibility: hidden;
+}
+
+.log .messages .message .username {
+  font-size: 0.001em !important;
+  font-size: 0 !important;
+}
+
+.log .messages .message .username::after {
+  font-size: 0.9rem;
+  content: "Redacted";
+}
+
+
+// hide stats area name
+.name-area .avatar {
+  visibility: hidden;
+}
+
+.name-area .username {
+  font-size: 0.001em;
+  font-size: 0;
+}
+
+.name-area .username::after {
+  font-size: 0.9rem;
+  content: "Redacted";
+}
+
+.name-area .pronouns {
   visibility: hidden;
 }
 """
