@@ -145,9 +145,9 @@ export function setupScripts(toggles: Toggle[]) {
     if (toggle.id === KnownScripts.animateHand) {
       if (toggle.enabled) {
         shouldWatchHand = true;
-        features.animate.enableHand();
+        features.animateHand.enable();
       } else {
-        features.animate.disableHand();
+        features.animateHand.disable();
       }
     }
   }

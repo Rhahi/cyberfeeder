@@ -12,7 +12,7 @@ const handObserverMe = new MutationObserver(m => mutationHandler(m, 'up'));
 const mePreviousHand: string[] = [];
 const opponentPreviousHand: string[] = [];
 
-export function enableHand() {
+export function enable() {
   debug.log('Animate hand enabled');
   document.addEventListener(hand.eventName, newHandHandler);
   const {meEvent, opponentEvent} = hand.getEvent();
@@ -20,7 +20,7 @@ export function enableHand() {
   if (opponentEvent) newHandHandler(opponentEvent);
 }
 
-export function disableHand() {
+export function disable() {
   debug.log('Animate hand disabled');
   document.removeEventListener(hand.eventName, newHandHandler);
   handObserverMe.disconnect();
