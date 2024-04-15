@@ -1260,7 +1260,6 @@ name = "Redact player names"
 default = false
 description = "Useful in replay if you don't want to reveal player names"
 css = """
-// hide log entry names
 .log .messages .runner-username, .log .messages .corp-username {
   line-height: 1em;
   font-size: 0.001em;
@@ -1277,7 +1276,6 @@ css = """
   content: "The Corp";
 }
 
-// hide chat message names
 .log .messages .message .avatar {
   visibility: hidden;
 }
@@ -1292,8 +1290,6 @@ css = """
   content: "Redacted";
 }
 
-
-// hide stats area name
 .name-area .avatar {
   visibility: hidden;
 }
