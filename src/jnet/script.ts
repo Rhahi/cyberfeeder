@@ -14,6 +14,7 @@ enum KnownScripts {
   autoscroll = 'Quality-of-life-none-Fix-chat-auto-scroll',
   debug = 'Debug-none-Enable-debug-mode',
   animateHand = 'Animation-none-Animate-cards-in-hand-(unsafe)',
+  animateBin = 'Animation-none-Animate-discard-entry-and-exit',
 }
 
 export interface Toggle {
@@ -148,6 +149,14 @@ export function setupScripts(toggles: Toggle[]) {
         features.animateHand.enable();
       } else {
         features.animateHand.disable();
+      }
+    }
+    if (toggle.id === KnownScripts.animateBin) {
+      if (toggle.enabled) {
+        shouldWatchArchive = true;
+        features.animateBin.enable();
+      } else {
+        features.animateBin.disable();
       }
     }
   }

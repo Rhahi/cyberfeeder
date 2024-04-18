@@ -21,6 +21,23 @@ css = """
   --mulligan-keep-icon: white;
   --mulligan-mull-icon: red;
 }
+
+/* in case script fails to pop out an animation, this will at least make the ghosts disappear */
+@keyframes hide {
+  0% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+#ghosts {
+  display: none;
+}
 """
 
 [[style]]
@@ -248,6 +265,37 @@ css = """
   animation-name: animate-down;
   animation-timing-function: ease-in;
   animation-fill-mode: forwards;
+}
+"""
+
+[[style]]
+category = "Animation"
+series = "none"
+name = "Animate discard entry and exit"
+default = false
+description = "Creates a ghost image of the card, which will move and disappear shortly"
+css = """
+#ghosts {
+  display: block;
+}
+
+#ghosts > .animate-bin .card, #ghosts > .animate-bin.card {
+  width: var(--card-width);
+  height: var(--card-height);
+  color: rgba(0,0,0,0);
+}
+
+#ghosts > .animate-bin {
+  position: absolute;
+  transition-property: transform opacity;
+  transition-duration: 0.3s;
+  animation-name: disappear-fallback;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}
+
+#ghosts > * {
+  pointer-event: none;
 }
 """
 
