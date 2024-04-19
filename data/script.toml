@@ -40,7 +40,7 @@ css = """
   pointer-event: none;
 }
 
-#ghosts {
+#ghosts > * {
   display: none;
 }
 """
@@ -297,8 +297,8 @@ name = "Animate discard entry and exit"
 default = false
 description = "Creates a ghost image of the card, which will move and disappear shortly"
 css = """
-#ghosts {
-  display: block;
+#ghosts > .animate-bin {
+  display: block !important;
 }
 
 #ghosts > .animate-bin .card, #ghosts > .animate-bin.card {
