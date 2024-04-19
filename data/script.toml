@@ -226,7 +226,7 @@ css = """
 [[style]]
 category = "Animation"
 series = "none"
-name = "Animate cards in hand (unsafe)"
+name = "Animate cards in hand (beta)"
 default = false
 description = """
 Forces flex-based hand size.

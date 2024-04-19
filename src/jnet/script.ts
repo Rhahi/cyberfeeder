@@ -13,7 +13,7 @@ enum KnownScripts {
   zindex = 'Quality-of-life-none-Lower-centrals-when-pressing-Ctrl',
   autoscroll = 'Quality-of-life-none-Fix-chat-auto-scroll',
   debug = 'Debug-none-Enable-debug-mode',
-  animateHand = 'Animation-none-Animate-cards-in-hand-(unsafe)',
+  animateHand = 'Animation-none-Animate-cards-in-hand-(beta)',
   animateBin = 'Animation-none-Animate-discard-entry-and-exit',
 }
 
