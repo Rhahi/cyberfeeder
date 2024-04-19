@@ -241,7 +241,7 @@ function getNewDiscardStat(side: Side): DiscardStat {
 /** helper function to update discard pile information once per a set of animation events */
 function updateDiscardStat(side: Side) {
   if (side === 'me') {
-    prevMeDiscardStat = currentOpponentDiscardStat;
+    prevMeDiscardStat = currentMeDiscardStat;
     currentMeDiscardStat = getNewDiscardStat(side);
     return;
   }
