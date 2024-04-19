@@ -17,7 +17,6 @@ interface Message {
   css: string;
 }
 
-
 browser.runtime.onMessage.addListener((message: Message) => {
   if (message.action === 'style') {
     css.applyStyle(message.id, message.css);
