@@ -13,3 +13,12 @@ export interface AnimationLocation {
   offsetX?: number;
   offsetY?: number;
 }
+
+export function createGhostContainer() {
+  if (!document.querySelector('#ghosts')) {
+    const container = document.createElement('div');
+    container.id = 'ghosts';
+    container.setAttribute('style', 'position: absolute; top: 0; left: 0; overflow: visible; width: 1em; height: 1em;');
+    document.body.appendChild(container);
+  }
+}

@@ -1,10 +1,12 @@
 import * as css from './css';
 import * as script from './script';
 import * as fontawesome from './fontawesome';
+import * as animation from './features/animation';
 
 css.onLoad();
 script.onLoad();
 fontawesome.onLoad();
+animation.createGhostContainer();
 
 interface Message {
   id: string;
@@ -13,13 +15,6 @@ interface Message {
   css: string;
 }
 
-/** create a ghost container to house animated entities */
-if (!document.querySelector('#ghosts')) {
-  const container = document.createElement('div');
-  container.id = 'ghosts';
-  container.setAttribute('style', 'position: absolute; top: 0; left: 0; overflow: visible; width: 1em; height: 1em;');
-  document.body.appendChild(container);
-}
 
 browser.runtime.onMessage.addListener((message: Message) => {
   if (message.action === 'style') {
