@@ -9,8 +9,7 @@ const archiveObserverMe = new MutationObserver(m => eventGenerator(m, 'me'));
 const heapRegex = /Heap \((?<faceUp>[0-9]+)\)/;
 const archiveRegex = /Archives \((?<faceUp>[0-9]+)↑.*(?<faceDown>[0-9]+)↓\)/;
 
-const animationGap = 150;
-const animationDistance = 40;
+const maxAnimationDelay = 450;
 const animationDuration = '0.3s';
 
 let currentOpponentDiscardStat: DiscardStat = {faceUp: 0, faceDown: 0};
@@ -180,7 +179,7 @@ function animationHandlerMe(e: Event) {
 
 function clampAnimationDelay(now: number, nextAnimationTime: number) {
   const delay = nextAnimationTime - now;
-  if (delay > animationGap) return animationGap;
+  if (delay > maxAnimationDelay) return maxAnimationDelay;
   if (delay < 0) return 0;
   return delay;
 }
