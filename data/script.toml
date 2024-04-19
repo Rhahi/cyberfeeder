@@ -260,6 +260,7 @@ css = """
   to {
     opacity: 0;
     transform: translateY(-80px);
+    display: none;
   }
 }
 
@@ -272,6 +273,7 @@ css = """
   to {
     opacity: 0;
     transform: translateY(80px);
+    display: none;
   }
 }
 
