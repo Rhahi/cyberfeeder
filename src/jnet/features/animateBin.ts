@@ -127,9 +127,10 @@ function eventGenerator(mutations: MutationRecord[], side: Side) {
 function animationHandler(e: CustomEvent<animation.Animation<Metadata>>, delay: number) {
   const container = document.querySelector('#ghosts');
   if (!container) {
-    debug.log('[animateBin] could not locate ghost container');
+    debug.warn('[animateBin] could not locate ghost container');
     return;
   }
+  debug.log(`[animateBin] create animation with delay ${delay}`);
   const ghost = e.detail.target.cloneNode(true) as Element;
   ghost.setAttribute('ghost', 'yes');
   ghost.classList.add('animate-bin');
