@@ -10,6 +10,8 @@ const heapRegex = /Heap \((?<faceUp>[0-9]+)\)/;
 const archiveRegex = /Archives \((?<faceUp>[0-9]+)↑.*(?<faceDown>[0-9]+)↓\)/;
 
 const maxAnimationDelay = 450;
+const animationGap = 150;
+const animationDistance = 45;
 const animationDuration = '0.3s';
 
 let currentOpponentDiscardStat: DiscardStat = {faceUp: 0, faceDown: 0};
