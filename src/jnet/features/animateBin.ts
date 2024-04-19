@@ -206,12 +206,14 @@ function shouldDispatchAnimation(e: animation.Animation<Metadata>, side: Side): 
 function getPreviousDiscardStat(side: Side): DiscardStat {
   if (side === 'me') return prevMeDiscardStat;
   if (side === 'opponent') return prevOpponentDiscardStat;
+  debug.warn('[animateBin] side is not provided');
   return {faceUp: 0, faceDown: 0}; // should not happen
 }
 
 function getCurrentDiscardStat(side: Side): DiscardStat {
   if (side === 'me') return currentMeDiscardStat;
   if (side === 'opponent') return currentOpponentDiscardStat;
+  debug.warn('[animateBin] side is not provided');
   return {faceUp: 0, faceDown: 0}; // should not happen
 }
 
