@@ -133,7 +133,7 @@ function animationHandler(e: CustomEvent<animation.Animation<Metadata>>, delay: 
   debug.log(`[animateBin] create animation with delay ${delay}`);
   const ghost = e.detail.target.cloneNode(true) as Element;
   ghost.setAttribute('ghost', 'yes');
-  ghost.classList.add('animate-bin');
+  ghost.classList.add('animate-bin', 'ghost');
 
   const from = getCssLocation(e.detail.source);
   const to = getCssLocation(e.detail.destination);

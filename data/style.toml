@@ -1164,7 +1164,7 @@ category = "Misc"
 series = "none"
 name = "Flex-based hand size"
 default = false
-description = "Alternative way to arrange hand. Should be more robust to resizing."
+description = "Alternative way to arrange hand. Should be more robust to resizing. This is redundant when using hand animation"
 css = """
 .hand-controls .hand > div:first-child {
   display: flex;

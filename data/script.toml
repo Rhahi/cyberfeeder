@@ -32,7 +32,12 @@ css = """
   }
   100% {
     opacity: 0;
+    display: none;
   }
+}
+
+#ghosts, .ghost {
+  pointer-event: none;
 }
 
 #ghosts {
@@ -224,11 +229,28 @@ series = "none"
 name = "Animate cards in hand (unsafe)"
 default = false
 description = """
-Use at your own risk.
+Forces flex-based hand size.
 Animate cards leaving hand (play, trash, etc).
 This manipulates DOM and may break the UI.
 If the UI is broken, navigate out of the Play mode (to deck builder, for examle) and enter Play again."""
 css = """
+/* copied from flex-based hand size */
+.hand-controls .hand > div:first-child {
+  display: flex;
+  padding-right: 30px;
+}
+
+.hand-controls .hand > div > .card-wrapper {
+  position: unset;
+  flex-basis: 60px;
+  min-width: 2px;
+}
+
+.gameboard .hand {
+  width: calc(384px + 30px);
+}
+/* endcopy */
+
 @keyframes animate-up {
   from {
     opacity: 1;
@@ -292,10 +314,6 @@ css = """
   animation-name: disappear-fallback;
   animation-duration: 1s;
   animation-fill-mode: forwards;
-}
-
-#ghosts > * {
-  pointer-event: none;
 }
 """
 
