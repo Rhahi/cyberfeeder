@@ -96,7 +96,7 @@ function mutationHandler(mutations: MutationRecord[], direction: 'up' | 'down') 
     const ghost = anim.target.cloneNode(true) as HTMLDivElement;
     ghost.setAttribute('ghost', 'yes');
     placeGhost(anim, ghost);
-    ghost.classList.add(`animate-${direction}`);
+    ghost.classList.add(`animate-${direction}`, 'ghost');
   }
   if (_container) updateCardsInHand(_container, cacheOrigin);
 }
