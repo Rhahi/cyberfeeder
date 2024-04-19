@@ -75,6 +75,10 @@ function eventGenerator(mutations: MutationRecord[], side: Side) {
   if (!discardPile) return;
   const distance = side === 'opponent' ? animationDistance : -animationDistance;
   const pendingEvents: CustomEvent<animation.Animation<Metadata>>[] = [];
+  if (shouldIgnoreAnimations()) {
+    debug.log('[animateBin] ignore animation on archive breach');
+    return;
+  }
 
   for (const m of mutations) {
     m.addedNodes.forEach(node => {
@@ -257,4 +261,18 @@ function getCardMetadata(isEntering: boolean, card: Element): Metadata {
   const data = {cardName: cardName ? cardName : '', isEntering, isFaceDown, isUnseen};
   debug.log('[animateBin] card to be maybe animated ', card, data);
   return data;
+}
+
+function shouldIgnoreAnimations() {
+  const lastChat = parseLatestChat();
+  if (!lastChat) return false;
+  if (lastChat.includes('breaches Archives')) return true;
+  return false;
+}
+
+function parseLatestChat() {
+  const systemMessages = document.querySelectorAll('.panel > .log > .messages > .system');
+  const index = systemMessages.length - 1;
+  const lastMessage = systemMessages.item(index);
+  return chat.getText(lastMessage);
 }

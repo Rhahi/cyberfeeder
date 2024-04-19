@@ -61,7 +61,7 @@ function newChatHandler(mutations: MutationRecord[]) {
 }
 
 /** parse icons into plain text */
-function getText(div: Element): string | null {
+export function getText(div: Element): string | null {
   if (!div.textContent) return null;
   let text = '';
   div.childNodes.forEach(node => {
