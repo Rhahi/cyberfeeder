@@ -138,13 +138,14 @@ function animationHandler(e: CustomEvent<animation.Animation<Metadata>>, delay: 
   const from = getCssLocation(e.detail.source);
   const to = getCssLocation(e.detail.destination);
   const cssLocation = `top: ${from.top}px; left: ${from.left}px;`;
-  const cssTransition = `transition-delay: ${delay}ms;`;
   const cssTransform = `transform: translateY(${to.top - from.top}px) translateX(${from.left - to.left}px); opacity: 0;`;
-  ghost.setAttribute('style', cssLocation + cssTransition);
-  container.appendChild(ghost);
+  ghost.setAttribute('style', cssLocation);
 
-  // give short sleep, since animation occurs only after the div's transform experiences a difference
-  setTimeout(() => ghost.setAttribute('style', cssLocation + cssTransition + cssTransform), 10);
+  setTimeout(() => {
+    container.appendChild(ghost);
+    // give short sleep, since animation occurs only after the div's transform experiences a difference
+    setTimeout(() => ghost.setAttribute('style', cssLocation + cssTransform), 10);
+  }, delay);
   setTimeout(() => container.removeChild(ghost), 1000);
 }
 
