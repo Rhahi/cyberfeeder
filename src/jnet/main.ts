@@ -3,6 +3,8 @@ import * as script from './script';
 import * as fontawesome from './fontawesome';
 import * as animation from './features/animation';
 
+console.log('Starting Cyberfeeder');
+
 css.onLoad();
 script.onLoad();
 fontawesome.onLoad();
