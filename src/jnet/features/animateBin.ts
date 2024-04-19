@@ -1,6 +1,6 @@
 import * as debug from '../debug';
 import * as animation from './animation';
-import {archive} from '../watchers';
+import {archive, chat} from '../watchers';
 
 const pileSelector = '.discard-container > .discard';
 const eventName = 'animate-bin';
