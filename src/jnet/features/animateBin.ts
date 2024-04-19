@@ -30,6 +30,7 @@ interface Coordinate {
 }
 
 interface Metadata {
+  cardName: string;
   isEntering: boolean;
   isFaceDown: boolean;
   isUnseen: boolean;
@@ -188,12 +189,12 @@ function shouldDispatchAnimation(e: animation.Animation<Metadata>, side: Side): 
   if (e.metadata.isEntering) {
     if (e.metadata.isFaceDown && current.faceDown > previous.faceDown) return true;
     if (!e.metadata.isFaceDown && current.faceUp > previous.faceUp) return true;
-    debug.log('reject entering animation', previous, current);
+    debug.log(`reject enter animation of ${e.metadata.cardName}`, previous, current);
     return false;
   } else {
     if (e.metadata.isFaceDown && current.faceDown < previous.faceDown) return true;
     if (!e.metadata.isFaceDown && current.faceUp < previous.faceUp) return true;
-    debug.log('reject exit animation', previous, current);
+    debug.log(`reject exit animation of ${e.metadata.cardName}`, previous, current);
     return false;
   }
 }
@@ -250,9 +251,10 @@ function updateDiscardStat(side: Side) {
 /** from given card div, extract card's metadata. Used to filter out errorenous animations */
 function getCardMetadata(isEntering: boolean, card: Element): Metadata {
   const isUnseen = card.querySelector(':scope .unseen') ? true : false;
-  const hasCardName = card.querySelector(':scope .cardname')?.textContent ? true : false;
+  const cardName = card.querySelector(':scope .cardname')?.textContent;
+  const hasCardName = cardName ? true : false;
   const isFaceDown = isUnseen ? true : !hasCardName;
-  const data = {isEntering, isFaceDown, isUnseen};
+  const data = {cardName: cardName ? cardName : '', isEntering, isFaceDown, isUnseen};
   debug.log('[animateBin] card to be maybe animated ', card, data);
   return data;
 }
