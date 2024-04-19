@@ -6,11 +6,22 @@
 import {hand} from '../watchers';
 import * as debug from '../debug';
 
-const animateAttribute = 'cyberfeeder-animate';
 const handObserverOpponent = new MutationObserver(m => mutationHandler(m, 'down'));
 const handObserverMe = new MutationObserver(m => mutationHandler(m, 'up'));
-const mePreviousHand: string[] = [];
-const opponentPreviousHand: string[] = [];
+const mePreviousHand: HandCard[] = [];
+const opponentPreviousHand: HandCard[] = [];
+
+interface HandAnimation {
+  container: Element;
+  index: number;
+  target: Element;
+}
+
+interface HandCard {
+  name: string;
+  target: Element;
+  animated: boolean;
+}
 
 export function enable() {
   debug.log('Animate hand enabled');
@@ -48,54 +59,94 @@ const newHandHandler = (e: Event) => {
 };
 
 function mutationHandler(mutations: MutationRecord[], direction: 'up' | 'down') {
-  const cache = direction === 'up' ? mePreviousHand : opponentPreviousHand;
+  const cacheOrigin = direction === 'up' ? mePreviousHand : opponentPreviousHand;
+  const cache = cacheOrigin.slice();
+  const queue: HandAnimation[] = [];
+  let _container: Element | undefined;
+  debug.log('[animateHand] previous cache', cache);
 
   for (const m of mutations) {
     const container = m.target as Element;
+    if (!_container) _container = container;
 
     m.removedNodes.forEach(async node => {
       if (node.nodeType !== Node.ELEMENT_NODE) return;
-      const removed = node as Element;
-      if (!removed.classList.contains('card-wrapper')) return;
-      if (removed.getAttribute(animateAttribute) === 'animated') return;
+      const target = node as Element;
+      if (!target.classList.contains('card-wrapper')) return;
+      if (target.getAttribute('ghost') === 'yes') return;
 
-      const shadow = createShadow(removed, cache);
-      placeShadow(container, shadow.element, shadow.index);
-      updateCardsInHand(container, cache);
-      shadow.element.classList.add(`animate-${direction}`);
-      setTimeout(() => container.removeChild(shadow.element), 200);
+      const index = getCardIndex(target, cache);
+      queue.push({
+        container,
+        target,
+        index,
+      });
     });
 
-    if (m.addedNodes.length > 0) {
-      updateCardsInHand(container, cache);
+    m.addedNodes.forEach(node => {
+      if (node.nodeType !== Node.ELEMENT_NODE) return;
+      const target = node as Element;
+      if (!target.classList.contains('card-wrapper')) return;
+      if (target.getAttribute('ghost') === 'yes') return;
+      target.addEventListener('click', () => target.setAttribute('animation-clicked', 'yes'), {once: true});
+    });
+  }
+
+  for (const anim of queue) {
+    const ghost = anim.target.cloneNode(true) as HTMLDivElement;
+    ghost.setAttribute('ghost', 'yes');
+    placeGhost(anim, ghost);
+    ghost.classList.add(`animate-${direction}`);
+  }
+  if (_container) updateCardsInHand(_container, cacheOrigin);
+}
+
+function getCardIndex(target: Element, cache: HandCard[]) {
+  const name = target.querySelector('.cardname')?.textContent;
+
+  // prioritize clicked items
+  for (const [index, card] of cache.entries()) {
+    if (card.animated) continue;
+    if (card.target.getAttribute('animation-clicked') !== 'yes') continue;
+    if (card.name === name) {
+      card.animated = true;
+      return index;
     }
   }
-}
 
-function updateCardsInHand(container: Element, cache: string[]) {
-  const names = container.querySelectorAll(':scope .cardname');
-  cache.length = 0;
-  names.forEach(div => {
-    cache.push(div.textContent || '');
-  });
-  debug.log(cache);
-}
-
-function createShadow(removed: Element, cache: string[]) {
-  const shadow = removed.cloneNode(true) as HTMLDivElement;
-  shadow.setAttribute(animateAttribute, 'animated');
-  const name = removed.querySelector(':scope .cardname')?.textContent || '';
-  const idx = cache.indexOf(name);
-  return {element: shadow, index: idx};
-}
-
-function placeShadow(parent: Element, shadow: Element, idx: number) {
-  debug.log(parent);
-  debug.log(parent.children);
-  const target = parent.children[idx];
-  if (!target) {
-    parent.appendChild(shadow);
-  } else {
-    parent.insertBefore(shadow, target);
+  // or just matching cards, reverse order.
+  for (const [index, card] of cache.entries()) {
+    if (card.animated) continue;
+    if (card.name === name) {
+      card.animated = true;
+      return index;
+    }
   }
+  return -1;
+}
+
+function updateCardsInHand(container: Element, cache: HandCard[]) {
+  const cards = container.querySelectorAll(':scope .card-wrapper');
+  cache.length = 0;
+  cards.forEach(card => {
+    if (card.getAttribute('ghost') === 'yes') return;
+    const name = card.querySelector(':scope .cardname')?.textContent;
+    cache.push({
+      name: name ? name : '',
+      target: card,
+      animated: false,
+    });
+  });
+  debug.log('[animateHand] new cache', cache);
+}
+
+function placeGhost(anim: HandAnimation, ghost: Element) {
+  debug.log('[animateHand] placing hand ghost', anim);
+  const target = anim.container.children[anim.index];
+  if (!target) {
+    anim.container.appendChild(ghost);
+  } else {
+    anim.container.insertBefore(ghost, target);
+  }
+  setTimeout(() => anim.container.removeChild(ghost), 200);
 }
