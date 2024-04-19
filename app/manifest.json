@@ -12,22 +12,11 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "https://*.jinteki.net/*",
-        "https://*.reteki.fun/*",
-        "http://jinteki.local/*"
-      ],
-      "js": [
-        "js/jnet.js"
-      ]
+      "matches": ["https://*.jinteki.net/*"],
+      "js": ["js/jnet.js"]
     }
   ],
-  "permissions": [
-    "scripting",
-    "activeTab",
-    "storage",
-    "downloads"
-  ],
+  "permissions": ["scripting", "activeTab", "storage", "downloads"],
   "sidebar_action": {
     "default_icon": {
       "16": "icons/JINTEKI_16.png",
@@ -48,12 +37,8 @@
       "96": "icons/JINTEKI_96.png",
       "128": "icons/JINTEKI_128.png"
     },
-    "default_title": "Cyberfeeder",
-    "show_matches": [
-      "https://*.jinteki.net/*",
-      "https://*.reteki.fun/*",
-      "http://jinteki.local/*"
-    ]
+    "default_title": "Click: Open panel\nCtrl: Close panel\nShift: Reload script features\nAlt: Should not be used",
+    "show_matches": ["https://*.jinteki.net/*"]
   },
   "browser_action": {
     "default_icon": {
@@ -63,17 +48,11 @@
       "96": "icons/JINTEKI_96.png",
       "128": "icons/JINTEKI_128.png"
     },
-    "default_title": "Open Sidebar"
+    "default_title": "Click: Open panel\nCtrl: Close panel\nShift: Reload script features\nAlt: Inject Cyberfeeder outside of jinteki.net\n(don't use Alt more than once. Reload clears the session.)"
   },
   "background": {
-    "scripts": [
-      "js/background.js"
-    ],
+    "scripts": ["js/background.js"],
     "persistent": false
   },
-  "web_accessible_resources": [
-    "webfonts/fa-solid-900.woff2",
-    "css/fontawesome.min.css",
-    "css/solid.min.css"
-  ]
+  "web_accessible_resources": ["webfonts/fa-solid-900.woff2", "css/fontawesome.min.css", "css/solid.min.css"]
 }
