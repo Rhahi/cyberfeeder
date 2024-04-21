@@ -1308,3 +1308,19 @@ css = """
   visibility: hidden;
 }
 """
+
+[[style]]
+category = "Misc"
+series = "none"
+name = "Move counters slightly down in runner board"
+default = false
+description = "Make way for the card arts"
+css = """
+.runner-board div:not(.runner-centrals) .card .counters {
+  top: 15%;
+}
+
+.corp-board .server-card .card .counters {
+  top: 15%;
+}
+"""
