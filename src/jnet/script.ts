@@ -64,9 +64,16 @@ export function disableAll() {
   watcher.hand.stop();
   watcher.command.stop();
   watcher.ril.stop();
+  features.sortArchive.disable();
+  features.newMessageIndicator.disable();
+  features.handsizeReminder.disable();
   features.annotateChat.disable();
   features.secret.disable();
+  features.zindex.disable();
   features.autoscroll.disable();
+  features.animateHand.disable();
+  features.animateBin.disable();
+  features.archivePoints.disable();
 }
 
 export function setupScripts(toggles: Toggle[]) {
