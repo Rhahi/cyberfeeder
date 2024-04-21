@@ -1,4 +1,4 @@
-version = "8"
+version = "9"
 
 [[style]]
 category = "Mandatory"
@@ -220,6 +220,30 @@ css = """
 
 .icon-mulligan-mull {
   color: var(--mulligan-mull-icon);
+}
+"""
+
+[[style]]
+category = "Information"
+series = "none"
+name = "Track points in Archives"
+description = "If there are known agenda points in archive, it will show up"
+default = false
+css = """
+#archive-points {
+  position: absolute;
+  top: 30%;
+  width: 100%;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+#archive-points i {
+  margin-right: 0.25em;
+}
+
+#archive-points.hidden {
+  display: none;
 }
 """
 

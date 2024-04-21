@@ -2,12 +2,12 @@ import {applyStyle} from './css';
 import * as features from './features';
 import * as watcher from './watchers';
 import * as debug from './debug';
+import * as card from './cardDB';
 
 enum KnownScripts {
   sortAcrhive = 'Quality-of-life-none-Sort-archive-when-pressing-Control-key',
   newMessageIndicator = 'Reminders-none-New-message-indicator',
   handsizeReminder = 'Reminders-none-Hand-size-reminder',
-  newTurnHighlight = 'Information-none-Highlight-new-turns-in-chat',
   annotateChat = 'Information-none-Annotate-locations-with-icons',
   secret = 'Information-none-Remember-secret-information',
   zindex = 'Quality-of-life-none-Lower-centrals-when-pressing-Ctrl',
@@ -15,6 +15,7 @@ enum KnownScripts {
   debug = 'Debug-none-Enable-debug-mode',
   animateHand = 'Animation-none-Animate-cards-in-hand-(beta)',
   animateBin = 'Animation-none-Animate-discard-entry-and-exit',
+  archiveTracker = 'Information-none-Track-points-in-Archives',
 }
 
 export interface Toggle {
@@ -25,6 +26,7 @@ export interface Toggle {
 
 export function onLoad() {
   applyCssFromCache();
+  card.load();
   watcher.base.watch();
   setupScriptsFromCache();
   const event = watcher.base.createNavigationEvent();
@@ -157,6 +159,14 @@ export function setupScripts(toggles: Toggle[]) {
         features.animateBin.enable();
       } else {
         features.animateBin.disable();
+      }
+    }
+    if (toggle.id === KnownScripts.archiveTracker) {
+      if (toggle.enabled) {
+        shouldWatchArchive = true;
+        features.archivePoints.enable();
+      } else {
+        features.archivePoints.disable();
       }
     }
   }
