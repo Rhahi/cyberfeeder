@@ -11,7 +11,7 @@ export function enable() {
   const panel = document.querySelector('.right-inner-leftpane .button-pane');
   if (panel) {
     panelMutationHandler();
-    panelObserver.observe(panel, {childList: true, subtree: true});
+    panelObserver.observe(panel, {childList: true, subtree: true, characterData: true});
   }
 
   document.addEventListener(hand.eventName, newHandHandler);
@@ -57,18 +57,23 @@ function panelMutationHandler() {
 }
 
 function handleButton(button: Element, override = false) {
-  if (!override && button.getAttribute('target-server-icon') === 'yes') return; // already has icon, skip
   if (!button.textContent) return;
+  if (isMatching(button) && !override && button.getAttribute('target-server-icon') === 'yes') return;
   const server = findTargetServer(button.textContent);
   if (!server) return;
 
   if (button.getAttribute('target-server-icon') !== 'yes') addServerIcon(button, button.textContent);
   button.setAttribute('target-server-icon', 'yes');
+  button.setAttribute('target-server', button.textContent);
   button.addEventListener('mouseover', () => {
     server.classList.remove('server-highlight');
     server.classList.add('server-highlight');
   });
   button.addEventListener('mouseout', () => server.classList.remove('server-highlight'));
+}
+
+function isMatching(button: Element): boolean {
+  return button.getAttribute('target-server') === button.textContent;
 }
 
 function findTargetServer(text: string) {
