@@ -92,7 +92,7 @@ css = """
 category = "Quality of life"
 series = "none"
 name = "Highlight target server"
-default = true
+default = false
 description = "When hovering over a server target in command panel, highlight that server."
 css = """
 .server-highlight {
