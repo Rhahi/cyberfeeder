@@ -95,9 +95,20 @@ name = "Highlight target server"
 default = false
 description = "When hovering over a server target in command panel, highlight that server."
 css = """
+@keyframes server-highlight {
+  from {
+    background-color: #ffa600aa;
+  }
+  to {
+    background-color: unset;
+  }
+}
+
 .server-highlight {
-  background-color: #ffa600aa;
-  transition: background-color 0.3s;
+  animation-duration: 1s;
+  animation-name: server-highlight;
+  animation-timing-function: linear;
+  animation-fill-mode: forwards;
 }
 
 .button-pane li[target-server-icon="yes"] i,

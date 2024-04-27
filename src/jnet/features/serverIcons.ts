@@ -64,7 +64,10 @@ function handleButton(button: Element, override = false) {
 
   if (button.getAttribute('target-server-icon') !== 'yes') addServerIcon(button, button.textContent);
   button.setAttribute('target-server-icon', 'yes');
-  button.addEventListener('mouseover', () => server.classList.add('server-highlight'));
+  button.addEventListener('mouseover', () => {
+    server.classList.remove('server-highlight');
+    server.classList.add('server-highlight');
+  });
   button.addEventListener('mouseout', () => server.classList.remove('server-highlight'));
 }
 
