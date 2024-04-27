@@ -62,7 +62,11 @@ function handleButton(button: Element, override = false) {
   const server = findTargetServer(button.textContent);
   if (!server) return;
 
-  if (button.getAttribute('target-server-icon') !== 'yes') addServerIcon(button, button.textContent);
+  if (button.getAttribute('target-server-icon') === 'yes') {
+    button.querySelectorAll(':scope > i').forEach(e => e.remove());
+  } else {
+    addServerIcon(button, button.textContent);
+  }
   button.setAttribute('target-server-icon', 'yes');
   button.setAttribute('target-server', button.textContent);
   button.addEventListener('mouseover', () => {
