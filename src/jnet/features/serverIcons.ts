@@ -9,7 +9,10 @@ let panel: Element | undefined;
 export function enable() {
   document.addEventListener(changePanelEvent, newPanelHandler);
   const panel = document.querySelector('.right-inner-leftpane .button-pane');
-  if (panel) panelObserver.observe(panel, {childList: true, subtree: true});
+  if (panel) {
+    panelMutationHandler();
+    panelObserver.observe(panel, {childList: true, subtree: true});
+  }
 
   document.addEventListener(hand.eventName, newHandHandler);
   handMutationHandler(true);
@@ -34,8 +37,8 @@ function newPanelHandler(e: Event) {
 
   panelObserver.disconnect();
   panel = event.detail.root;
-  panelObserver.observe(panel, {childList: true, subtree: true});
   panelMutationHandler();
+  panelObserver.observe(panel, {childList: true, subtree: true});
   debug.log('[serverIcons] got new panel, now watching', panel);
 }
 
@@ -45,9 +48,12 @@ function panelMutationHandler() {
     return;
   }
   const serversMenu = panel.querySelector(':scope .servers-menu');
-  if (!serversMenu) return;
-  const buttons = serversMenu.querySelectorAll(':scope li');
-  buttons.forEach(element => handleButton(element));
+  const outerButtons = panel.querySelectorAll(':scope > .panel > button');
+  outerButtons.forEach(element => handleButton(element));
+  if (serversMenu) {
+    const innerButtons = serversMenu.querySelectorAll(':scope li');
+    innerButtons.forEach(element => handleButton(element));
+  }
 }
 
 function handleButton(button: Element, override = false) {

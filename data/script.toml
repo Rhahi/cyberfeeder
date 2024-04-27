@@ -101,7 +101,8 @@ css = """
 }
 
 .button-pane li[target-server-icon="yes"] i,
-.hand-container li[target-server-icon="yes"] i {
+.hand-container li[target-server-icon="yes"] i,
+.button-pane button[target-server-icon="yes"] i {
   float: right;
   visibility: visible !important;
 }
