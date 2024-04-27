@@ -3,7 +3,7 @@ import {hand} from '../watchers';
 import * as debug from '../debug';
 
 const panelObserver = new MutationObserver(panelMutationHandler);
-const handObserver = new MutationObserver(handMutationHandler);
+const handObserver = new MutationObserver(() => handMutationHandler(false));
 let panel: Element | undefined;
 
 export function enable() {
@@ -11,13 +11,19 @@ export function enable() {
   const panel = document.querySelector('.right-inner-leftpane .button-pane');
   if (panel) panelObserver.observe(panel, {childList: true, subtree: true});
 
-  document.addEventListener(hand.eventName, newCardHandler);
-  handMutationHandler(null, null, true);
+  document.addEventListener(hand.eventName, newHandHandler);
+  handMutationHandler(true);
+  const container = document.querySelector('.me .hand-container > .hand-controls > .hand > div');
+  if (container) {
+    handObserver.observe(container, {subtree: true, childList: true});
+  } else {
+    debug.warn('[serverIcons] Could not find hand container for initial observer start');
+  }
 }
 
 export function disable() {
   document.removeEventListener(changePanelEvent, newPanelHandler);
-  document.removeEventListener(hand.eventName, newCardHandler);
+  document.removeEventListener(hand.eventName, newHandHandler);
   panelObserver.disconnect();
   handObserver.disconnect();
 }
@@ -88,19 +94,21 @@ function addServerIcon(e: Element, text: string) {
   e.appendChild(icon);
 }
 
-function newCardHandler(e: Event) {
+function newHandHandler(e: Event) {
   const event = e as CustomEvent<hand.Hand>;
   if (!event.detail || event.detail.type !== hand.eventName) return;
+  if (event.detail.side !== 'me') return;
 
   handObserver.disconnect();
+  handMutationHandler(true);
   handObserver.observe(event.detail.element, {subtree: true, childList: true});
-  handMutationHandler(null, null, false);
-  debug.log('[serverIcons] got new card,', event.detail.element);
+  debug.log('[serverIcons] got new hand container,', event.detail.element);
 }
 
-function handMutationHandler(_1: unknown, _2: unknown, override = false) {
+function handMutationHandler(override: boolean) {
   const cards = document.querySelectorAll('.me .hand-container .card-wrapper');
   if (!cards) return;
+  debug.log('[serverIcons] Card mutation detected, renewing target highlights');
 
   for (const card of Array.from(cards)) {
     const serversMenu = card.querySelector(':scope .servers-menu');
