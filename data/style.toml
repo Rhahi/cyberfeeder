@@ -1070,6 +1070,18 @@ css = """
 """
 
 [[style]]
+category = "Labelling"
+series = "none"
+name = "Fix empty server label"
+description = "make it take full space"
+default = true
+css = """
+.corp-board > .server > .content {
+  min-width: var(--card-width);
+}
+"""
+
+[[style]]
 category = "UI Downsizing"
 series = "none"
 name = "Compress opponent's vertical hand size"
