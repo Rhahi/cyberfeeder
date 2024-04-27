@@ -1,4 +1,4 @@
-version = "9"
+version = "10"
 
 [[style]]
 category = "Mandatory"
@@ -86,6 +86,41 @@ name = "Fix chat auto scroll"
 default = true
 description = "When chat container resizes, the auto scroll function breaks. This will fix auto scroll issues with resize."
 css = """
+"""
+
+[[style]]
+category = "Quality of life"
+series = "none"
+name = "Highlight target server"
+default = true
+description = "When hovering over a server target in command panel, highlight that server."
+css = """
+.server-highlight {
+  background-color: #ffa600aa;
+  transition: background-color 0.3s;
+}
+
+.button-pane li[target-server-icon="yes"] i,
+.hand-container li[target-server-icon="yes"] i {
+  float: right;
+  visibility: visible !important;
+}
+
+.icon-hq {
+  color: var(--hq-icon);
+}
+
+.icon-rnd {
+  color: var(--rnd-icon);
+}
+
+.icon-archives {
+  color: var(--archives-icon);
+}
+
+.icon-remote {
+  color: var(--remote-icon);
+}
 """
 
 [[style]]

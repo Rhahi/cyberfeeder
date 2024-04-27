@@ -8,3 +8,4 @@ export * as autoscroll from './autoscroll';
 export * as animateHand from './animateHand';
 export * as animateBin from './animateBin';
 export * as archivePoints from './archivePoints';
+export * as serverIcons from './serverIcons';

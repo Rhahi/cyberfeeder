@@ -16,6 +16,7 @@ enum KnownScripts {
   animateHand = 'Animation-none-Animate-cards-in-hand-(beta)',
   animateBin = 'Animation-none-Animate-discard-entry-and-exit',
   archiveTracker = 'Information-none-Track-points-in-Archives',
+  serverIcons = 'Quality-of-life-none-Highlight-target-server',
 }
 
 export interface Toggle {
@@ -174,6 +175,15 @@ export function setupScripts(toggles: Toggle[]) {
         features.archivePoints.enable();
       } else {
         features.archivePoints.disable();
+      }
+    }
+    if (toggle.id === KnownScripts.serverIcons) {
+      if (toggle.enabled) {
+        shouldWatchCommand = true;
+        shouldWatchHand = true;
+        features.serverIcons.enable();
+      } else {
+        features.serverIcons.disable();
       }
     }
   }

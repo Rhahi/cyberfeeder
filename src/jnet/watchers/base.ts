@@ -81,7 +81,7 @@ export function conditionalObserver(config: ConditionalObserverConfig) {
     const element = document.querySelector(config.selector);
     if (element) {
       config.observer.observe(element, config.observeOptions);
-      debug.log('observe', config.name, element);
+      debug.log('[watchers/base] new observer has started for', config.name, element);
     } else {
       console.warn(`[Cyberfeeder] expected to find ${config.selector}, found none`);
     }
@@ -122,6 +122,7 @@ export function announce(main: Element) {
   if (firstChild && firstChild.nodeType === Node.ELEMENT_NODE) {
     const data: Navigation = {type: eventName, mode: page, root: firstChild};
     const event = new CustomEvent<Navigation>(eventName, {detail: data});
+    debug.log(`[watchers/base] announce navigation ${eventName} with "${page}"`);
     document.dispatchEvent(event);
   } else {
     console.warn('[Cyberfeeder] failed to announce current page (invalid content');

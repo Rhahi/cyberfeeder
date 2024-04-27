@@ -4,6 +4,7 @@
 
 import {getChatAge} from '../features/util';
 import * as base from './base';
+import * as debug from '../debug';
 
 export interface CommandPanelContent extends PanelContent {
   type: 'content-command-panel';
@@ -26,9 +27,9 @@ export interface PanelContent {
 
 export const contentEvent = 'content-command-panel';
 export const clickEvent = 'click-command-panel';
-const changePanelEvent = 'change-panel';
+export const changePanelEvent = 'change-panel';
 
-interface ChangePanel {
+export interface ChangePanel {
   type: 'change-panel';
   root: Element;
 }
@@ -85,6 +86,7 @@ function announcePanel(element: Element): boolean {
       root: element,
     };
     const event = new CustomEvent(changePanelEvent, {detail: data});
+    debug.log('[watchers/command] found a new panel');
     document.dispatchEvent(event);
     return true;
   }
