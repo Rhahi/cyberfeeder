@@ -135,7 +135,8 @@ css = """
   content: "<< hand limit";
   bottom: 0;
   font-size: 0.7rem;
-  width: 64px;
+  right: 0;
+  border-top: 0.1em solid;
   position: absolute;
   opacity: 0.5;
   visibility: hidden;
