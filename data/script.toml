@@ -107,7 +107,7 @@ css = """
 .server-highlight {
   animation-duration: 1s;
   animation-name: server-highlight;
-  animation-timing-function: linear;
+  animation-timing-function: ease-in;
   animation-fill-mode: forwards;
 }
 
