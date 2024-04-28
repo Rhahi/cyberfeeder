@@ -10,7 +10,7 @@ export function enable() {
   document.addEventListener(changePanelEvent, newPanelHandler);
   const panel = document.querySelector('.right-inner-leftpane .button-pane');
   if (panel) {
-    panelMutationHandler();
+    panelMutationHandler(null, null, true);
     panelObserver.observe(panel, {childList: true, subtree: true, characterData: true});
   }
 
@@ -37,43 +37,58 @@ function newPanelHandler(e: Event) {
 
   panelObserver.disconnect();
   panel = event.detail.root;
-  panelMutationHandler();
-  panelObserver.observe(panel, {childList: true, subtree: true});
+  panelMutationHandler(null, null, true);
+  panelObserver.observe(panel, {childList: true, subtree: true, characterData: true});
   debug.log('[serverIcons] got new panel, now watching', panel);
 }
 
-function panelMutationHandler() {
+function panelMutationHandler(_1: unknown, _2: unknown, override = false) {
   if (!panel) {
     debug.log('[serverIcons] There is no panel to observe');
     return;
   }
   const serversMenu = panel.querySelector(':scope .servers-menu');
   const outerButtons = panel.querySelectorAll(':scope > .panel > button');
-  outerButtons.forEach(element => handleButton(element));
+  outerButtons.forEach(element => handleButton(element, override));
   if (serversMenu) {
     const innerButtons = serversMenu.querySelectorAll(':scope li');
-    innerButtons.forEach(element => handleButton(element));
+    innerButtons.forEach(element => handleButton(element, override));
   }
 }
 
 function handleButton(button: Element, override = false) {
   if (!button.textContent) return;
-  if (isMatching(button) && !override && button.getAttribute('target-server-icon') === 'yes') return;
-  const server = findTargetServer(button.textContent);
-  if (!server) return;
-
-  if (button.getAttribute('target-server-icon') === 'yes') {
-    button.querySelectorAll(':scope > i').forEach(e => e.remove());
-  } else {
-    addServerIcon(button, button.textContent);
+  if (isMatching(button) && !override) {
+    debug.log('[serverIcons] button already has matching icon, skip');
+    return;
   }
-  button.setAttribute('target-server-icon', 'yes');
-  button.setAttribute('target-server', button.textContent);
-  button.addEventListener('mouseover', () => {
-    server.classList.remove('server-highlight');
-    server.classList.add('server-highlight');
-  });
-  button.addEventListener('mouseout', () => server.classList.remove('server-highlight'));
+  const server = findTargetServer(button.textContent);
+  if (!server) {
+    button.querySelectorAll(':scope > i').forEach(e => e.remove());
+    debug.log('[serverIcons] server icon no longer matches a server, remove icons');
+    return;
+  }
+
+  if (!isMatching(button) || override) {
+    button.querySelectorAll(':scope > i').forEach(e => e.remove());
+    addServerIcon(button, button.textContent);
+    button.setAttribute('target-server', button.textContent);
+  }
+
+  if (button.getAttribute('target-server-event') !== 'yes' || override) {
+    button.setAttribute('target-server-event', 'yes');
+    button.addEventListener('mouseover', () => {
+      if (!button.textContent) return;
+      const server = findTargetServer(button.textContent);
+      server?.classList.remove('server-highlight');
+      server?.classList.add('server-highlight');
+    });
+    button.addEventListener('mouseout', () => {
+      if (!button.textContent) return;
+      const server = findTargetServer(button.textContent);
+      server?.classList.remove('server-highlight');
+    });
+  }
 }
 
 function isMatching(button: Element): boolean {
@@ -97,13 +112,13 @@ function addServerIcon(e: Element, text: string) {
 
   switch (true) {
     case text === 'Archives':
-      icon.classList.add('fa-sharp', 'fa-solid', 'fa-building', 'icon-hq');
+      icon.classList.add('fa-solid', 'fa-server', 'icon-archives');
       break;
     case text === 'R&D':
       icon.classList.add('fa-solid', 'fa-flask', 'icon-rnd');
       break;
     case text === 'HQ':
-      icon.classList.add('fa-solid', 'fa-server', 'icon-archives');
+      icon.classList.add('fa-sharp', 'fa-solid', 'fa-building', 'icon-hq');
       break;
     case text.includes('Server'):
       icon.classList.add('fa-sharp', 'fa-solid', 'fa-network-wired', 'icon-remote');

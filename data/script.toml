@@ -111,9 +111,9 @@ css = """
   animation-fill-mode: forwards;
 }
 
-.button-pane li[target-server-icon="yes"] i,
-.hand-container li[target-server-icon="yes"] i,
-.button-pane button[target-server-icon="yes"] i {
+.button-pane li[target-server-event="yes"] i,
+.hand-container li[target-server-event="yes"] i,
+.button-pane button[target-server-event="yes"] i {
   float: right;
   visibility: visible !important;
 }
@@ -399,9 +399,14 @@ name = "Enable debug mode"
 description = "There is no reason to use this feature in normal gameplay."
 default = false
 css = """
+.log .messages > div {
+  position: relative;
+}
 .log .messages > div::before {
+  position: absolute;
+  left: 0;
   content: attr(age);
-  margin-right: 0.15em;
   background-color: black;
+  opacity: 0.7;
 }
 """
