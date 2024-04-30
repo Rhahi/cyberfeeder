@@ -18,7 +18,9 @@ export function createGhostContainer() {
   if (!document.querySelector('#ghosts')) {
     const container = document.createElement('div');
     container.id = 'ghosts';
-    container.setAttribute('style', 'position: absolute; top: 0; left: 0; overflow: visible; width: 1em; height: 1em;');
+    const cssBackup = 'width: 100vw; height: 100vh; ';
+    const cssMain = 'position: absolute; top: 0; left: 0; overflow: clip; width: 100svw; height: 100svh;';
+    container.setAttribute('style', cssBackup + cssMain);
     document.body.appendChild(container);
   }
 }
