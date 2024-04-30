@@ -37,7 +37,7 @@ css = """
 }
 
 #ghosts, .ghost {
-  pointer-event: none;
+  pointer-events: none;
 }
 
 #ghosts > * {
@@ -284,7 +284,7 @@ css = """
   width: 100%;
   text-align: center;
   font-size: 1.5em;
-  pointer-event: none;
+  pointer-events: none;
 }
 
 #archive-points i {
