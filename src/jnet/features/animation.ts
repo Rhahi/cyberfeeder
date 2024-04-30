@@ -19,7 +19,7 @@ export function createGhostContainer() {
     const container = document.createElement('div');
     container.id = 'ghosts';
     const cssBackup = 'width: 100vw; height: 100vh; ';
-    const cssMain = 'position: absolute; top: 0; left: 0; overflow: clip; width: 100svw; height: 100svh;';
+    const cssMain = 'pointer-events: none; position: absolute; top: 0; left: 0; overflow: clip; width: 100svw; height: 100svh;';
     container.setAttribute('style', cssBackup + cssMain);
     document.body.appendChild(container);
   }
