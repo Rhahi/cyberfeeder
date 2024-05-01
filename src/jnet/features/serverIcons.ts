@@ -5,6 +5,7 @@ import * as debug from '../debug';
 const panelObserver = new MutationObserver(panelMutationHandler);
 const handObserver = new MutationObserver(() => handMutationHandler(false));
 let panel: Element | undefined;
+const remoteRegex = /Server (?<num>[0-9]+)/;
 
 export function enable() {
   document.addEventListener(changePanelEvent, newPanelHandler);
@@ -120,7 +121,7 @@ function addServerIcon(e: Element, text: string) {
     case text === 'HQ':
       icon.classList.add('fa-sharp', 'fa-solid', 'fa-building', 'icon-hq');
       break;
-    case text.includes('Server'):
+    case !!text.match(remoteRegex):
       icon.classList.add('fa-sharp', 'fa-solid', 'fa-network-wired', 'icon-remote');
       break;
   }
