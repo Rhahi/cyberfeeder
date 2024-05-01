@@ -1,4 +1,4 @@
-version = "18"
+version = "19"
 
 [[style]]
 category = "Mandatory"
@@ -1334,5 +1334,27 @@ css = """
 
 .corp-board .server-card .card .counters {
   top: 15%;
+}
+"""
+
+[[style]]
+category = "Misc"
+series = "none"
+name = "Mark corp cards that got flipped on access, but not rezzed"
+default = false
+description = "Not sure if this 100% works"
+css = """
+.corp-board .server-card .card:not([tabindex])::after {
+  position: absolute;
+  bottom: 1.3rem;
+  z-index: 1;
+  content: "(not rezzed)";
+  background-color: black;
+  opacity: 0.7;
+  font-size: 0.8em;
+  left: 0;
+  right: 0;
+  text-align: center;
+  line-height: 0.9rem;
 }
 """
