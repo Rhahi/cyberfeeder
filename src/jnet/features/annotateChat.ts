@@ -28,7 +28,7 @@ const bottomRegex = [
 ];
 const discardRegex = [
   /discards? .* from (?:their )?(?<source>Grip|grip|HQ)/, // discard at the end of the turn
-  /(?:trashes|trash)/, // trashed cards
+  /(?!steal or trash)(?:trashes|trash)/, // trashed cards
 ];
 const flatlineRegex = ['is flatlined'];
 const arrangeRegex = [/rearranges? (?:the )?top .* of (?:the )?(?<location>R&D)/];
