@@ -105,6 +105,7 @@ const panelPatterns: PanelPattern[] = [
 // leave last secret to single item for now.
 let lastSecret: PanelSecret = {category: Secret.invalid, age: -1, text: ''};
 const secretPanelClicks: PanelClick[] = [];
+const mulliganPattern = [/keeps their hand/, /takes a mulligan/];
 
 interface ChatSecret {
   target: util.Location; // which location the information belongs to
@@ -144,6 +145,7 @@ const secretHandler = async (e: Event) => {
   if (!event.detail || event.detail.type !== chat.eventName) return;
   if (!event.detail.system) return;
 
+  resetIfMulligan(event.detail.text);
   for (const s of chatPatterns) {
     for (const pattern of s.patterns) {
       const match = event.detail.text.match(pattern);
@@ -207,6 +209,16 @@ export function disable() {
   document.removeEventListener(chat.eventName, secretHandler);
   document.removeEventListener(command.contentEvent, secretPanelWatcher);
   document.removeEventListener(command.clickEvent, secretPanelClickWatcher);
+}
+
+/** Reset cached secret between games */
+function resetIfMulligan(text: string) {
+  for (const pattern of mulliganPattern) {
+    if (text.match(pattern)) {
+      lastSecret = {category: Secret.invalid, age: -1, text: ''};
+      return;
+    }
+  }
 }
 
 function annotate(element: Element, result: ChatSecret) {
