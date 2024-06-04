@@ -71,7 +71,7 @@ const chatPatterns: ChatPattern[] = [
       /looks? at the top(?: \d+)? cards? of/,
       // /^(?!.*install it).*\b(?:uses? .* to reveal|reveals|then reveals?).*(HQ|R&D|Archives|Server|stack|Stack)\b/,
     ],
-    dispatch: (age: number) => watchPanel(1, Secret.order, age, 3),
+    dispatch: (age: number) => watchPanel(1, Secret.order, age, 2),
   },
   {
     type: Secret.look,
