@@ -3,6 +3,7 @@ import {chat, command, ril} from '../watchers';
 import * as annotateChat from './annotateChat';
 import {isFullyDown} from './newMessageIndicator';
 import * as util from './util';
+import * as debug from '../debug';
 
 type MatchType = string | RegExp;
 const eventName = 'secret-command-panel';
@@ -177,6 +178,7 @@ const secretPanelWatcher = (e: Event) => {
         const data = {category: pattern.type, age, text: event.detail.text};
         const secret = new CustomEvent<PanelSecretEvent>(eventName, {detail: {type: eventName, ...data}});
         lastSecret = data;
+        debug.log(`[secret] age=${age} Found a new secret, cached it (text=${event.detail.text})`);
         document.dispatchEvent(secret);
         return;
       }
@@ -255,19 +257,22 @@ function watchPanel(
   validate?: (x: PanelSecret) => boolean
 ) {
   const chan = new SimpleChannel<PanelSecret>();
-  validateSend(chan, lastSecret, category, chatAge, ageThreshold, validate);
+  let result = validateSend(chan, lastSecret, category, chatAge, ageThreshold, validate);
+  debug.log(`[secret] tried cached secret. Result=${result} (${lastSecret.text})`);
 
   let count = 0;
   const handler = (e: Event) => {
     const event = e as CustomEvent<PanelSecretEvent>;
     if (!event.detail || event.detail.type !== eventName) return;
+    if (chan.state === ChannelState.close) return;
 
     if (count >= maxCount) {
       document.removeEventListener(eventName, handler);
       chan.close();
     } else {
       count++;
-      validateSend(chan, event.detail, category, chatAge, ageThreshold, validate);
+      result = validateSend(chan, event.detail, category, chatAge, ageThreshold, validate);
+      debug.log(`[secret] tried new secret. Result=${result} (${event.detail.text})`);
     }
   };
   document.addEventListener(eventName, handler);
@@ -365,5 +370,5 @@ function validateSend(
   if (x.category !== category) return 'wrong category';
   if (validate && !validate(x)) return 'validate reject';
   chan.send(lastSecret);
-  return;
+  return `matched (chat=${chatAge} secret=${x.age})`;
 }
