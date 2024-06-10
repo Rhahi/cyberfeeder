@@ -1,4 +1,4 @@
-version = "19"
+version = "18"
 
 [[style]]
 category = "Mandatory"
@@ -364,7 +364,7 @@ css = """
 category = "Layout"
 series = "CSS grid"
 name = "Alternative layout"
-description = "An alternative layout that makes it easier to zoom in, unless corp builds high servers."
+description = "An alternative layout that makes it easier to zoom in, unless corp builds high servers. Flex-based hand size is included."
 default = false
 css = """
 .gameboard {
@@ -530,6 +530,21 @@ css = """
 .button-pane .prompt-card-preview .card img {
   width: 100% !important;
   height: auto !important;
+}
+
+.hand-controls .hand > div:first-child {
+  display: flex;
+  padding-right: 30px;
+}
+
+.hand-controls .hand > div > .card-wrapper {
+  position: unset;
+  flex-basis: 60px;
+  min-width: 2px;
+}
+
+.gameboard .hand {
+  width: calc(384px + 30px);
 }
 """
 
@@ -1176,7 +1191,7 @@ category = "Misc"
 series = "none"
 name = "Flex-based hand size"
 default = false
-description = "Alternative way to arrange hand. Should be more robust to resizing. This is redundant when using hand animation"
+description = "Alternative way to arrange hand. Should be more robust to resizing. This is redundant when using hand animation and when using alt layout"
 css = """
 .hand-controls .hand > div:first-child {
   display: flex;
