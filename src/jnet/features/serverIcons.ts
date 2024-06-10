@@ -6,6 +6,7 @@ const panelObserver = new MutationObserver(panelMutationHandler);
 const handObserver = new MutationObserver(() => handMutationHandler(false));
 let panel: Element | undefined;
 const remoteRegex = /Server (?<num>[0-9]+)/;
+const numberRegex = /(\d+)/g;
 
 export function enable() {
   document.addEventListener(changePanelEvent, newPanelHandler);
@@ -97,12 +98,17 @@ function isMatching(button: Element): boolean {
 }
 
 function findTargetServer(text: string) {
+  const targetMatch = text.match(remoteRegex);
+  if (!targetMatch || !targetMatch.groups) return;
+  const target = targetMatch.groups['num'];
   const servers = document.querySelectorAll('.corp-board > div.server');
   if (!servers) return;
   for (const server of Array.from(servers)) {
     const label = server.querySelector(':scope .content .server-label');
     if (!label) continue;
-    if (label.textContent?.includes(text)) return server;
+    if (!label.textContent?.includes('Server')) continue;
+    const match = label.textContent?.match(numberRegex);
+    if (match && match.includes(target)) return server;
   }
   return;
 }
