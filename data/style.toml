@@ -40,7 +40,7 @@ category = "Layout"
 series = "none"
 name = "Top navbar fix"
 default = true
-description= "Make the top navbar narrower, and it will not spill over when zoomed in."
+description = "Make the top navbar narrower, and it will not spill over when zoomed in."
 css = """
 #main-content {
   display: flex;
