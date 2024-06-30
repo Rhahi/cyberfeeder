@@ -1,4 +1,4 @@
-version = "18"
+version = "19"
 
 [[style]]
 category = "Mandatory"
@@ -32,6 +32,96 @@ default = false
 css = """
 .stats-area {
   font-size: 16px !important;
+}
+"""
+
+[[style]]
+category = "Layout"
+series = "Font size"
+name = "Streamer mode"
+description = "Style provided by Andrej from Metropole Grid. He obtained this style from NSG."
+default = false
+css = """
+/* general text size tweaks */
+
+body {
+  font-size: 0.85rem;
+}
+
+/* board text size tweaks */
+
+.gameboard .stats > div {
+  font-size: 17px;
+}
+
+.gameboard .header {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+gameboard .stats-area {
+  font-size: 1.1rem;
+  line-height: 1.5rem;
+}
+
+/* button text size tweaks */
+
+button, a.button {
+  font-size: 0.85rem;
+}
+
+
+/* message log text size */
+
+.gameboard .rightpane .log > .panel {
+  font-size: 18px;
+}
+
+.content .log .messages {
+  font-size: 16px;
+}
+
+/* counters on cards */
+
+.gameboard .counter {
+  font-size: 18px;
+  font-weight: bold;
+  /*  position: absolute; */
+  z-index: 10;
+  padding: 0;
+  text-align: center;
+  line-height: 1.5rem;
+  bottom: 3px;
+  left: 3px;
+  height: 24px;
+  width: 24px;
+}
+
+/* ice/icebreaker strength */
+
+.gameboard .strength {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+/* victory / game end text tweaks */
+
+.win.table {
+  font-size: 18px;
+  font-weight: normal;
+}
+
+.win.centered {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.card-zoom {
+  size: 120%;
+}
+
+.anr-icon {
+  font-size: 125%;
 }
 """
 
