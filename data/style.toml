@@ -1,4 +1,4 @@
-version = "20"
+version = "21"
 
 [[style]]
 category = "Mandatory"
@@ -1152,9 +1152,9 @@ description = "Useful when using labels"
 default = true
 css = """
 .opponent .ice > .card-frame > .card .strength {
-  top: 0.4em;
+  top: 0;
   left: unset;
-  right: 0.4em;
+  right: 0;
 }
 """
 
