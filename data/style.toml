@@ -123,6 +123,12 @@ button, a.button {
 .anr-icon {
   font-size: 125%;
 }
+
+/* Cyberfeeder specific fixes */
+
+.hand .header {
+  overflow: hidden;
+}
 """
 
 [[style]]
