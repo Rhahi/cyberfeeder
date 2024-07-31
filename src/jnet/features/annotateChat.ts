@@ -35,8 +35,8 @@ const flatlineRegex = ['is flatlined'];
 const arrangeRegex = [/rearranges? (?:the )?top .* of (?:the )?(?<location>R&D)/];
 const lookRegex = [/look at the top(?: \d+)? cards? of (?:the )?(?<location>R&D)/]; // Epiphany
 const shuffleRegex = [
-  /shuffle .* into (?:the )?(?<location>R&D|Stack|stack)/, // Oracle Thinktank, Marilyn
-  /shuffle (?:the )?(?<location>stack)/,
+  /shuffles? .* into (?:the )?(?<location>R&D|Stack|stack)/, // Oracle Thinktank, Marilyn
+  /shuffles? (?:the )?(?<location>stack|R&D)/,
 ];
 const mulliganKeepRegex = [/keeps [a-z]+ hand/];
 const mulliganPassRegex = [/takes a mulligan/];
