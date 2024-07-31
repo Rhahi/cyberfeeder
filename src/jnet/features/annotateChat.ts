@@ -28,6 +28,8 @@ const bottomRegex = [
 ];
 const discardRegex = [
   /discards? .* from (?:their )?(?<source>Grip|grip|HQ)/, // discard at the end of the turn
+  /trash(?:es)? .* (?:the )?top of (?:the )?(?<source>Grip|grip|HQ|R&D|stack)./, // sabotage R&D
+  /trash(?:es)? .* from (?:the )?(?<source>Grip|grip|HQ|R&D|stack)./, // sabotage R&D
   /trash /,
   /trashes /,
 ];
@@ -40,6 +42,7 @@ const shuffleRegex = [
 ];
 const mulliganKeepRegex = [/keeps [a-z]+ hand/];
 const mulliganPassRegex = [/takes a mulligan/];
+const sabotageRegex = [/sabotage [0-9]+/];
 
 interface Annotation {
   hasIcon: boolean;
@@ -77,6 +80,7 @@ const annotate = (e: Event) => {
   annotateGeneric(annotation, 'cf-look', lookRegex, event.detail);
   annotateGeneric(annotation, 'cf-shuffle', shuffleRegex, event.detail);
   annotateGeneric(annotation, 'cf-add', addRegex, event.detail);
+  annotateGeneric(annotation, 'cf-sabotage', sabotageRegex, event.detail);
   const didAddIcons = addIcons(event.detail.element, annotation);
   if (didAddIcons && shouldScroll && event.detail.element.parentElement) {
     event.detail.element.parentElement.scrollTop = event.detail.element.parentElement.scrollHeight;
@@ -116,6 +120,7 @@ export function createIcon(text: string) {
   else if (text === 'cf-click') icon.classList.add('fa-regular', 'fa-clock', 'icon-action');
   else if (text === 'cf-mulligan-keep') icon.classList.add('fa-regular', 'fa-thumbs-up', 'icon-mulligan-keep');
   else if (text === 'cf-mulligan-mull') icon.classList.add('fa-regular', 'fa-thumbs-down', 'icon-mulligan-mull');
+  else if (text === 'cf-sabotage') icon.classList.add('fa-regular', 'fa-hand-fist', 'icon-sabotage');
   else icon.classList.add('fa-solid', 'fa-question', 'icon-unknown');
   return icon;
 }
@@ -179,10 +184,18 @@ function annotateGeneric(annotation: Annotation, type: string, regex: MatchType[
   detail.element.classList.add(type);
   if (match.groups) {
     const location = util.toLocation(match.groups['location']);
+    const source = util.toLocation(match.groups['source']);
     if (location !== 'unknown') {
       detail.element.setAttribute('location', location);
       if (!annotation.location) {
         annotation.location = createIcon(location);
+        annotation.hasIcon = true;
+      }
+    }
+    if (source !== 'unknown') {
+      detail.element.setAttribute('source', source);
+      if (!annotation.location) {
+        annotation.source = createIcon(source);
         annotation.hasIcon = true;
       }
     }
