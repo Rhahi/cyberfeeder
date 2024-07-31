@@ -38,7 +38,7 @@ const shuffleRegex = [
   /shuffle .* into (?:the )?(?<location>R&D|Stack|stack)/, // Oracle Thinktank, Marilyn
   /shuffle (?:the )?(?<location>stack)/,
 ];
-const mulliganKeepRegex = [/keeps their hand/];
+const mulliganKeepRegex = [/keeps [a-z]+ hand/];
 const mulliganPassRegex = [/takes a mulligan/];
 
 interface Annotation {
