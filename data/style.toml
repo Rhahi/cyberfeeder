@@ -1177,9 +1177,9 @@ css = """
 
 .hosted .card .strength {
   width: unset;
-  height: 1.5em;
-  min-width: 1.5em;
-  line-height: 1.5em;
+  height: 20px;
+  min-width: 20px;
+  line-height: 20px;
   padding: 0 0.2em;
 }
 
