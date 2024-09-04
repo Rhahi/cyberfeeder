@@ -27,7 +27,7 @@ const bottomRegex = [
   /adds? one to the bottom of the (?<location>stack)/, // Blueberry diesel
 ];
 const discardRegex = [
-  /discards? .* from (?:their )?(?<source>Grip|grip|HQ)/, // discard at the end of the turn
+  /discards? .* from (?:[a-z]+ )?(?<source>Grip|grip|HQ)/, // discard at the end of the turn
   /trash(?:es)? .* (?:the )?top of (?:the )?(?<source>Grip|grip|HQ|R&D|stack)./, // sabotage R&D
   /trash(?:es)? .* from (?:the )?(?<source>Grip|grip|HQ|R&D|stack)./, // sabotage R&D
   /trash /,
