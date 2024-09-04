@@ -1,4 +1,4 @@
-version = "22"
+version = "23"
 
 [[style]]
 category = "Mandatory"
@@ -1450,5 +1450,19 @@ css = """
 
 .corp-board .server-card .card .counters {
   top: 15%;
+}
+"""
+
+[[style]]
+category = "Misc"
+series = "none"
+name = "Thicker turn line divider"
+default = false
+description = "Quickly identify turns"
+css = """
+.content-pane .panel-bottom.content hr {
+  color: orange;
+  height: 0.3em;
+  background-color: orange;
 }
 """
