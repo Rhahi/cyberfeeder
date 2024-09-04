@@ -1,4 +1,4 @@
-version = "10"
+version = "11"
 
 [[style]]
 category = "Mandatory"
@@ -293,6 +293,36 @@ css = """
 
 #archive-points.hidden {
   display: none;
+}
+"""
+
+[[style]]
+category = "Information"
+series = "none"
+name = "Show turn number"
+description = "Show current turn number in the corner of chat box"
+default = false
+css = """
+.content-pane .panel-bottom.content {
+  /* note: this collides with setting for "Fix chat menu layout" */
+  position: relative !important;
+}
+
+#cyberfeeder-turn {
+  display: block !important;
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: center;
+  pointer-events: none;
+  font-size: 1.5em;
+  width: 1.5em;
+  height: 1.5em;
+  border-left: solid grey 1px;
+  border-bottom: solid grey 1px;
+  border-bottom-left-radius: 0.5em;
+  background: rgba(0,0,0,0.5);
+  line-height: 1.5em;
 }
 """
 

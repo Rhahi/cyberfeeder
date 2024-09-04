@@ -17,6 +17,7 @@ enum KnownScripts {
   animateBin = 'Animation-none-Animate-discard-entry-and-exit',
   archiveTracker = 'Information-none-Track-points-in-Archives',
   serverIcons = 'Quality-of-life-none-Highlight-target-server',
+  turnNumber = 'Information-none-Show-turn-number',
 }
 
 export interface Toggle {
@@ -75,6 +76,8 @@ export function disableAll() {
   features.animateHand.disable();
   features.animateBin.disable();
   features.archivePoints.disable();
+  features.serverIcons.disable();
+  features.turnNumber.disable();
 }
 
 export function setupScripts(toggles: Toggle[]) {
@@ -184,6 +187,14 @@ export function setupScripts(toggles: Toggle[]) {
         features.serverIcons.enable();
       } else {
         features.serverIcons.disable();
+      }
+    }
+    if (toggle.id === KnownScripts.turnNumber) {
+      if (toggle.enabled) {
+        shouldWatchChat = true;
+        features.turnNumber.enable();
+      } else {
+        features.turnNumber.disable();
       }
     }
   }
