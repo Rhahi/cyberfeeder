@@ -323,6 +323,7 @@ css = """
   border-bottom-left-radius: 0.5em;
   background: rgba(0,0,0,0.5);
   line-height: 1.5em;
+  overflow: hidden;
 }
 """
 
