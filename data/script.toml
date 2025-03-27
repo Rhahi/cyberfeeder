@@ -75,7 +75,7 @@ category = "Quality of life"
 series = "none"
 name = "Lower centrals when pressing Ctrl"
 default = false
-description = "Sometimes upgrades can cover up each other, preventing you from clicking on them. This will help fix that problem."
+description = "Only useful in old Jnet versions. If upgrades and central servers interact in a way that prevents you from clicking them, use this feature."
 css = """
 """
 

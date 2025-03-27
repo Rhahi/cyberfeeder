@@ -1480,7 +1480,7 @@ css = """
 [[style]]
 category = "Misc"
 series = "none"
-name = "Move counters slightly down in runner board"
+name = "Move counters slightly down"
 default = false
 description = "Make way for the card arts"
 css = """
