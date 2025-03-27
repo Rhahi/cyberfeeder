@@ -1151,10 +1151,30 @@ name = "Alternative ICE strength indicator position"
 description = "Useful when using labels"
 default = true
 css = """
+/* move away strength indicators and labels so it doesn't overlap with labels */
+
 .opponent .ice > .card-frame > .card .strength {
+  top: unset !important;
+  bottom: 0 !important;
+  right: 0 !important;
+}
+
+.me .ice > .card-frame > .card .strength {
+  bottom: 0 !important;
+  top: unset !important;
+  left: 0 !important;
+}
+
+.opponent .ice > .card-frame > .card .icon {
   top: 0;
-  left: unset;
   right: 0;
+  left: unset;
+}
+
+.me .ice > .card-frame > .card .icon {
+  top: 0;
+  right: unset;
+  left: 0;
 }
 """
 
