@@ -3,14 +3,10 @@
   "version": "4.6.2",
   "description": "Jinteki.net enhancements",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "gts lint",
     "clean": "gts clean && rm -rf app/js/*",
     "build": "sh scripts/build.sh",
     "fix": "gts fix",
-    "prepare": "npm run compile",
-    "pretest": "npm run compile",
-    "posttest": "npm run lint",
     "package": "mkdir -p ./build && pushd app && zip -r ../build/extension.zip ./* && popd",
     "postversion": "sh scripts/version.sh"
   },
