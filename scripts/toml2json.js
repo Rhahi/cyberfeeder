@@ -1,4 +1,3 @@
-// prettier-ignore
 import read from 'read-file-stdin'
 import {parse as parseToml} from 'toml'
 import univeil from 'univeil'
