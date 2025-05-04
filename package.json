@@ -7,7 +7,7 @@
     "clean": "gts clean && rm -rf app/js/*",
     "build": "sh scripts/build.sh",
     "fix": "gts fix",
-    "package": "mkdir -p ./build && pushd app && zip -r ../build/extension.zip ./* && popd",
+    "package": "sh scripts/package.sh",
     "postversion": "sh scripts/version.sh",
     "start": "web-ext run --verbose --source-dir ./app"
   },
