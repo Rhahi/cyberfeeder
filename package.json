@@ -9,7 +9,7 @@
     "fix": "gts fix",
     "package": "mkdir -p ./build && pushd app && zip -r ../build/extension.zip ./* && popd",
     "postversion": "sh scripts/version.sh",
-    "run": "web-ext run --verbose --source-dir ./app"
+    "start": "web-ext run --verbose --source-dir ./app"
   },
   "author": "Rhahi",
   "license": "MIT",
