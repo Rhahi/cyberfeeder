@@ -1,4 +1,4 @@
-version = "24"
+version = "25"
 
 [[style]]
 category = "Mandatory"
@@ -194,6 +194,20 @@ css = """
 
 .topnav #status {
   order: 2;
+}
+
+/* elongate archive width so that up/down arrow do not stick out */
+.corp-board .discard-container .header {
+  min-width: 70px;
+}
+
+.gameboard .graveyard-highlight-bg {
+  background: linear-gradient(
+    90deg,
+    rgba(131,82,173,0.6) 0px,
+    rgba(131,82,173,0.6) var(--card-width),
+    rgba(0,0,0,0) var(--card-width)
+  );
 }
 """
 
