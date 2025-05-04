@@ -94,11 +94,11 @@ const panelPatterns: PanelPattern[] = [
   },
   {
     type: Secret.order,
-    patterns: [/(?:top|bottom) (?<number>\d )?cards? of (?:the )?(?<location>stack|R&D) (?:is|are|will be) (?<card>.*)$/],
+    patterns: [/(?:top|bottom) (?<number>\d )?cards? of (?:the )?(?<location>stack|R&D) (?:is|are|will be) (?<card>.*)$/, /(?:top|bottom) of (?<location>stack|R&D) is .*$/],
   },
   {
     type: Secret.look,
-    patterns: [/(?:top|bottom) (?<number>\d )?cards? of (?:the )?(?<location>stack|R&D) (?:is|are|will be) (?<card>.*)$/],
+    patterns: [/(?:top|bottom) (?<number>\d )?cards? of (?:the )?(?<location>stack|R&D) (?:is|are|will be) (?<card>.*)$/, /(?:top|bottom) of (?<location>stack|R&D) is .*$/],
   },
 ];
 
