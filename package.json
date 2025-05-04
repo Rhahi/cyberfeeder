@@ -8,7 +8,8 @@
     "build": "sh scripts/build.sh",
     "fix": "gts fix",
     "package": "mkdir -p ./build && pushd app && zip -r ../build/extension.zip ./* && popd",
-    "postversion": "sh scripts/version.sh"
+    "postversion": "sh scripts/version.sh",
+    "run": "web-ext run --verbose"
   },
   "author": "Rhahi",
   "license": "MIT",
@@ -24,7 +25,8 @@
     "gts": "^5.0.1",
     "rollup": "^4.40.1",
     "sass": "^1.87.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "web-ext": "^8.6.0"
   },
   "dependencies": {
     "channel-ts": "^0.1.2"
