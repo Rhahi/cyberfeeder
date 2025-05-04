@@ -21,6 +21,6 @@ for FILE in "./data"/*; do
     if [[ -f "$FILE" ]]; then
         BASENAME="$(basename $FILE)"
         NAME="${BASENAME%.*}"
-        toml2json --pretty "$FILE" > "./app/data/$NAME.json"
+        # node ./scripts/toml2json.js "$FILE" > "./app/data/$NAME.json"
     fi
 done

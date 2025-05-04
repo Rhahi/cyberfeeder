@@ -23,9 +23,13 @@
     "@types/firefox-webext-browser": "^111.0.2",
     "@types/node": "20.4.6",
     "gts": "^5.0.1",
+    "read-file-stdin": "^0.2.1",
     "rollup": "^4.40.1",
     "sass": "^1.87.0",
+    "toml": "^3.0.0",
+    "toml-json": "^1.1.4",
     "typescript": "^5.2.2",
+    "univeil": "^0.1.19",
     "web-ext": "^8.6.0"
   },
   "dependencies": {
