@@ -70,6 +70,7 @@ export function enable() {
   document.addEventListener(chat.eventName, chatHandler);
   document.addEventListener(chat.eventNameReversed, chatHandler);
   document.addEventListener(clock.eventName, clockHandler);
+  refresh();
 }
 
 export function disable() {
