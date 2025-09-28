@@ -1,9 +1,10 @@
 import * as base from './base';
 
 export const eventName = 'new-chat';
+export const eventNameReversed = 'removed-chat';
 
 export interface ChatMessage {
-  type: 'new-chat';
+  type: 'new-chat' | 'removed-chat';
   system: boolean;
   text: string;
   age: number;
@@ -35,6 +36,7 @@ export function stop() {
 
 function newChatHandler(mutations: MutationRecord[]) {
   const messages: ChatMessage[] = [];
+  const removedMessages: ChatMessage[] = [];
   for (const m of mutations) {
     m.addedNodes.forEach(node => {
       if (node.nodeType !== Node.ELEMENT_NODE) {
@@ -49,6 +51,26 @@ function newChatHandler(mutations: MutationRecord[]) {
         messages.push(data);
       }
     });
+    m.removedNodes.forEach(node => {
+      if (node.nodeType !== Node.ELEMENT_NODE) return;
+      console.log(node);
+      const div = node as Element;
+      const system = div.classList.contains('system');
+      const text = getText(div);
+      let age = -1;
+      try {
+        const textAge = div.getAttribute('age');
+        if (textAge) {
+          age = parseInt(textAge);
+        }
+      } catch {
+        // do nothing
+      }
+      if (text && age) {
+        const data: ChatMessage = {type: 'removed-chat', system, text, age: age, element: div};
+        removedMessages.push(data);
+      }
+    });
   }
   let offset = 1 - messages.length;
   for (const data of messages) {
@@ -57,6 +79,10 @@ function newChatHandler(mutations: MutationRecord[]) {
     data.element.setAttribute('age', `${data.age}`);
     document.dispatchEvent(event);
     offset += 1;
+  }
+  for (const data of removedMessages.reverse()) {
+    const event = new CustomEvent<ChatMessage>(eventName, {detail: data});
+    document.dispatchEvent(event);
   }
 }
 
