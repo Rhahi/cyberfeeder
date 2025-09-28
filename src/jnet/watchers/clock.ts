@@ -35,7 +35,6 @@ export interface Clock {
 
 function tickHandler(mutations: MutationRecord[]) {
   let text: string | undefined;
-  let seconds = -1;
   for (const m of mutations) {
     const container = m.target.parentElement;
     if (container?.textContent) {
@@ -44,9 +43,26 @@ function tickHandler(mutations: MutationRecord[]) {
     }
   }
   if (!text) return;
+  const seconds = parseTimerTimestamp(text);
+  if (!seconds) return;
+  const data: Clock = {type: 'clock', text, seconds};
+  const event = new CustomEvent<Clock>(eventName, {detail: data});
+  document.dispatchEvent(event);
+}
+
+export function readTimer() {
+  const div = document.querySelector(selector);
+  if (!div) return null;
+  const text = div.textContent;
+  if (!text) return null;
+  return parseTimerTimestamp(text);
+}
+
+function parseTimerTimestamp(text: string) {
+  let seconds = -1;
   const match = text.match(regex);
-  if (!match) return;
-  if (match.length !== 4) return;
+  if (!match) return null;
+  if (match.length !== 4) return null;
   if (match[1]) {
     seconds += parseInt(match[1]) * 3600;
   }
@@ -59,7 +75,5 @@ function tickHandler(mutations: MutationRecord[]) {
   if (seconds > 0) {
     seconds += 1;
   }
-  const data: Clock = {type: 'clock', text, seconds};
-  const event = new CustomEvent<Clock>(eventName, {detail: data});
-  document.dispatchEvent(event);
+  return seconds;
 }
