@@ -10,3 +10,4 @@ export * as animateBin from './animateBin';
 export * as archivePoints from './archivePoints';
 export * as serverIcons from './serverIcons';
 export * as turnNumber from './turnNumber';
+export * as timer from './timer';

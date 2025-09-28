@@ -18,6 +18,7 @@ enum KnownScripts {
   archiveTracker = 'Information-none-Track-points-in-Archives',
   serverIcons = 'Quality-of-life-none-Highlight-target-server',
   turnNumber = 'Information-none-Show-turn-number',
+  timer = 'Reminders-none-Per-player-timer',
 }
 
 export interface Toggle {
@@ -66,6 +67,7 @@ export function disableAll() {
   watcher.hand.stop();
   watcher.command.stop();
   watcher.ril.stop();
+  watcher.clock.stop();
   features.sortArchive.disable();
   features.newMessageIndicator.disable();
   features.handsizeReminder.disable();
@@ -78,6 +80,7 @@ export function disableAll() {
   features.archivePoints.disable();
   features.serverIcons.disable();
   features.turnNumber.disable();
+  features.timer.disable();
 }
 
 export function setupScripts(toggles: Toggle[]) {
@@ -86,6 +89,7 @@ export function setupScripts(toggles: Toggle[]) {
   let shouldWatchHand = false;
   let shouldWatchCommand = false;
   let shouldWatchRIL = false;
+  let shouldWatchClock = false;
 
   for (const toggle of toggles) {
     if (toggle.id === KnownScripts.sortAcrhive) {
@@ -197,10 +201,20 @@ export function setupScripts(toggles: Toggle[]) {
         features.turnNumber.disable();
       }
     }
+    if (toggle.id === KnownScripts.timer) {
+      if (toggle.enabled) {
+        shouldWatchChat = true;
+        shouldWatchClock = true;
+        features.timer.enable();
+      } else {
+        features.timer.disable();
+      }
+    }
   }
   if (shouldWatchArchive) watcher.archive.watch();
   if (shouldWatchChat) watcher.chat.watch();
   if (shouldWatchHand) watcher.hand.watch();
   if (shouldWatchCommand) watcher.command.watch();
   if (shouldWatchRIL) watcher.ril.watch();
+  if (shouldWatchClock) watcher.clock.watch();
 }

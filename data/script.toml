@@ -1,4 +1,4 @@
-version = "11"
+version = "12"
 
 [[style]]
 category = "Mandatory"
@@ -40,7 +40,7 @@ css = """
   pointer-events: none;
 }
 
-#ghosts > * {
+#ghosts > *, #cyberfeeder-timer {
   display: none;
 }
 """
@@ -188,6 +188,32 @@ description = "When a new message is available, and you are not scrolled down, c
 css = """
 #log-input[newchat="yes"] {
   background-color: #FF7;
+}
+"""
+
+[[style]]
+category = "Reminders"
+series = "none"
+name = "Per-player timer"
+default = true
+description = "Side time spent on each player's turn. Does not consider paid abilities."
+css = """
+#cyberfeeder-timer {
+  display: flex;
+  justify-content: space-between;
+}
+
+#cyberfeeder-timer > div {
+  padding: 0 0.5em;
+  background-color: rgba(0,0,0,0.5);
+}
+
+#cyberfeeder-timer #cyberfeeder-corp-timer {
+  color: skyblue;
+}
+
+#cyberfeeder-timer #cyberfeeder-runner-timer {
+  color: pink;
 }
 """
 
