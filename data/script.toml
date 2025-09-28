@@ -1,4 +1,4 @@
-version = "12"
+version = "13"
 
 [[style]]
 category = "Mandatory"
@@ -195,8 +195,8 @@ css = """
 category = "Reminders"
 series = "none"
 name = "Per-player timer"
-default = true
-description = "Side time spent on each player's turn. Does not consider paid abilities."
+default = false
+description = "Track time spent for each player's turn. Might help some players become more aware time spend in their turn, but this is rather inaccurate way to track actual time spend by each player."
 css = """
 #cyberfeeder-timer {
   display: flex;
