@@ -3,8 +3,7 @@ import * as base from './base';
 import * as debug from '../debug';
 
 export const EVENT_SERVER = 'board-server';
-export const EVENT_ROOT = 'board-root';
-export const EVENT_ICE = 'board-ice';
+export const EVENT_INSTALL = 'board-install';
 export const EVENT_RUN = 'board-run';
 export const EVENT_FACEUP = 'board-faceup';
 export const EVENT_FACEDOWN = 'board-facedown';
@@ -39,10 +38,18 @@ export interface FaceupEvent {
   server: Element;
 }
 
-export interface BoardEvent {
-  type: 'board-root' | 'board-ice' | 'board-facedown';
+export interface FacedownEvent {
+  type: 'board-facedown';
   card: Element;
   server: Element;
+  isIce: boolean;
+}
+
+export interface InstallEvent {
+  type: 'board-install';
+  card: Element;
+  server: Element;
+  isIce: boolean;
 }
 
 export interface RunEvent {
@@ -70,8 +77,8 @@ function dispatchBoardEvent(mutations: MutationRecord[]) {
       if (div.classList.contains('run-arrow')) runHandler(div);
       else if (div.classList.contains('server')) serverHandler(div);
       else if (div.getAttribute('alt') === 'Facedown corp card') facedownHandler(div);
-      else if (div.classList.contains('server-card')) installHandler(div);
-      else if (div.classList.contains('ice')) installHandler(div);
+      else if (div.classList.contains('server-card')) installHandler(div, false);
+      else if (div.classList.contains('ice')) installHandler(div, true);
     });
   }
 }
@@ -92,23 +99,26 @@ function faceupHandler(span: Element) {
   // debug.log('[watcher/board] starting faceup detection...', span);
   if (!span.textContent) return;
   const card = span.parentElement?.parentElement?.parentElement;
-  if (!card?.classList.contains('server-card') && !card?.classList.contains('ice')) return;
+  let isIce: boolean;
+  if (card?.classList.contains('ice')) isIce = true;
+  else if (card?.classList.contains('server-card')) isIce = false;
+  else return;
   const server = card?.parentElement?.parentElement;
   if (!server?.classList.contains('server')) return;
 
-  const data: FaceupEvent = {type: EVENT_FACEUP, name: span.textContent, server, card};
+  const data: FaceupEvent = {type: EVENT_FACEUP, name: span.textContent, server, card, isIce};
   const event = new CustomEvent<FaceupEvent>(EVENT_FACEUP, {detail: data});
   document.dispatchEvent(event);
   debug.log('[watcher/board] faceup detected', card);
 }
 
-function installHandler(card: Element) {
+function installHandler(card: Element, isIce: boolean) {
   // debug.log('[watcher/board] starting install detection...', card);
   const server = card.parentElement?.parentElement;
   if (!server?.classList.contains('server')) return;
 
-  const data: BoardEvent = {type: EVENT_ROOT, card, server};
-  const event = new CustomEvent<BoardEvent>(EVENT_ROOT, {detail: data});
+  const data: InstallEvent = {type: EVENT_INSTALL, isIce, card, server};
+  const event = new CustomEvent<InstallEvent>(EVENT_INSTALL, {detail: data});
   document.dispatchEvent(event);
   debug.log('[watcher/board] install detected', card);
 }
@@ -116,12 +126,15 @@ function installHandler(card: Element) {
 function facedownHandler(img: Element) {
   // debug.log('[watcher/board] starting facedown detection...', img);
   const card = img.parentElement?.parentElement?.parentElement;
-  if (!card?.classList.contains('ice') && !card?.classList.contains('server-card')) return;
+  let isIce: boolean;
+  if (card?.classList.contains('ice')) isIce = true;
+  else if (card?.classList.contains('server-card')) isIce = false;
+  else return;
   const server = card.parentElement?.parentElement;
   if (!server?.classList.contains('server')) return;
 
-  const data: BoardEvent = {type: EVENT_FACEDOWN, card, server};
-  const event = new CustomEvent<BoardEvent>(EVENT_FACEDOWN, {detail: data});
+  const data: FacedownEvent = {type: EVENT_FACEDOWN, isIce, card, server};
+  const event = new CustomEvent<FacedownEvent>(EVENT_FACEDOWN, {detail: data});
   document.dispatchEvent(event);
   debug.log('[watcher/board] facedown detected', card);
 }
@@ -134,7 +147,7 @@ function serverHandler(server: Element) {
   debug.log('[watcher/board] server detected', server);
 
   const rootCards = server.querySelectorAll(':scope .server-card');
-  rootCards.forEach(installHandler);
+  rootCards.forEach(n => installHandler(n, true));
   const ices = server.querySelectorAll(':scope .ice');
-  ices.forEach(installHandler);
+  ices.forEach(n => installHandler(n, false));
 }
