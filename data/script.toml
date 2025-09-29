@@ -196,7 +196,7 @@ category = "Reminders"
 series = "none"
 name = "Per-player timer"
 default = false
-description = "Track time spent for each player's turn. Might help some players become more aware time spend in their turn, but this is rather inaccurate way to track actual time spend by each player."
+description = "Track time spent in each player's turn. This can help be more aware of time spent for each turn, but this is rather inaccurate way to track actual time spent by each player."
 css = """
 #cyberfeeder-timer {
   display: flex;
