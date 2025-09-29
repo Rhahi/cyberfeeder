@@ -50,6 +50,7 @@ let reverseChatHandleCounter = 0;
 const reverseChatHandleDelay = 0.1;
 const secondsInCycle = 86400;
 let lastProcessedRealTime: number | null = null;
+let temporaryOffset = 0;
 let cycles = 0;
 let highestSeconds = 0;
 let gameEnd = false;
@@ -66,6 +67,7 @@ const menuWatcher = (event: Event) => {
 };
 
 export function enable() {
+  lastProcessedRealTime = null;
   document.addEventListener(base.eventName, menuWatcher);
   document.addEventListener(chat.eventName, chatHandler);
   document.addEventListener(chat.eventNameReversed, chatHandler);
@@ -167,8 +169,7 @@ function forwardChatHandler(clk: Clock, msg: ChatMessage, time: Time): boolean {
   const match = msg.text.match(turnRegex);
   if (!match) return false;
   if (msg.text.includes('wins the game')) {
-    gameEnd = true;
-    debug.log('[timer] game end detected');
+    endGame();
     return false;
   }
   const side = imminentSide(msg.text, msg.element);
@@ -205,6 +206,7 @@ function backwardChatHandler() {
 }
 
 function refresh() {
+  temporaryOffset = 0;
   gameEnd = false;
   const clk = getClock();
   if (!clk) return;
@@ -226,11 +228,14 @@ function clockHandler(e: Event) {
   if (!event.detail) return;
 
   const state = parseState(current);
-  let offset = 0;
   if (lastProcessedRealTime !== null) {
-    offset = event.detail.seconds - lastProcessedRealTime;
+    temporaryOffset = 0;
+    const offset = event.detail.seconds - lastProcessedRealTime;
+    update(current, {seconds: state.committed + state.span + offset});
+  } else {
+    temporaryOffset += 1;
+    update(current, {seconds: state.committed + state.span + temporaryOffset});
   }
-  update(current, {seconds: state.committed + state.span + offset});
 }
 
 /** Given a text and chat element that is a turn start/end text,
@@ -290,8 +295,7 @@ function parseHistory(): ClockState | null {
     const match = element.textContent?.match(turnRegex);
     if (!match) return;
     if (element.textContent?.includes('wins the game')) {
-      gameEnd = true;
-      debug.log('[timer] game end detected');
+      endGame();
       return;
     }
     const newSide = imminentSide(element.textContent, element);
@@ -398,4 +402,10 @@ function toTimestamp(time: number | Time) {
     return `${minutes}:${seconds}`;
   }
   return toTimestamp(toSeconds(time));
+}
+
+function endGame() {
+  gameEnd = true;
+  lastProcessedRealTime = null;
+  debug.log('[timer] game end detected');
 }
