@@ -19,6 +19,7 @@ enum KnownScripts {
   serverIcons = 'Quality-of-life-none-Highlight-target-server',
   turnNumber = 'Information-none-Show-turn-number',
   timer = 'Reminders-none-Per-player-timer',
+  server = 'Information-none-Remember-installed-cards',
 }
 
 export interface Toggle {
@@ -68,6 +69,7 @@ export function disableAll() {
   watcher.command.stop();
   watcher.ril.stop();
   watcher.clock.stop();
+  watcher.board.stop();
   features.sortArchive.disable();
   features.newMessageIndicator.disable();
   features.handsizeReminder.disable();
@@ -81,6 +83,7 @@ export function disableAll() {
   features.serverIcons.disable();
   features.turnNumber.disable();
   features.timer.disable();
+  features.server.disable();
 }
 
 export function setupScripts(toggles: Toggle[]) {
@@ -90,6 +93,7 @@ export function setupScripts(toggles: Toggle[]) {
   let shouldWatchCommand = false;
   let shouldWatchRIL = false;
   let shouldWatchClock = false;
+  let shouldWatchBoard = false;
 
   for (const toggle of toggles) {
     if (toggle.id === KnownScripts.sortAcrhive) {
@@ -210,6 +214,15 @@ export function setupScripts(toggles: Toggle[]) {
         features.timer.disable();
       }
     }
+    if (toggle.id === KnownScripts.server) {
+      if (toggle.enabled) {
+        shouldWatchChat = true;
+        shouldWatchBoard = true;
+        features.server.enable();
+      } else {
+        features.server.disable();
+      }
+    }
   }
   if (shouldWatchArchive) watcher.archive.watch();
   if (shouldWatchChat) watcher.chat.watch();
@@ -217,4 +230,5 @@ export function setupScripts(toggles: Toggle[]) {
   if (shouldWatchCommand) watcher.command.watch();
   if (shouldWatchRIL) watcher.ril.watch();
   if (shouldWatchClock) watcher.clock.watch();
+  if (shouldWatchBoard) watcher.board.watch();
 }
