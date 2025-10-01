@@ -357,7 +357,7 @@ css = """
 category = "Information"
 series = "none"
 name = "Remember installed cards"
-description = "Add labels when cards are accessed from remote/central servers"
+description = "Add labels when cards are accessed from remote/central servers, or when they are derezzed."
 default = false
 css = """
 .server .server-card:not(.discard-container)[cyberfeeder-cardname]:has(img~span.cardname)::after {
