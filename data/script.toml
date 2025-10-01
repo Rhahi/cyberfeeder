@@ -1,4 +1,4 @@
-version = "14"
+version = "15"
 
 [[style]]
 category = "Mandatory"
@@ -357,7 +357,7 @@ css = """
 category = "Information"
 series = "none"
 name = "Remember installed cards"
-description = "Add labels when cards are accessed from remote/central servers, or when they are derezzed."
+description = "Add labels when cards are accessed from remote/central servers, or when they are derezzed. When using this feature, it is recommended to turn off Stack Cards (jnet feature)"
 default = false
 css = """
 .server .server-card:not(.discard-container)[cyberfeeder-cardname]:has(img~span.cardname)::after {
@@ -404,7 +404,7 @@ css = """
   overflow: unset;
   font-size: 0.65rem;
   margin-bottom: -10px;
-  z-index: 1;
+  z-index: 13;
 }
 """
 
