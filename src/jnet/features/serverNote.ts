@@ -17,18 +17,12 @@ const ATTR_CLICK_AGE = 'cyberfeeder-clicked';
 const ATTR_CARD_NAME = 'cyberfeeder-cardname';
 const ATTR_CANDIDATE = 'cyberfeeder-candidate';
 const ATTR_DATA_CARD = 'data-card-title';
+let lastChat: chat.ChatMessage | null = null;
 
 interface AnnotationRequest {
   card: Element;
   name: string;
 }
-
-interface OpenInstall {
-  name: string;
-  age: number;
-}
-
-let openInstall: OpenInstall | null = null;
 
 const menuWatcher = (event: Event) => {
   base.conditionalExecuter({
@@ -60,7 +54,7 @@ export function disable() {
 
 /** called when starting or navigating */
 function reset() {
-  openInstall = null;
+  lastChat = null;
   clearAttribute('server-card', ATTR_CANDIDATE);
   clearAttribute('server-card', ATTR_CLICK_AGE);
   watchAllRootCards();
@@ -81,7 +75,8 @@ function chatHandler(e: Event) {
   if (!event.detail) return;
   if (!event.detail.system) return;
 
-  if (isOpenInstall(event.detail)) return;
+  lastChat = event.detail;
+  debug.log(event.detail.text);
   const result = findAccessedCard(event.detail);
   if (result) annotate(result.card, result.name);
 }
@@ -123,10 +118,10 @@ function findAccessedCard(detail: chat.ChatMessage): AnnotationRequest | null {
   return {card: target, name: cardName};
 }
 
-function isOpenInstall(detail: chat.ChatMessage): boolean {
+function findOpenInstall(detail: chat.ChatMessage): string | null {
   const match = detail.text.match(OPEN_INSTALL_REGEX);
-  if (!match) return false;
-  if (!match.groups) return false;
+  if (!match) return null;
+  if (!match.groups) return null;
   debug.log('[serverNote] open install detected');
   const cardName = match.groups['card'];
   const query = detail.element.querySelectorAll(`:scope [${ATTR_DATA_CARD}]`);
@@ -137,10 +132,9 @@ function isOpenInstall(detail: chat.ChatMessage): boolean {
     const attrName = node.getAttribute(ATTR_DATA_CARD);
     if (attrName === cardName) verifiedName = attrName;
   });
-  if (!verifiedName) return false;
-  openInstall = {name: verifiedName, age: detail.age};
+  if (!verifiedName) return null;
   debug.log('[serverNote] found open install', verifiedName);
-  return true;
+  return verifiedName;
 }
 
 /** Look for all cards in this server. If there are any marked cards,
@@ -187,11 +181,14 @@ function getServer(name: string) {
 function installHandler(e: Event) {
   const event = e as CustomEvent<board.InstallEvent>;
   if (!event.detail) return;
-  if (event.detail.isIce) return;
-  if (openInstall) {
-    annotate(event.detail.card, openInstall.name);
-    openInstall = null;
+  if (lastChat) {
+    const name = findOpenInstall(lastChat);
+    if (name) {
+      annotate(event.detail.card, name);
+    }
   }
+  lastChat = null;
+  if (event.detail.isIce) return;
   watchCard(event.detail.card);
   debug.log('[serverNote] install detected, watching card', event.detail.card);
 }
