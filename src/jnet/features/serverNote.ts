@@ -40,8 +40,8 @@ export function disable() {
 
 /** called when starting or navigating */
 function reset() {
-  clearCandidates();
-  clearClicked();
+  clearAttribute('server-card', ATTR_CANDIDATE);
+  clearAttribute('server-card', ATTR_CLICK_AGE);
   watchAllRootCards();
   markAllRezzedCards();
 }
@@ -51,7 +51,7 @@ function runHandler(e: Event) {
   const event = e as CustomEvent<board.RunEvent>;
   if (!event.detail) return;
   // unknown event occurs every access, but movement only occurs when declaring and between ice.
-  if (event.detail.phase === 'movement') clearCandidates();
+  if (event.detail.phase === 'movement') clearAttribute('server-card', ATTR_CANDIDATE);
 }
 
 /** Whenever a new chat mentions accesses, queue it up for note taking */
@@ -172,33 +172,12 @@ function watchCard(card: Element) {
   return 1;
 }
 
-/** Clear watching mark, to be used when we are sure that no watching is happening */
-function clearWatchedAttribute() {
-  debug.log('[serverNote] clearing watched attributes');
-  const clicked = document.querySelectorAll(`[${ATTR_WATCH}]`);
+function clearAttribute(klass: string, attr: string) {
+  debug.log('[serverNote] clearing attribute', klass, attr);
+  const clicked = document.querySelectorAll(`.${klass}[${attr}]`);
   clicked.forEach(node => {
     if (node.nodeType !== Node.ELEMENT_NODE) return;
-    node.removeAttribute(ATTR_WATCH);
-  });
-}
-
-/** Clear all clicked card markers */
-function clearCandidates() {
-  debug.log('[serverNote] clearing candidates');
-  const clicked = document.querySelectorAll(`.server-card[${ATTR_CANDIDATE}]`);
-  clicked.forEach(node => {
-    if (node.nodeType !== Node.ELEMENT_NODE) return;
-    node.removeAttribute(ATTR_CANDIDATE);
-  });
-}
-
-/** Clear all clicked card markers */
-function clearClicked() {
-  debug.log('[serverNote] clearing clicked attributes');
-  const clicked = document.querySelectorAll(`.server-card[${ATTR_CLICK_AGE}]`);
-  clicked.forEach(node => {
-    if (node.nodeType !== Node.ELEMENT_NODE) return;
-    node.removeAttribute(ATTR_CLICK_AGE);
+    node.removeAttribute(attr);
   });
 }
 
