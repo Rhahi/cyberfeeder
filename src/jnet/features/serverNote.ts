@@ -43,6 +43,7 @@ function reset() {
   clearCandidates();
   clearClicked();
   watchAllRootCards();
+  markAllRezzedCards();
 }
 
 /** When a run arrow appears clear access candidate */
@@ -211,4 +212,27 @@ function watchAllRootCards() {
     count += watchCard(node as Element);
   });
   debug.log(`[serverNote] added watcher for ${count} cards`);
+}
+
+function markAllRezzedCards() {
+  const cards = document.querySelectorAll('.corp-board.opponent .server .server-card');
+  const ices = document.querySelectorAll('.corp-board.opponent .server .ice');
+  let count = 0;
+  cards.forEach(node => {
+    if (node.nodeType !== Node.ELEMENT_NODE) return;
+    const card = node as Element;
+    if (card.hasAttribute(ATTR_CARD_NAME)) return;
+    const name = card.querySelector(':scope .cardname')?.textContent;
+    if (card && name) annotate(card, name);
+    count += 1;
+  });
+  ices.forEach(node => {
+    if (node.nodeType !== Node.ELEMENT_NODE) return;
+    const card = node as Element;
+    if (card.hasAttribute(ATTR_CARD_NAME)) return;
+    const name = card.querySelector(':scope .cardname')?.textContent;
+    if (card && name) annotate(card, name);
+    count += 1;
+  });
+  debug.log(`[serverNote] annotated ${count} cards`);
 }
