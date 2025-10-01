@@ -152,7 +152,7 @@ function serverHandler(server: Element) {
   debug.log('[watcher/board] server detected', server);
 
   const rootCards = server.querySelectorAll(':scope .server-card');
-  rootCards.forEach(n => installHandler(n, true));
+  rootCards.forEach(n => installHandler(n, false));
   const ices = server.querySelectorAll(':scope .ice');
-  ices.forEach(n => installHandler(n, false));
+  ices.forEach(n => installHandler(n, true));
 }
