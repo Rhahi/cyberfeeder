@@ -2,13 +2,33 @@ import {chat, board, base} from '../watchers';
 import * as debug from '../debug';
 import {getChatAge} from './util';
 
+/** Known matches:
+ * - uses Drafter to install Vovô Ozetti from Archives in the root of Server 8 (new remote).
+ * - uses The Powers That Be to install a card from Archives in the root of Server 6 (new remote).
+ * - uses Project Ingatan to install Drago Ivanov from Archives in the root of Server 5 (new remote).
+ * - uses Synapse Global: Faster than Thought to reveal Sericulture Expansion from HQ.
+ *   -> uses Synapse Global: Faster than Thought to install a card in the root of Server 2 (new remote).
+ */
+const OPEN_INSTALL_REGEX = /install (?<card>.*) from /;
 const ACCESS_REMOTE_REGEX = /access(?:es)? (?<card>.*) from (?<server>Server \d+)/;
 const ACCESS_CENTRAL_REGEX = /access(?:es)? (?<card>.*) from the root of (?:the )?(?<server>R&D|Archives|HQ)\./;
-const CLICK_AGE_LIMIT = 1;
 const ATTR_WATCH = 'cyberfeeder-servernote-watch';
 const ATTR_CLICK_AGE = 'cyberfeeder-clicked';
 const ATTR_CARD_NAME = 'cyberfeeder-cardname';
 const ATTR_CANDIDATE = 'cyberfeeder-candidate';
+const ATTR_DATA_CARD = 'data-card-title';
+
+interface AnnotationRequest {
+  card: Element;
+  name: string;
+}
+
+interface OpenInstall {
+  name: string;
+  age: number;
+}
+
+let openInstall: OpenInstall | null = null;
 
 const menuWatcher = (event: Event) => {
   base.conditionalExecuter({
@@ -40,6 +60,7 @@ export function disable() {
 
 /** called when starting or navigating */
 function reset() {
+  openInstall = null;
   clearAttribute('server-card', ATTR_CANDIDATE);
   clearAttribute('server-card', ATTR_CLICK_AGE);
   watchAllRootCards();
@@ -60,22 +81,27 @@ function chatHandler(e: Event) {
   if (!event.detail) return;
   if (!event.detail.system) return;
 
-  let match = event.detail.text.match(ACCESS_REMOTE_REGEX);
-  if (!match) match = event.detail.text.match(ACCESS_CENTRAL_REGEX);
-  if (!match?.groups) return;
-  debug.log('[serverNote] access detected', event.detail.age);
+  if (isOpenInstall(event.detail)) return;
+  const result = findAccessedCard(event.detail);
+  if (result) annotate(result.card, result.name);
+}
+
+function findAccessedCard(detail: chat.ChatMessage): AnnotationRequest | null {
+  let match = detail.text.match(ACCESS_REMOTE_REGEX);
+  if (!match) match = detail.text.match(ACCESS_CENTRAL_REGEX);
+  if (!match?.groups) return null;
+  debug.log('[serverNote] access detected', detail.age);
 
   const cardName = match.groups['card'];
-  if (cardName === 'an unseen card') return;
+  if (cardName === 'an unseen card') return null;
   const serverName = match.groups['server'];
   const server = getServer(serverName);
-  const candidates = findCandidates(server, event.detail.age);
+  const candidates = findCandidates(server, detail.age);
   debug.log(`[serverNote] found ${candidates.length} candidates`);
 
-  if (candidates.length === 0) return;
+  if (candidates.length === 0) return null;
   if (candidates.length === 1) {
-    annotate(candidates[0], cardName);
-    return;
+    return {card: candidates[0], name: cardName};
   }
 
   let latest = 0;
@@ -90,8 +116,31 @@ function chatHandler(e: Event) {
     latest = timestamp;
   }
 
-  if (!target) return debug.log('[serverNote] there is no target to annotate');
-  annotate(target, cardName);
+  if (!target) {
+    debug.log('[serverNote] there is no target to annotate');
+    return null;
+  }
+  return {card: target, name: cardName};
+}
+
+function isOpenInstall(detail: chat.ChatMessage): boolean {
+  const match = detail.text.match(OPEN_INSTALL_REGEX);
+  if (!match) return false;
+  if (!match.groups) return false;
+  debug.log('[serverNote] open install detected');
+  const cardName = match.groups['card'];
+  const query = detail.element.querySelectorAll(`:scope [${ATTR_DATA_CARD}]`);
+  let verifiedName: string | null = null;
+  query.forEach(node => {
+    if (node.nodeType !== Node.ELEMENT_NODE) return;
+    if (verifiedName) return;
+    const attrName = node.getAttribute(ATTR_DATA_CARD);
+    if (attrName === cardName) verifiedName = attrName;
+  });
+  if (!verifiedName) return false;
+  openInstall = {name: verifiedName, age: detail.age};
+  debug.log('[serverNote] found open install', verifiedName);
+  return true;
 }
 
 /** Look for all cards in this server. If there are any marked cards,
@@ -139,6 +188,10 @@ function installHandler(e: Event) {
   const event = e as CustomEvent<board.InstallEvent>;
   if (!event.detail) return;
   if (event.detail.isIce) return;
+  if (openInstall) {
+    annotate(event.detail.card, openInstall.name);
+    openInstall = null;
+  }
   watchCard(event.detail.card);
   debug.log('[serverNote] install detected, watching card', event.detail.card);
 }
