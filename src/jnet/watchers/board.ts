@@ -36,6 +36,7 @@ export interface FaceupEvent {
   name: string;
   card: Element;
   server: Element;
+  isIce: boolean;
 }
 
 export interface FacedownEvent {
@@ -54,6 +55,7 @@ export interface InstallEvent {
 
 export interface RunEvent {
   type: 'board-run';
+  phase: 'unknown' | 'encounter' | 'movement' | 'approach';
   server: Element;
 }
 
@@ -88,8 +90,11 @@ function runHandler(arrow: Element) {
   // debug.log('[watcher/board] starting run detection...', arrow);
   const server = arrow.parentElement?.parentElement?.parentElement;
   if (!server?.classList.contains('server')) return;
-
-  const data: RunEvent = {type: EVENT_RUN, server};
+  const phase = arrow.firstElementChild?.className;
+  const data: RunEvent = {type: EVENT_RUN, server, phase: 'unknown'};
+  if (phase === 'movement' || phase === 'approach' || phase === 'encounter') {
+    data.phase = phase;
+  }
   const event = new CustomEvent<RunEvent>(EVENT_RUN, {detail: data});
   document.dispatchEvent(event);
   debug.log('[watcher/board] run detected', server);
