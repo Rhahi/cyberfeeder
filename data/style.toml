@@ -1,4 +1,4 @@
-version = "25"
+version = "26"
 
 [[style]]
 category = "Mandatory"
@@ -248,6 +248,7 @@ css = """
 }
 
 .centralpane {
+  /* change this value to 2 / -2 if you want to scroll instead of zoom out */
   grid-column: 2 / -1;
   grid-row: 1;
 }
@@ -399,14 +400,14 @@ css = """
   scrollbar-width: none;
 }
 
+/* opponent stats area */
 .left-inner-leftpane > div:nth-child(1) > .panel.stats {
   grid-row: 1;
-  max-height: 8em;
 }
 
+/* me stats area */
 .left-inner-leftpane > div:nth-child(2) > .panel.stats {
   grid-row: 5;
-  max-height: 8em;
 }
 
 /* hand */
@@ -609,14 +610,14 @@ css = """
   scrollbar-width: none;
 }
 
+/* opponent stats area */
 .left-inner-leftpane > div:nth-child(1) > .panel.stats {
   grid-row: 1;
-  max-height: 8em;
 }
 
+/* me stats area */
 .left-inner-leftpane > div:nth-child(2) > .panel.stats {
   grid-row: 5;
-  max-height: 8em;
 }
 
 /* hand */
