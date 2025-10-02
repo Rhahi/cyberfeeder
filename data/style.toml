@@ -1,4 +1,4 @@
-version = "26"
+version = "27"
 
 [[style]]
 category = "Mandatory"
@@ -903,7 +903,6 @@ css = """
   overflow: hidden;
   padding: 0.1rem;
   width: 100%;
-  z-index: 11;
 }
 
 .server .content > div:not(.discard-container) .card:hover .cardname,
