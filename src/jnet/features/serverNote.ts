@@ -16,6 +16,7 @@ const ATTR_WATCH = 'cyberfeeder-servernote-watch';
 const ATTR_CLICK_AGE = 'cyberfeeder-clicked';
 const ATTR_CARD_NAME = 'cyberfeeder-cardname';
 const ATTR_CANDIDATE = 'cyberfeeder-candidate';
+const ATTR_ONGOING_BREACH = 'cyberfeeder-breaching';
 const ATTR_DATA_CARD = 'data-card-title';
 let lastChat: chat.ChatMessage | null = null;
 
@@ -66,7 +67,10 @@ function runHandler(e: Event) {
   const event = e as CustomEvent<board.RunEvent>;
   if (!event.detail) return;
   // unknown event occurs every access, but movement only occurs when declaring and between ice.
-  if (event.detail.phase === 'movement') clearAttribute('server-card', ATTR_CANDIDATE);
+  if (event.detail.phase === 'movement') {
+    clearAttribute('server-card', ATTR_CANDIDATE);
+    clearAttribute('server', ATTR_ONGOING_BREACH);
+  }
 }
 
 /** Whenever a new chat mentions accesses, queue it up for note taking */
@@ -141,9 +145,20 @@ function findOpenInstall(detail: chat.ChatMessage): string | null {
  * return those cards. Otherwise, mark them and return the newly marked cards.*/
 function findCandidates(server: Element | null, age: number) {
   debug.log('[serverNote] looking for cards in server', server);
-  const cards: Element[] = [];
-  if (!server) return cards;
+  if (!server) return [];
+  const {cards, candidates} = cardsInServer(server);
+  if (cards.length === 1) return cards;
+  if (candidates.length > 0) return candidates;
+  for (const card of cards) {
+    card.setAttribute(ATTR_CANDIDATE, `${age}`);
+  }
+  server.setAttribute(ATTR_ONGOING_BREACH, `${age}`);
+  return cards;
+}
+
+function cardsInServer(server: Element) {
   const query = server.querySelectorAll(':scope .server-card');
+  const cards: Element[] = [];
   const candidates: Element[] = [];
   query.forEach(node => {
     if (node.nodeType !== Node.ELEMENT_NODE) return;
@@ -151,12 +166,7 @@ function findCandidates(server: Element | null, age: number) {
     cards.push(e);
     if (node.hasAttribute(ATTR_CANDIDATE)) candidates.push(e);
   });
-  if (cards.length === 1) return cards;
-  if (candidates.length > 0) return candidates;
-  for (const card of cards) {
-    card.setAttribute(ATTR_CANDIDATE, `${age}`);
-  }
-  return cards;
+  return {cards, candidates};
 }
 
 function getServer(name: string) {
@@ -189,6 +199,9 @@ function installHandler(e: Event) {
   }
   lastChat = null;
   if (event.detail.isIce) return;
+  if (event.detail.server.hasAttribute(ATTR_ONGOING_BREACH)) {
+    event.detail.card.setAttribute(ATTR_CANDIDATE, '');
+  }
   watchCard(event.detail.card);
   debug.log('[serverNote] install detected, watching card', event.detail.card);
 }
