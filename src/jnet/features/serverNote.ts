@@ -99,6 +99,7 @@ function chatHandler(e: Event) {
   const result = findAccessedCard(event.detail);
   if (result) {
     annotate(result.card, result.name);
+    result.card.removeAttribute(ATTR_CANDIDATE);
     return;
   }
   const refused = findRefusedCard(event.detail);
@@ -262,7 +263,8 @@ function appendChat(msg: chat.ChatMessage) {
 function installHandler(e: Event) {
   const event = e as CustomEvent<board.InstallEvent>;
   if (!event.detail) return;
-  if (event.detail.server.hasAttribute(ATTR_ONGOING_BREACH)) {
+  if (!event.detail.isIce && event.detail.server.hasAttribute(ATTR_ONGOING_BREACH)) {
+    debug.log('[serverNote] breach is ongoing, adding card to candidates', event.detail.card);
     event.detail.card.setAttribute(ATTR_CANDIDATE, '');
   }
   const name = findOpenInstall();
@@ -287,7 +289,6 @@ function annotate(card: Element, name: string, overwrite?: boolean) {
   if (!card.hasAttribute(ATTR_CARD_NAME) || overwrite) {
     card.setAttribute(ATTR_CARD_NAME, name);
   }
-  card.removeAttribute(ATTR_CANDIDATE);
 }
 
 /** Mark the recently clicked card */
