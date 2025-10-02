@@ -9,6 +9,7 @@ export interface ChatMessage {
   text: string;
   age: number;
   element: Element;
+  when: number;
 }
 
 const newChatObserver = new MutationObserver(newChatHandler);
@@ -47,7 +48,14 @@ function newChatHandler(mutations: MutationRecord[]) {
       const text = getText(div);
       const age = div.parentNode?.children.length;
       if (text && age) {
-        const data: ChatMessage = {type: 'new-chat', system, text, age: age, element: div};
+        const data: ChatMessage = {
+          type: 'new-chat',
+          system,
+          text,
+          age: age,
+          element: div,
+          when: Date.now(),
+        };
         messages.push(data);
       }
     });
@@ -67,7 +75,14 @@ function newChatHandler(mutations: MutationRecord[]) {
         // do nothing
       }
       if (text && age) {
-        const data: ChatMessage = {type: 'removed-chat', system, text, age: age, element: div};
+        const data: ChatMessage = {
+          type: 'removed-chat',
+          system,
+          text,
+          age: age,
+          element: div,
+          when: Date.now(),
+        };
         removedMessages.push(data);
       }
     });
