@@ -82,7 +82,10 @@ function chatHandler(e: Event) {
   lastChat = event.detail;
   debug.log(event.detail.text);
   const result = findAccessedCard(event.detail);
-  if (result) annotate(result.card, result.name);
+  if (result) {
+    if (result.card.hasAttribute(ATTR_CARD_NAME)) return;
+    annotate(result.card, result.name);
+  }
 }
 
 function findAccessedCard(detail: chat.ChatMessage): AnnotationRequest | null {
@@ -196,7 +199,7 @@ function installHandler(e: Event) {
   }
   if (lastChat) {
     const name = findOpenInstall(lastChat);
-    if (name) {
+    if (name && !event.detail.card.hasAttribute(ATTR_CARD_NAME)) {
       annotate(event.detail.card, name);
     }
   }
@@ -211,6 +214,7 @@ function faceupHandler(e: Event) {
   const event = e as CustomEvent<board.FaceupEvent>;
   if (!event.detail) return;
   debug.log('[serverNote] faceup detected', event.detail.card);
+  // always annotate, as this is the best knowledge.
   annotate(event.detail.card, event.detail.name);
 }
 
@@ -260,10 +264,10 @@ function markAllRezzedCards() {
   const cards = document.querySelectorAll('.corp-board.opponent .server .server-card');
   const ices = document.querySelectorAll('.corp-board.opponent .server .ice');
   let count = 0;
+  // always annotate if name is available -- this is the best information
   cards.forEach(node => {
     if (node.nodeType !== Node.ELEMENT_NODE) return;
     const card = node as Element;
-    if (card.hasAttribute(ATTR_CARD_NAME)) return;
     const name = card.querySelector(':scope .cardname')?.textContent;
     if (card && name) annotate(card, name);
     count += 1;
@@ -271,7 +275,6 @@ function markAllRezzedCards() {
   ices.forEach(node => {
     if (node.nodeType !== Node.ELEMENT_NODE) return;
     const card = node as Element;
-    if (card.hasAttribute(ATTR_CARD_NAME)) return;
     const name = card.querySelector(':scope .cardname')?.textContent;
     if (card && name) annotate(card, name);
     count += 1;
