@@ -191,6 +191,9 @@ function getServer(name: string) {
 function installHandler(e: Event) {
   const event = e as CustomEvent<board.InstallEvent>;
   if (!event.detail) return;
+  if (event.detail.server.hasAttribute(ATTR_ONGOING_BREACH)) {
+    event.detail.card.setAttribute(ATTR_CANDIDATE, `${lastChat?.age || 0}`);
+  }
   if (lastChat) {
     const name = findOpenInstall(lastChat);
     if (name) {
@@ -199,9 +202,6 @@ function installHandler(e: Event) {
   }
   lastChat = null;
   if (event.detail.isIce) return;
-  if (event.detail.server.hasAttribute(ATTR_ONGOING_BREACH)) {
-    event.detail.card.setAttribute(ATTR_CANDIDATE, '');
-  }
   watchCard(event.detail.card);
   debug.log('[serverNote] install detected, watching card', event.detail.card);
 }
