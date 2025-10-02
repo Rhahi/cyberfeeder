@@ -9,16 +9,28 @@ import {getChatAge} from './util';
  * - uses Synapse Global: Faster than Thought to reveal Sericulture Expansion from HQ.
  *   -> uses Synapse Global: Faster than Thought to install a card in the root of Server 2 (new remote).
  */
-const OPEN_INSTALL_REGEX = /install (?<card>.*) from /;
-const ACCESS_REMOTE_REGEX = /access(?:es)? (?<card>.*) from (?<server>Server \d+)/;
-const ACCESS_CENTRAL_REGEX = /access(?:es)? (?<card>.*) from the root of (?:the )?(?<server>R&D|Archives|HQ)\./;
+const PATTERNS_OPEN_INSTALL = [
+  // Drafter, Powers, Ingatan
+  /install (?<card>.*) from /,
+  // Synapse
+  /uses Synapse Global: Faster than Thought to reveal (?<card>.*) from HQ/,
+];
+const PATTERNS_ACCESS = [
+  // Remotes. Will not handle stacked servers (they are always rezzed anyway)
+  /access(?:es)? (?<card>.*) from (?<server>Server \d+)/,
+  /access(?:es)? (?<card>.*) from the root of (?:the )?(?<server>R&D|Archives|HQ)\./,
+];
+const PATTERN_REFUSE = /do(?:es)? not access/;
 const ATTR_WATCH = 'cyberfeeder-servernote-watch';
 const ATTR_CLICK_AGE = 'cyberfeeder-clicked';
 const ATTR_CARD_NAME = 'cyberfeeder-cardname';
 const ATTR_CANDIDATE = 'cyberfeeder-candidate';
 const ATTR_ONGOING_BREACH = 'cyberfeeder-breaching';
 const ATTR_DATA_CARD = 'data-card-title';
-let lastChat: chat.ChatMessage | null = null;
+const CHAT_HISTORY_TIME_LIMIT = 200;
+const CHAT_HISTORY_LIMIT = 5;
+
+const chatHistory: chat.ChatMessage[] = [];
 
 interface AnnotationRequest {
   card: Element;
@@ -55,7 +67,7 @@ export function disable() {
 
 /** called when starting or navigating */
 function reset() {
-  lastChat = null;
+  chatHistory.length = 0;
   clearAttribute('server-card', ATTR_CANDIDATE);
   clearAttribute('server-card', ATTR_CLICK_AGE);
   watchAllRootCards();
@@ -79,18 +91,36 @@ function chatHandler(e: Event) {
   if (!event.detail) return;
   if (!event.detail.system) return;
 
-  lastChat = event.detail;
+  appendChat(event.detail);
   debug.log(event.detail.text);
+  if (event.detail.text.match(PATTERN_REFUSE)) {
+    // find which card it was
+  }
   const result = findAccessedCard(event.detail);
   if (result) {
-    if (result.card.hasAttribute(ATTR_CARD_NAME)) return;
     annotate(result.card, result.name);
+    return;
   }
+  const refused = findRefusedCard(event.detail);
+  if (refused) refused.removeAttribute(ATTR_CANDIDATE);
+}
+
+function findRefusedCard(detail: chat.ChatMessage): Element | null {
+  const server = document.querySelector(`[${ATTR_ONGOING_BREACH}]`);
+  if (!server) return null;
+  const candidates = findCandidates(server, detail.age);
+  if (candidates.length === 0) return null;
+  if (candidates.length === 1) return candidates[0];
+  return associateClickedCard(candidates);
 }
 
 function findAccessedCard(detail: chat.ChatMessage): AnnotationRequest | null {
-  let match = detail.text.match(ACCESS_REMOTE_REGEX);
-  if (!match) match = detail.text.match(ACCESS_CENTRAL_REGEX);
+  let match: RegExpMatchArray | null = null;
+  for (const pattern of PATTERNS_ACCESS) {
+    match = detail.text.match(pattern);
+    if (match) break;
+  }
+  if (!match) return null;
   if (!match?.groups) return null;
   debug.log('[serverNote] access detected', detail.age);
 
@@ -105,10 +135,18 @@ function findAccessedCard(detail: chat.ChatMessage): AnnotationRequest | null {
   if (candidates.length === 1) {
     return {card: candidates[0], name: cardName};
   }
+  const target = associateClickedCard(candidates);
+  if (!target) {
+    debug.log('[serverNote] there is no target to annotate');
+    return null;
+  }
+  return {card: target, name: cardName};
+}
 
+function associateClickedCard(cards: Element[]) {
   let latest = 0;
   let target: Element | null = null;
-  for (const card of candidates) {
+  for (const card of cards) {
     const ageText = card.getAttribute(ATTR_CLICK_AGE);
     if (!ageText) continue;
     const timestamp = parseInt(ageText);
@@ -117,22 +155,36 @@ function findAccessedCard(detail: chat.ChatMessage): AnnotationRequest | null {
     target = card;
     latest = timestamp;
   }
-
-  if (!target) {
-    debug.log('[serverNote] there is no target to annotate');
-    return null;
-  }
-  return {card: target, name: cardName};
+  return target;
 }
 
-function findOpenInstall(detail: chat.ChatMessage): string | null {
-  const match = detail.text.match(OPEN_INSTALL_REGEX);
+function findOpenInstall() {
+  debug.log('[serverNote] looking for open install...');
+  if (!chatHistory) return null;
+  // consume current chat history. Continue even after a match is found.
+  let msg: chat.ChatMessage | undefined;
+  let match: RegExpMatchArray | null = null;
+  while (chatHistory.length > 0) {
+    const _msg = chatHistory.shift();
+    if (match) continue;
+    if (!_msg) continue;
+    for (const pattern of PATTERNS_OPEN_INSTALL) {
+      const _match = _msg.text.match(pattern);
+      if (_match) {
+        debug.log('[serverNote] found match from', _msg.text);
+        msg = _msg;
+        match = _match;
+        break;
+      }
+    }
+  }
+  if (!msg) return null;
   if (!match) return null;
   if (!match.groups) return null;
-  debug.log('[serverNote] open install detected');
   const cardName = match.groups['card'];
-  const query = detail.element.querySelectorAll(`:scope [${ATTR_DATA_CARD}]`);
   let verifiedName: string | null = null;
+  // verify that the captured cardname is a valid card
+  const query = msg.element.querySelectorAll(`:scope [${ATTR_DATA_CARD}]`);
   query.forEach(node => {
     if (node.nodeType !== Node.ELEMENT_NODE) return;
     if (verifiedName) return;
@@ -190,20 +242,31 @@ function getServer(name: string) {
   return null;
 }
 
+/** store recent chat messages in an array */
+function appendChat(msg: chat.ChatMessage) {
+  const now = Date.now();
+  if (chatHistory.length === 0) {
+    chatHistory.push(msg);
+    return;
+  }
+  while (chatHistory.length >= CHAT_HISTORY_LIMIT) {
+    chatHistory.shift();
+  }
+  while (chatHistory.length > 0 && now - chatHistory[0].when > CHAT_HISTORY_TIME_LIMIT) {
+    chatHistory.shift();
+  }
+  chatHistory.push(msg);
+}
+
 /** When a new card is installed in root, attach click listener on it */
 function installHandler(e: Event) {
   const event = e as CustomEvent<board.InstallEvent>;
   if (!event.detail) return;
   if (event.detail.server.hasAttribute(ATTR_ONGOING_BREACH)) {
-    event.detail.card.setAttribute(ATTR_CANDIDATE, `${lastChat?.age || 0}`);
+    event.detail.card.setAttribute(ATTR_CANDIDATE, '');
   }
-  if (lastChat) {
-    const name = findOpenInstall(lastChat);
-    if (name && !event.detail.card.hasAttribute(ATTR_CARD_NAME)) {
-      annotate(event.detail.card, name);
-    }
-  }
-  lastChat = null;
+  const name = findOpenInstall();
+  if (name) annotate(event.detail.card, name);
   if (event.detail.isIce) return;
   watchCard(event.detail.card);
   debug.log('[serverNote] install detected, watching card', event.detail.card);
@@ -215,13 +278,15 @@ function faceupHandler(e: Event) {
   if (!event.detail) return;
   debug.log('[serverNote] faceup detected', event.detail.card);
   // always annotate, as this is the best knowledge.
-  annotate(event.detail.card, event.detail.name);
+  annotate(event.detail.card, event.detail.name, true);
 }
 
-function annotate(card: Element, name: string) {
+function annotate(card: Element, name: string, overwrite?: boolean) {
   if (name === '') return;
   debug.log('[serverNote] annotated card', card);
-  card.setAttribute(ATTR_CARD_NAME, name);
+  if (!card.hasAttribute(ATTR_CARD_NAME) || overwrite) {
+    card.setAttribute(ATTR_CARD_NAME, name);
+  }
   card.removeAttribute(ATTR_CANDIDATE);
 }
 
@@ -269,14 +334,14 @@ function markAllRezzedCards() {
     if (node.nodeType !== Node.ELEMENT_NODE) return;
     const card = node as Element;
     const name = card.querySelector(':scope .cardname')?.textContent;
-    if (card && name) annotate(card, name);
+    if (card && name) annotate(card, name, true);
     count += 1;
   });
   ices.forEach(node => {
     if (node.nodeType !== Node.ELEMENT_NODE) return;
     const card = node as Element;
     const name = card.querySelector(':scope .cardname')?.textContent;
-    if (card && name) annotate(card, name);
+    if (card && name) annotate(card, name, true);
     count += 1;
   });
   debug.log(`[serverNote] annotated ${count} cards`);
