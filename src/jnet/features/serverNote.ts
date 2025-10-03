@@ -288,6 +288,7 @@ function annotate(card: Element, name: string, overwrite?: boolean) {
   debug.log('[serverNote] annotated card', card);
   if (!card.hasAttribute(ATTR_CARD_NAME) || overwrite) {
     card.setAttribute(ATTR_CARD_NAME, name);
+    void window.getComputedStyle(card, '::after').content;
   }
 }
 
