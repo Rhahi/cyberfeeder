@@ -1,4 +1,4 @@
-version = "27"
+version = "28"
 
 [[style]]
 category = "Mandatory"
@@ -618,6 +618,7 @@ css = """
 /* me stats area */
 .left-inner-leftpane > div:nth-child(2) > .panel.stats {
   grid-row: 5;
+  overflow: hidden;  /* prevents extra scroll produced */
 }
 
 /* hand */
