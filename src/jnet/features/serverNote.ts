@@ -27,7 +27,6 @@ const ATTR_CARD_NAME = 'cyberfeeder-cardname';
 const ATTR_CANDIDATE = 'cyberfeeder-candidate';
 const ATTR_ONGOING_BREACH = 'cyberfeeder-breaching';
 const ATTR_DATA_CARD = 'data-card-title';
-const CHAT_HISTORY_TIME_LIMIT = 200;
 const CHAT_HISTORY_LIMIT = 5;
 
 const chatHistory: chat.ChatMessage[] = [];
@@ -244,15 +243,11 @@ function getServer(name: string) {
 
 /** store recent chat messages in an array */
 function appendChat(msg: chat.ChatMessage) {
-  const now = Date.now();
   if (chatHistory.length === 0) {
     chatHistory.push(msg);
     return;
   }
   while (chatHistory.length >= CHAT_HISTORY_LIMIT) {
-    chatHistory.shift();
-  }
-  while (chatHistory.length > 0 && now - chatHistory[0].when > CHAT_HISTORY_TIME_LIMIT) {
     chatHistory.shift();
   }
   chatHistory.push(msg);
