@@ -36,17 +36,6 @@ interface AnnotationRequest {
   name: string;
 }
 
-const menuWatcher = (event: Event) => {
-  base.conditionalExecuter({
-    event,
-    type: base.eventName,
-    targetMode: 'gameview',
-    callback: enable => {
-      if (enable) reset();
-    },
-  });
-};
-
 export function enable() {
   reset();
   document.addEventListener(base.eventName, menuWatcher);
@@ -71,6 +60,17 @@ function reset() {
   clearAttribute('server-card', ATTR_CLICK_AGE);
   watchAllRootCards();
   markAllRezzedCards();
+}
+
+function menuWatcher(event: Event) {
+  base.conditionalExecuter({
+    event,
+    type: base.eventName,
+    targetMode: 'gameview',
+    callback: enable => {
+      if (enable) reset();
+    },
+  });
 }
 
 /** When a run arrow appears clear access candidate */
