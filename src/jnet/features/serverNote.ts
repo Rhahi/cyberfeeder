@@ -92,7 +92,6 @@ function chatHandler(e: Event) {
   if (!event.detail.system) return;
 
   appendChat(event.detail);
-  debug.log(event.detail.text);
   if (event.detail.text.match(PATTERN_REFUSE)) {
     // find which card it was
   }
