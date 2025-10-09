@@ -2,6 +2,8 @@
 
 This is a firefox extension that adds new scripts and stylesheet into jinteki.net.
 
+Cyberfeeder is a free software licensed under GPLv3. Exceptions are listed in LICENSE.DEPENDENCY file.
+
 The extension aims to be:
 - Plug and playable.
 - Good for reading board states intuitively.

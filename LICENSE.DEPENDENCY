@@ -1,1 +1,11 @@
-Toml2json uses ISC license: https://github.com/mk-pmb/toml2json-node
+This document clarifies segment of the source code that does not follow Cyberfeeder's license.
+
+Run-time dependencies:
+- channel-ts uses MIT license: https://github.com/arjsin/channels
+
+  channel-ts source code gets compiled into Javascript and gets packaged into Cyberfeeder releases.
+
+Build dependencies whose source code is included in this repository:
+- Toml2json uses ISC license: https://github.com/mk-pmb/toml2json-node
+
+  This license applies to file at scripts/toml2json.js
