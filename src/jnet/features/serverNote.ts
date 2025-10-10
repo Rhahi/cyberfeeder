@@ -91,6 +91,7 @@ function chatHandler(e: Event) {
   if (!event.detail.system) return;
 
   appendChat(event.detail);
+  if (isRunnerChat(event.detail)) return;
   const result = findAccessedCard(event.detail);
   if (result) {
     annotate(result.card, result.name);
@@ -102,6 +103,16 @@ function chatHandler(e: Event) {
     if (refused) refused.removeAttribute(ATTR_CANDIDATE);
     return;
   }
+}
+
+/** Runner does not install corp cards, I think.
+ * This will remove false positive labels caused by
+ * corp install followed by runner installing something.
+ */
+function isRunnerChat(detail: chat.ChatMessage) {
+  const runner = detail.element.querySelector(':scope .runner-username');
+  if (runner) return true;
+  return false;
 }
 
 function findRefusedCard(detail: chat.ChatMessage): Element | null {
