@@ -178,6 +178,7 @@ function findOpenInstall() {
     if (match) continue;
     if (!_msg) continue;
     for (const pattern of PATTERNS_OPEN_INSTALL) {
+      if (isRunnerChat(_msg)) continue;
       const _match = _msg.text.match(pattern);
       if (_match) {
         debug.log('[serverNote] found match from', _msg.text);
