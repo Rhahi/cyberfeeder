@@ -91,7 +91,6 @@ function chatHandler(e: Event) {
   if (!event.detail.system) return;
 
   appendChat(event.detail);
-  if (isRunnerChat(event.detail)) return;
   const result = findAccessedCard(event.detail);
   if (result) {
     annotate(result.card, result.name);
