@@ -91,17 +91,17 @@ function chatHandler(e: Event) {
   if (!event.detail.system) return;
 
   appendChat(event.detail);
-  if (event.detail.text.match(PATTERN_REFUSE)) {
-    // find which card it was
-  }
   const result = findAccessedCard(event.detail);
   if (result) {
     annotate(result.card, result.name);
     result.card.removeAttribute(ATTR_CANDIDATE);
     return;
   }
-  const refused = findRefusedCard(event.detail);
-  if (refused) refused.removeAttribute(ATTR_CANDIDATE);
+  if (event.detail.text.match(PATTERN_REFUSE)) {
+    const refused = findRefusedCard(event.detail);
+    if (refused) refused.removeAttribute(ATTR_CANDIDATE);
+    return;
+  }
 }
 
 function findRefusedCard(detail: chat.ChatMessage): Element | null {
