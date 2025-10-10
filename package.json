@@ -1,6 +1,6 @@
 {
   "name": "cyberfeeder",
-  "version": "4.8.7",
+  "version": "5.0.0",
   "description": "Jinteki.net enhancements",
   "scripts": {
     "lint": "gts lint",
