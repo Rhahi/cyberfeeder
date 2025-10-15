@@ -1,0 +1,33 @@
+Here are Cyberfeeder feature ideas I have or received so far. If there are particular demands for some of them, I can bump them up.
+
+**Planned for next feature update:**
+- Permissions update (discussed above)
+- Search function in config menu
+- Combine style/script tab into one, and add a marker for script feature instead
+- Fix corp card labels not stacking properly
+- Fix trojan strength location
+
+**Considering positively**
+- Recently toggled items collection
+- New features collection (updated every major/minor release)
+- Add about page
+- Fix clock overflow when clock goes over 12:00
+- Match history (shows how many times you faced this opponent, and how many days ago you met them recently)
+**Requested**
+- Zen mode (hide nonessential information, make them appear when mouse is nearby)
+
+**Nice to have, but I don't need it**
+- Chrome support (it might actually be coming soon, but not from me)
+- Interactive configuration page (Like sidebar menu, but visual. Shows toggles over a mock game board)
+- Mobile support, also means making a configuration tab (since there is no sidebar in mobile)
+- Find out why per-player clock is buggy when spectating and fix it
+- Highlights for cards that meet Threat condition
+- User custom CSS (you can edit existing styles, or use Stylus)
+- Tabletop experience, where click/credits (stat area) look like tokens instead of numbers
+
+**Won't do**
+- Make new features announcement page when new features are released (I personally find them annoying when extensions do this)
+- User custom script (use Greasemonkey, or make a PR)
+
+**Can't do**
+- Make drag and drop work on touch screen (tried to fix this, but could not do it in userscript-land)
