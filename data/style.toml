@@ -1186,6 +1186,19 @@ css = """
   right: 0 !important;
 }
 
+/* move trojan's strength to corner */
+.opponent .ice .hosted .card .strength {
+  left: 0 !important;
+  top: unset !important;
+  bottom: 0 !important;
+}
+
+.opponent .ice .hosted .card .strength {
+  right: unset !important;
+  top: unset !important;
+  bottom: 0 !important;
+}
+
 .me .ice > .card-frame > .card .strength {
   bottom: 0 !important;
   top: unset !important;
