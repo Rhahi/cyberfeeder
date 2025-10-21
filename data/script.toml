@@ -360,6 +360,7 @@ name = "Remember installed cards"
 description = "Add labels when cards are accessed from remote/central servers, or when they are derezzed. When using this feature, it is recommended to turn off Stack Cards (jnet feature)"
 default = false
 css = """
+/* root cards */
 .server .server-card:not(.discard-container)[cyberfeeder-cardname]:has(img~span.cardname)::after {
   display: block;
   content: attr(cyberfeeder-cardname);
@@ -378,6 +379,7 @@ css = """
   font-size: 0.7rem;
 }
 
+/* ice known cards labels */
 .server .ice:not(.discard-container)[cyberfeeder-cardname]:has(img~span.cardname)::after {
   position: absolute;
   writing-mode: sideways-lr;
@@ -397,6 +399,7 @@ css = """
   border-bottom-left-radius: var(--card-border-radius);
 }
 
+/* ice known cards labels, on hover */
 .server .server-card[cyberfeeder-cardname]:has(img~span.cardname):hover::after,
 .server .ice[cyberfeeder-cardname]:has(img~span.cardname):hover::after {
   white-space: unset;
