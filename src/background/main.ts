@@ -10,6 +10,9 @@ browser.browserAction.onClicked.addListener(handleClick);
  */
 browser.pageAction.onClicked.addListener(handleClick);
 
+/** Auto inject on user navigation */
+browser.tabs.onUpdated.addListener(autoInject);
+
 function handleClick(tab: browser.tabs.Tab, click?: browser.pageAction.OnClickData | browser.browserAction.OnClickData) {
   if (!click) return;
   if (click.button !== 0) return;
@@ -26,6 +29,11 @@ function handleClick(tab: browser.tabs.Tab, click?: browser.pageAction.OnClickDa
     return;
   }
   if (click.modifiers.includes('Alt')) {
+    if (!tab.url) return;
+    const url = new URL(tab.url);
+    const stringUrl = `${url.protocol}//${url.host}/*`;
+    console.log('[background] Asking permission for', stringUrl);
+    browser.permissions.request({origins: [stringUrl]});
     injectAnywhere(tab);
   }
 }
@@ -48,6 +56,37 @@ function injectAnywhere(tab: browser.tabs.Tab) {
   }
   browser.scripting.executeScript({
     target: {tabId: tab.id},
+    files: ['js/jnet.js'],
+  });
+}
+
+async function autoInject(tabId: number, changeInfo: browser.tabs._OnUpdatedChangeInfo, tab: browser.tabs.Tab) {
+  // ignore all events other than change in url
+  if (!changeInfo.url) return;
+
+  // check if Cyberfeeder is already running
+  if (!tab.url) return;
+  console.log('[background] new url', changeInfo.url);
+  const url = new URL(tab.url);
+  const stringUrl = `${url.protocol}//${url.host}/*`;
+  try {
+    const response = await browser.tabs.sendMessage(tabId, {action: 'ping'});
+    if (response) {
+      console.log('[background] Cyberfeeder is already running');
+      return;
+    }
+  } catch (e) {
+    console.log('[background] Cyberfeeder is not up for', stringUrl);
+  }
+  console.log('[background] Checking permission...');
+  const hasPermission = await browser.permissions.contains({origins: [stringUrl]});
+  if (!hasPermission) {
+    console.log("[background] don't have permission, nothing to do.");
+    return;
+  }
+  console.log('[background] Have permission, injecting Cyberfeeder');
+  browser.scripting.executeScript({
+    target: {tabId: tabId},
     files: ['js/jnet.js'],
   });
 }

@@ -20,12 +20,8 @@
       ]
     }
   ],
-  "permissions": [
-    "scripting",
-    "activeTab",
-    "storage",
-    "downloads"
-  ],
+  "permissions": ["scripting", "activeTab", "storage", "downloads"],
+  "optional_permissions": ["<all_urls>"],
   "sidebar_action": {
     "default_icon": {
       "16": "icons/JINTEKI_16.png",

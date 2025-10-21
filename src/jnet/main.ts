@@ -12,12 +12,12 @@ animation.createGhostContainer();
 
 interface Message {
   id: string;
-  action: 'style' | 'script';
+  action: string;
   toggles?: script.Toggle[];
   css: string;
 }
 
-browser.runtime.onMessage.addListener((message: Message) => {
+browser.runtime.onMessage.addListener((message: Message, _sender, sendResponse) => {
   if (message.action === 'style') {
     css.applyStyle(message.id, message.css);
     return;
@@ -34,5 +34,8 @@ browser.runtime.onMessage.addListener((message: Message) => {
     css.onLoad();
     script.disableAll();
     script.onLoad();
+  }
+  if (message.action === 'ping') {
+    sendResponse('pong');
   }
 });
