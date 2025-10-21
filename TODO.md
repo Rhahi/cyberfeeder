@@ -4,9 +4,9 @@ Here are Cyberfeeder feature ideas I have or received so far. If there are parti
 - Fix corp card labels not stacking properly (nothing to do)
 - Fix trojan strength location
 - Add permanent permission and auto-loading for other netrunner instances
-- Handle Nuvem top deck peek
 
 **Planned for next feature update:**
+- Handle Nuvem top deck peek
 - Search function in config menu
 - Combine style/script tab into one, and add a marker for script feature instead
 
