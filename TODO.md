@@ -3,9 +3,10 @@ Here are Cyberfeeder feature ideas I have or received so far. If there are parti
 **Done in last update**
 - Fix corp card labels not stacking properly (nothing to do)
 - Fix trojan strength location
+- Add permanent permission and auto-loading for other netrunner instances
+- Handle Nuvem top deck peek
 
 **Planned for next feature update:**
-- Permissions update (discussed above)
 - Search function in config menu
 - Combine style/script tab into one, and add a marker for script feature instead
 
@@ -20,6 +21,7 @@ Here are Cyberfeeder feature ideas I have or received so far. If there are parti
 - Zen mode (hide nonessential information, make them appear when mouse is nearby)
 
 **Nice to have, but I don't need it**
+- Remove download permission and ask when needed
 - Chrome support (it might actually be coming soon, but not from me)
 - Interactive configuration page (Like sidebar menu, but visual. Shows toggles over a mock game board)
 - Mobile support, also means making a configuration tab (since there is no sidebar in mobile)
