@@ -1,11 +1,13 @@
 Here are Cyberfeeder feature ideas I have or received so far. If there are particular demands for some of them, I can bump them up.
 
+**Done in last update**
+- Fix corp card labels not stacking properly (nothing to do)
+- Fix trojan strength location
+
 **Planned for next feature update:**
 - Permissions update (discussed above)
 - Search function in config menu
 - Combine style/script tab into one, and add a marker for script feature instead
-- Fix corp card labels not stacking properly
-- Fix trojan strength location
 
 **Considering positively**
 - Recently toggled items collection
@@ -13,6 +15,7 @@ Here are Cyberfeeder feature ideas I have or received so far. If there are parti
 - Add about page
 - Fix clock overflow when clock goes over 12:00
 - Match history (shows how many times you faced this opponent, and how many days ago you met them recently)
+- Highlight for rooms that deviate from default title format
 **Requested**
 - Zen mode (hide nonessential information, make them appear when mouse is nearby)
 
