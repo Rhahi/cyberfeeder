@@ -63,6 +63,7 @@ function injectAnywhere(tab: browser.tabs.Tab) {
 async function autoInject(tabId: number, changeInfo: browser.tabs._OnUpdatedChangeInfo, tab: browser.tabs.Tab) {
   // ignore all events other than change in url
   if (!changeInfo.url) return;
+  if (changeInfo.status !== 'complete') return;
 
   // check if Cyberfeeder is already running
   if (!tab.url) return;
