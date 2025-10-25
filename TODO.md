@@ -1,9 +1,7 @@
 Here are Cyberfeeder feature ideas I have or received so far. If there are particular demands for some of them, I can bump them up.
 
 **Done in last update**
-- Fix corp card labels not stacking properly (nothing to do)
-- Fix trojan strength location
-- Add permanent permission and auto-loading for other netrunner instances
+- Fix Cyberfeeder double-starting in jinteki.net
 
 **Planned for next feature update:**
 - Handle Nuvem top deck peek
