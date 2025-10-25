@@ -104,7 +104,8 @@ export function conditionalExecuter(config: ConditionalExecuterConfig) {
 export function createNavigationEvent() {
   const main = document.querySelector('#main-content #main > .item');
   if (main) {
-    const firstChild = main.firstChild as Element;
+    const firstChild = main.firstElementChild;
+    if (!firstChild) return;
     const page = firstChild.className ? firstChild.className : 'unknown';
     if (firstChild && firstChild.nodeType === Node.ELEMENT_NODE) {
       const data: Navigation = {type: eventName, mode: page, root: firstChild};
@@ -117,7 +118,8 @@ export function createNavigationEvent() {
 
 /** Start by firing an event announing current view */
 export function announce(main: Element) {
-  const firstChild = main.firstChild as Element;
+  const firstChild = main.firstElementChild;
+  if (!firstChild) return;
   const page = firstChild.className ? firstChild.className : 'unknown';
   if (firstChild && firstChild.nodeType === Node.ELEMENT_NODE) {
     const data: Navigation = {type: eventName, mode: page, root: firstChild};
