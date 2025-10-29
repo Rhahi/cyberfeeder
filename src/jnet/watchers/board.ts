@@ -15,7 +15,7 @@ const menuWatcher = (event: Event) => {
     type: base.eventName,
     targetMode: 'gameview',
     observer: boardObserver,
-    selector: '.corp-board.opponent',
+    selector: '.corp-board',
     observeOptions: {characterData: true, subtree: true, childList: true},
   });
 };
@@ -51,6 +51,7 @@ export interface InstallEvent {
   card: Element;
   server: Element;
   isIce: boolean;
+  isOpponent: boolean;
 }
 
 export interface RunEvent {
@@ -121,8 +122,8 @@ function installHandler(card: Element, isIce: boolean) {
   // debug.log('[watcher/board] starting install detection...', card);
   const server = card.parentElement?.parentElement;
   if (!server?.classList.contains('server')) return;
-
-  const data: InstallEvent = {type: EVENT_INSTALL, isIce, card, server};
+  const isOpponent = !!server.parentElement?.classList.contains('opponent');
+  const data: InstallEvent = {type: EVENT_INSTALL, isIce, card, server, isOpponent};
   const event = new CustomEvent<InstallEvent>(EVENT_INSTALL, {detail: data});
   document.dispatchEvent(event);
   debug.log('[watcher/board] install detected', card);

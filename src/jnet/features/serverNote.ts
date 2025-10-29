@@ -93,6 +93,7 @@ function chatHandler(e: Event) {
   appendChat(event.detail);
   const result = findAccessedCard(event.detail);
   if (result) {
+    if (hasName(result.card)) return; // don't try to annotate when card name span is available
     annotate(result.card, result.name);
     result.card.removeAttribute(ATTR_CANDIDATE);
     return;
@@ -235,7 +236,7 @@ function cardsInServer(server: Element) {
 }
 
 function getServer(name: string) {
-  const labels = document.querySelectorAll('.corp-board.opponent .server .content .server-label');
+  const labels = document.querySelectorAll('.corp-board .server .content .server-label');
   let label: Element | undefined;
   labels.forEach(node => {
     const e = node as Element;
@@ -273,9 +274,10 @@ function installHandler(e: Event) {
     event.detail.card.setAttribute(ATTR_CANDIDATE, '');
   }
   const name = findOpenInstall();
+  if (hasName(event.detail.card)) return; // no need to do anything if you control the card
   if (name) annotate(event.detail.card, name);
   if (event.detail.isIce) return;
-  watchCard(event.detail.card);
+  if (event.detail.isOpponent) watchCard(event.detail.card);
   debug.log('[serverNote] install detected, watching card', event.detail.card);
 }
 
@@ -352,4 +354,10 @@ function markAllRezzedCards() {
     count += 1;
   });
   debug.log(`[serverNote] annotated ${count} cards`);
+}
+
+function hasName(card: Element) {
+  const span = card.querySelector(':scope .cardname');
+  const text = span?.textContent;
+  return !!text;
 }
