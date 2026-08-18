@@ -14,7 +14,7 @@
     "start:chromium": "web-ext run --verbose --target chromium --source-dir ./app"
   },
   "author": "Rhahi",
-  "license": "MIT",
+  "license": "GPL-3.0-or-later",
   "engines": {
     "node": ">= 10.0.0"
   },
