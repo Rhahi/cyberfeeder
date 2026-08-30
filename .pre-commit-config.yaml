@@ -1,0 +1,60 @@
+# Managed with prek, a drop-in pre-commit replacement that comes from hermit.
+# One-time setup after `source bin/activate-hermit`:
+#   prek install --install-hooks
+# Run against everything on demand:
+#   prek run --all-files
+default_install_hook_types: [pre-commit, commit-msg, pre-push]
+
+exclude: |
+  (?x)^(
+    app/css/(fontawesome|solid)\.min\.css|
+    app/webfonts/.*|
+    replays/replay\.json|
+    package-lock\.json|
+    LICENSE(\.DEPENDENCY)?
+  )$
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: mixed-line-ending
+        args: [--fix=lf]
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: [--maxkb=1024]
+
+  # semantic-release derives the next version from commit subjects, so an
+  # unparseable one silently costs a release. The type list keeps the `doc:` and
+  # `dev:` prefixes this project already uses.
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v4.0.0
+    hooks:
+      - id: conventional-pre-commit
+        stages: [commit-msg]
+        args: [feat, fix, doc, docs, dev, chore, ci, build, refactor, perf, style, test, revert]
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks
+
+  # Everything above is fast enough to run on every commit. Linting is not
+  # (`gts lint` takes ~20s on this tree), so it rides along with the pre-push
+  # build instead - build.sh runs `npm run lint` as its first step, and CI runs
+  # the same build on every push and pull request.
+  - repo: local
+    hooks:
+      # Both engines share most of the source, so a change that only breaks one
+      # target is easy to miss.
+      - id: build-targets
+        name: lint and build firefox and chromium targets
+        entry: sh -c 'npm run build && npm run build:chromium'
+        language: system
+        pass_filenames: false
+        stages: [pre-push]
+        files: \.(ts|json|scss|html|sh|toml)$

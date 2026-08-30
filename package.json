@@ -10,7 +10,6 @@
     "fix": "gts fix",
     "package": "sh scripts/package.sh",
     "package:chromium": "TARGET=chromium sh scripts/package.sh",
-    "postversion": "sh scripts/version.sh",
     "start": "web-ext run --verbose --source-dir ./app",
     "start:chromium": "web-ext run --verbose --target chromium --source-dir ./app"
   },

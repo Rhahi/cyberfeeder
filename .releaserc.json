@@ -1,0 +1,78 @@
+{
+  "branches": ["main"],
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits",
+        "releaseRules": [
+          { "type": "chore", "scope": "deps", "release": "patch" },
+          { "type": "dev", "scope": "deps", "release": "patch" }
+        ]
+      }
+    ],
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "preset": "conventionalcommits",
+        "presetConfig": {
+          "types": [
+            { "type": "feat", "section": "Features" },
+            { "type": "fix", "section": "Bug Fixes" },
+            { "type": "perf", "section": "Performance" },
+            { "type": "refactor", "section": "Refactoring" },
+            { "type": "doc", "section": "Documentation" },
+            { "type": "docs", "section": "Documentation" },
+            { "type": "chore", "scope": "deps", "section": "Dependencies" },
+            { "type": "dev", "scope": "deps", "section": "Dependencies" },
+            { "type": "dev", "hidden": true },
+            { "type": "chore", "hidden": true },
+            { "type": "ci", "hidden": true },
+            { "type": "build", "hidden": true },
+            { "type": "style", "hidden": true },
+            { "type": "test", "hidden": true }
+          ]
+        }
+      }
+    ],
+    "@semantic-release/changelog",
+    [
+      "@semantic-release/npm",
+      {
+        "npmPublish": false
+      }
+    ],
+    [
+      "@semantic-release/exec",
+      {
+        "prepareCmd": "sh scripts/sync-version.sh ${nextRelease.version} && npm run build && npm run package && npm run build:chromium && npm run package:chromium"
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": ["package.json", "package-lock.json", "manifests/*.json", "CHANGELOG.md"],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "successComment": false,
+        "failComment": false,
+        "failTitle": false,
+        "releasedLabels": false,
+        "assets": [
+          {
+            "path": "build/extension-firefox.zip",
+            "label": "Cyberfeeder ${nextRelease.version} (Firefox)"
+          },
+          {
+            "path": "build/extension-chromium.zip",
+            "label": "Cyberfeeder ${nextRelease.version} (Chrome/Brave/Edge)"
+          }
+        ]
+      }
+    ]
+  ]
+}

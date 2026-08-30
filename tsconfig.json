@@ -5,7 +5,7 @@
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",
-    "outDir": "build",
+    "outDir": "tmp/tsc",
     "sourceMap": false,
     "skipLibCheck": true,
     "types": ["firefox-webext-browser", "chrome"],

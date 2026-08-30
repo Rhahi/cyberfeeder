@@ -1,5 +1,6 @@
 _*.ts
 /.assets
+/.hermit
 /.package
 /app/css
 /app/data
