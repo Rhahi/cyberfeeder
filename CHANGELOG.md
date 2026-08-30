@@ -1,3 +1,9 @@
+## [5.4.1](https://github.com/Rhahi/cyberfeeder/compare/v5.4.0...v5.4.1) (2026-08-30)
+
+### Bug Fixes
+
+* **chromium:** add privacy policy, remove activeTab ([c7a6cc6](https://github.com/Rhahi/cyberfeeder/commit/c7a6cc6565dbb90068ee96f34573efe1e74063ec))
+
 ## [5.4.0](https://github.com/Rhahi/cyberfeeder/compare/v5.3.1...v5.4.0) (2026-08-30)
 
 ### Features
