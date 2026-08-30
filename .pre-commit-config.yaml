@@ -43,19 +43,16 @@ repos:
     hooks:
       - id: gitleaks
 
+  # Everything above is fast enough to run on every commit. Linting is not
+  # (`gts lint` takes ~20s on this tree), so it rides along with the pre-push
+  # build instead - build.sh runs `npm run lint` as its first step, and CI runs
+  # the same build on every push and pull request.
   - repo: local
     hooks:
-      - id: gts-lint
-        name: gts lint (eslint + prettier)
-        entry: npm run lint
-        language: system
-        files: \.ts$
-        pass_filenames: false
-
       # Both engines share most of the source, so a change that only breaks one
-      # target is easy to miss. Kept on pre-push so day-to-day commits stay fast.
+      # target is easy to miss.
       - id: build-targets
-        name: build firefox and chromium targets
+        name: lint and build firefox and chromium targets
         entry: sh -c 'npm run build && npm run build:chromium'
         language: system
         pass_filenames: false

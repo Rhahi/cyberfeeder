@@ -58,9 +58,13 @@
     [
       "@semantic-release/github",
       {
+        "successComment": false,
+        "failComment": false,
+        "failTitle": false,
+        "releasedLabels": false,
         "assets": [
           {
-            "path": "build/extension.zip",
+            "path": "build/extension-firefox.zip",
             "label": "Cyberfeeder ${nextRelease.version} (Firefox)"
           },
           {

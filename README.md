@@ -57,8 +57,8 @@ Hooks are managed with [prek](https://github.com/j178/prek), a drop-in
 pre-commit replacement that hermit installs:
 
 - `prek install --install-hooks` once, then commits get whitespace/JSON checks,
-  a conventional-commit subject check and `gts lint`, and pushes get a build of
-  both targets.
+  a secret scan and a conventional-commit subject check - all fast - and pushes
+  get a lint and build of both targets.
 - `prek run --all-files` to run everything on demand.
 
 # Releases
@@ -66,7 +66,12 @@ pre-commit replacement that hermit installs:
 Releases are cut by [semantic-release](https://semantic-release.gitbook.io/) from
 the commit history, on every push to `main`. It bumps `package.json` and both
 manifests, writes `CHANGELOG.md`, tags `v<version>` and attaches
-`extension.zip` and `extension-chromium.zip` to the GitHub release.
+`extension-firefox.zip` and `extension-chromium.zip` to the GitHub release.
+
+It is not a project dependency: `.github/workflows/ci.yml` fetches it and its
+plugins with `npx` at exact versions, so `package-lock.json` stays free of ~400
+packages that only the release job uses. To try a release without publishing
+anything, copy that `npx` line and add `--dry-run`.
 
 Which commit types trigger what:
 

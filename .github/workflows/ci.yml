@@ -59,10 +59,10 @@ jobs:
     needs: checks
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    # contents only: the github plugin's issue/PR comments and labels are
+    # turned off in .releaserc.json, so nothing outside the repo tree is written.
     permissions:
       contents: write
-      issues: write
-      pull-requests: write
     concurrency:
       group: release
       cancel-in-progress: false
@@ -80,7 +80,19 @@ jobs:
 
       # Bumps package.json and both manifests, writes CHANGELOG.md, tags
       # v<version>, and attaches both extension zips to the GitHub release.
+      #
+      # Fetched by npx at exact versions rather than added to devDependencies:
+      # semantic-release is only ever run here, and as a dependency it pulls
+      # ~400 transitive packages into package-lock.json that no build, hook or
+      # contributor needs. Version bumps are a one-line edit below.
       - name: Release
-        run: npx semantic-release
+        run: |
+          npx --yes \
+            -p semantic-release@25.0.9 \
+            -p @semantic-release/changelog@7.0.0 \
+            -p @semantic-release/exec@7.1.0 \
+            -p @semantic-release/git@11.0.1 \
+            -p conventional-changelog-conventionalcommits@8.0.0 \
+            semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
