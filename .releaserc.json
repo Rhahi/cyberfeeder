@@ -45,7 +45,8 @@
     [
       "@semantic-release/exec",
       {
-        "prepareCmd": "sh scripts/sync-version.sh ${nextRelease.version} && npm run build && npm run package && npm run build:chromium && npm run package:chromium"
+        "prepareCmd": "sh scripts/sync-version.sh ${nextRelease.version} && npm run build && npm run package && npm run build:chromium && npm run package:chromium",
+        "successCmd": "printf '%s\\n' 'released=true' 'version=${nextRelease.version}' >> \"$GITHUB_OUTPUT\""
       }
     ],
     [

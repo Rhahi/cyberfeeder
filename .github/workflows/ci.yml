@@ -24,6 +24,9 @@ jobs:
       - name: Run prek hooks
         run: prek run --all-files --show-diff-on-failure
 
+      - name: Test Chrome Web Store publishing
+        run: npm run test:publish-chromium
+
       # prek only runs the pre-commit stage above, and the build is what catches
       # a change that compiles for one engine but not the other.
       - name: Build firefox target
@@ -59,6 +62,9 @@ jobs:
     needs: checks
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    outputs:
+      released: ${{ steps.semantic_release.outputs.released }}
+      version: ${{ steps.semantic_release.outputs.version }}
     # contents only: the github plugin's issue/PR comments and labels are
     # turned off in .releaserc.json, so nothing outside the repo tree is written.
     permissions:
@@ -86,6 +92,7 @@ jobs:
       # ~400 transitive packages into package-lock.json that no build, hook or
       # contributor needs. Version bumps are a one-line edit below.
       - name: Release
+        id: semantic_release
         run: |
           npx --yes \
             -p semantic-release@25.0.9 \
@@ -96,3 +103,44 @@ jobs:
             semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-chromium:
+    needs: release
+    if: needs.release.outputs.released == 'true'
+    runs-on: ubuntu-latest
+    environment: chrome-web-store
+    concurrency:
+      group: chrome-web-store
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      # Download from the durable GitHub release rather than a workflow artifact,
+      # so Re-run failed jobs works after the release job has completed.
+      - name: Download Chromium store package
+        run: mkdir -p build && gh release download "v$RELEASE_VERSION" --pattern extension-chromium.zip --dir build --clobber
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_VERSION: ${{ needs.release.outputs.version }}
+
+      - id: google_auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+          token_format: access_token
+          access_token_scopes: https://www.googleapis.com/auth/chromewebstore
+          create_credentials_file: false
+          export_environment_variables: false
+
+      - name: Upload and submit Chromium extension
+        run: sh scripts/publish-chromium.sh "$RELEASE_VERSION"
+        env:
+          RELEASE_VERSION: ${{ needs.release.outputs.version }}
+          CHROME_WEB_STORE_ACCESS_TOKEN: ${{ steps.google_auth.outputs.access_token }}
+          CHROME_WEB_STORE_PUBLISHER_ID: ${{ vars.CHROME_WEB_STORE_PUBLISHER_ID }}
+          CHROME_WEB_STORE_EXTENSION_ID: ${{ vars.CHROME_WEB_STORE_EXTENSION_ID }}
