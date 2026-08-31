@@ -98,9 +98,9 @@ One-time setup for automated Chromium releases:
    `assertion.sub`, plus `attribute.repository`, `attribute.ref`, and
    `attribute.workflow_ref` from `assertion.repository`, `assertion.ref`, and
    `assertion.workflow_ref`. Restrict the provider condition to
-   `attribute.repository == 'linusfr/cyberfeeder'`,
+   `attribute.repository == 'Rhahi/cyberfeeder'`,
    `attribute.ref == 'refs/heads/main'`, and
-   `attribute.workflow_ref == 'linusfr/cyberfeeder/.github/workflows/ci.yml@refs/heads/main'`;
+   `attribute.workflow_ref == 'Rhahi/cyberfeeder/.github/workflows/ci.yml@refs/heads/main'`;
    grant only that repository principal `roles/iam.workloadIdentityUser` on the
    publishing service account.
 3. Create a GitHub environment named `chrome-web-store`, limited to `main`, with
