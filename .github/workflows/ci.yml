@@ -60,7 +60,8 @@ jobs:
   # commit whose lint or build failed.
   release:
     needs: checks
-    if: github.event_name != 'pull_request'
+    # Manual dispatch must never create a release or submit a store package.
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     outputs:
       released: ${{ steps.semantic_release.outputs.released }}
