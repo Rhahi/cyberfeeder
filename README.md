@@ -80,8 +80,42 @@ Which commit types trigger what:
 - `chore(deps):` and `dev(deps):` -> patch, so dependency bumps ship.
 - `doc:`, `dev:`, `chore:`, `ci:`, `style:`, `test:`, `refactor:` -> no release.
 
-Both stores are still submitted by hand: download the zip from the release and
-upload it to addons.mozilla.org or the Chrome Web Store.
+Firefox releases are still submitted manually: download `extension-firefox.zip`
+from the GitHub release and upload it to addons.mozilla.org. Chromium releases
+are uploaded and submitted to the Chrome Web Store automatically after
+semantic-release succeeds. Chrome publishes the submitted version automatically
+after its review is approved, using the item's existing visibility settings.
+
+## Chrome Web Store publishing setup
+
+One-time setup for automated Chromium releases:
+
+1. In a Google Cloud project, enable `chromewebstore.googleapis.com` and create
+   a dedicated publishing service account. In the Chrome Web Store Developer
+   Dashboard's **Account** section, authorize that service-account email.
+2. Create a GitHub OIDC Workload Identity Pool provider with issuer
+   `https://token.actions.githubusercontent.com`. Map `google.subject` from
+   `assertion.sub`, plus `attribute.repository`, `attribute.ref`, and
+   `attribute.workflow_ref` from `assertion.repository`, `assertion.ref`, and
+   `assertion.workflow_ref`. Restrict the provider condition to
+   `attribute.repository == 'Rhahi/cyberfeeder'`,
+   `attribute.ref == 'refs/heads/main'`, and
+   `attribute.workflow_ref == 'Rhahi/cyberfeeder/.github/workflows/ci.yml@refs/heads/main'`;
+   grant only that repository principal `roles/iam.workloadIdentityUser` on the
+   publishing service account.
+3. Create a GitHub environment named `chrome-web-store`, limited to `main`, with
+   these non-secret variables: `GCP_WORKLOAD_IDENTITY_PROVIDER`,
+   `GCP_SERVICE_ACCOUNT`, `CHROME_WEB_STORE_PUBLISHER_ID`, and
+   `CHROME_WEB_STORE_EXTENSION_ID`. GitHub OIDC issues the short-lived access
+   token, so do not create or store a service-account JSON key or token.
+4. Before enabling CI, manually publish the extension once and complete its
+   listing, privacy, distribution, and visibility settings. API releases retain
+   the dashboard's visibility settings.
+
+For a transient store-job failure, use GitHub's **Re-run failed jobs**. The
+store job downloads the package from the versioned GitHub release, so it can run
+again after the release job has completed. If Chrome rejects a submission,
+resolve the validation error in the Developer Dashboard before retrying.
 
 # Used versions (for Mozilla reviewer)
 - Fedora Spin Sway (version 42)

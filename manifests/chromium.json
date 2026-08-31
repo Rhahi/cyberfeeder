@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Cyberfeeder",
   "version": "5.4.1",
-  "description": "UI improvements for jinteki.net",
+  "description": "Customizable layouts and quality-of-life improvements for jinteki.net",
   "minimum_chrome_version": "116",
   "icons": {
     "16": "icons/JINTEKI_16.png",
